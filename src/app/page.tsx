@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Header from '@/components/header'; // Import Header component
 import Footer from '@/components/footer'; // Import Footer component
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Import Carousel
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Import Avatar
 
 // تعریف داده‌های نمونه برای خریدهای گروهی
 const groupPurchases = [
@@ -202,6 +203,7 @@ const wholesalers = [
     logo: "https://picsum.photos/seed/wholesaler1/100/100",
     description: "توزیع کننده انواع مواد غذایی، بهداشتی و شوینده.",
     aiHint: "food distribution company logo",
+    products: groupPurchases.filter(p => ['food', 'beauty-health'].includes(p.category || '')).slice(0, 3), // Add sample products
   },
   {
     id: 2,
@@ -209,6 +211,7 @@ const wholesalers = [
     logo: "https://picsum.photos/seed/wholesaler2/100/100",
     description: "عرضه کننده جدیدترین لوازم خانگی برندهای معتبر.",
     aiHint: "home appliance store logo",
+     products: groupPurchases.filter(p => ['home-appliances'].includes(p.category || '')).slice(0, 3),
   },
   {
     id: 3,
@@ -216,6 +219,7 @@ const wholesalers = [
     logo: "https://picsum.photos/seed/wholesaler3/100/100",
     description: "تولید و پخش انواع پوشاک مردانه، زنانه و بچگانه.",
     aiHint: "clothing manufacturer logo",
+     products: groupPurchases.filter(p => ['fashion'].includes(p.category || '')).slice(0, 3),
   },
   {
     id: 4,
@@ -223,6 +227,7 @@ const wholesalers = [
     logo: "https://picsum.photos/seed/wholesaler4/100/100",
     description: "وارد کننده و پخش کننده انواع کالاهای دیجیتال.",
     aiHint: "digital electronics company logo",
+     products: groupPurchases.filter(p => ['digital'].includes(p.category || '')).slice(0, 3),
   }
 ];
 
@@ -404,7 +409,7 @@ export default function HomePage() {
                 <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-10 h-10 rounded-full ml-3 rtl:mr-3 shadow-md" data-ai-hint="iran flag" />
                 <h2 className="text-3xl font-bold text-card-foreground">محصولات ایرانی برتر</h2>
               </div>
-              <Link href="/iranian-products" className="text-primary hover:text-primary/80 text-sm font-medium flex items-center transition-colors duration-300">
+              <Link href="/iranian-products" className="text-primary hover:text-primary/80 text-sm font-medium flex items-center transition-colors duration-300 group">
                 مشاهده همه
                 <ChevronLeft className="h-4 w-4 mr-1 rtl:ml-1 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
               </Link>
@@ -528,21 +533,17 @@ export default function HomePage() {
       </div>
 
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
-      <div className="bg-background py-16">
+       <div className="bg-background py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
           <div className="space-y-12">
             {stores.map((store) => (
               <Card key={store.id} className="bg-card border border-border shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-secondary/50 border-b border-border">
-                  <Image
-                    src={store.logo}
-                    width={80}
-                    height={80}
-                    alt={`لوگوی ${store.name}`}
-                    className="rounded-full border-4 border-background shadow-md"
-                    data-ai-hint={store.aiHint}
-                  />
+                  <Avatar className="w-16 h-16 border-4 border-background shadow-md">
+                    <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
+                    <AvatarFallback>{store.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
                   <div className="text-center sm:text-right flex-grow">
                     <CardTitle className="text-2xl font-bold text-card-foreground">{store.name}</CardTitle>
                     {store.offersInstallments && (
@@ -558,19 +559,19 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent className="p-6">
                   <h4 className="text-lg font-semibold mb-4 text-muted-foreground">محصولات منتخب برای خرید گروهی:</h4>
-                   <Carousel
+                  <Carousel
                     opts={{
                       align: "start",
                       direction: "rtl", // Set carousel direction to RTL
                     }}
-                    className="w-full"
+                    className="w-full relative" // Add relative for positioning arrows
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
                         <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4">
-                          <Card className="overflow-hidden h-full flex flex-col border">
-                             <CardHeader className="p-0 relative">
-                              <Image src={product.image} width={300} height={180} alt={product.title} className="w-full h-40 object-cover" data-ai-hint={product.aiHint}/>
+                          <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md">
+                            <CardHeader className="p-0 relative aspect-[4/3]">
+                              <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
                               <Badge variant="destructive" className="absolute top-2 right-2">
                                 {product.discount}٪ تخفیف
                               </Badge>
@@ -581,27 +582,28 @@ export default function HomePage() {
                                 </Badge>
                               )}
                             </CardHeader>
-                             <CardContent className="p-3 flex-grow">
-                              <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden">{product.title}</h5>
-                              <div className="flex justify-between items-baseline text-xs mb-2">
+                            <CardContent className="p-3 flex-grow flex flex-col">
+                              <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{product.title}</h5>
+                              <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
                                 <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
                                 <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
                               </div>
-                              <Progress value={(product.members / product.requiredMembers) * 100} className="h-1.5" />
-                               <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                              <Progress value={(product.members / product.requiredMembers) * 100} className="h-1.5 mt-auto" />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
                                 <span>{product.members}/{product.requiredMembers} نفر</span>
                                 <span>{product.remainingTime}</span>
                               </div>
                             </CardContent>
                             <CardFooter className="p-3 pt-0">
-                                <Button onClick={() => handleJoinClick(product.title)} size="sm" variant="default" className="w-full text-xs">پیوستن</Button>
+                              <Button onClick={() => handleJoinClick(product.title)} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button>
                             </CardFooter>
                           </Card>
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 disabled:opacity-50"/>
-                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 disabled:opacity-50"/>
+                     {/* Carousel Arrows - Enhanced Styling */}
+                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
+                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
                   </Carousel>
                 </CardContent>
               </Card>
@@ -611,27 +613,34 @@ export default function HomePage() {
       </div>
 
 
-      {/* لیست فروشندگان عمده */}
+     {/* لیست فروشندگان عمده - بازطراحی شده */}
       <div className="bg-secondary py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">فروشندگان عمده همکار</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
             {wholesalers.map((wholesaler) => (
-              <Card key={wholesaler.id} className="bg-card text-center p-6 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                <Image
-                  src={wholesaler.logo}
-                  width={80}
-                  height={80}
-                  alt={`لوگوی ${wholesaler.name}`}
-                  className="rounded-full mx-auto mb-4 border-2 border-border"
-                  data-ai-hint={wholesaler.aiHint}
-                />
-                <CardTitle className="text-lg font-semibold mb-2 text-card-foreground">{wholesaler.name}</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground mb-4">{wholesaler.description}</CardDescription>
-                <Button variant="link" size="sm" className="text-primary hover:text-primary/80">
-                  مشاهده محصولات
-                  <ChevronLeft className="mr-1 h-4 w-4" />
-                </Button>
+              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center">
+                 <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-md">
+                  <AvatarImage src={wholesaler.logo} alt={`لوگوی ${wholesaler.name}`} data-ai-hint={wholesaler.aiHint} />
+                  <AvatarFallback>{wholesaler.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <CardTitle className="text-md font-semibold mb-1 text-card-foreground text-center h-10 overflow-hidden">{wholesaler.name}</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground mb-3 text-center line-clamp-2 h-8">{wholesaler.description}</CardDescription>
+                 {/* Product Circles */}
+                 {wholesaler.products && wholesaler.products.length > 0 && (
+                   <div className="flex -space-x-2 rtl:space-x-reverse justify-center mt-2 mb-4">
+                     {wholesaler.products.slice(0, 3).map((product) => (
+                       <Avatar key={product.id} className="w-8 h-8 border-2 border-background shadow-sm">
+                         <AvatarImage src={product.image} alt={product.title} data-ai-hint={product.aiHint} />
+                         <AvatarFallback>{product.title.charAt(0)}</AvatarFallback>
+                       </Avatar>
+                     ))}
+                   </div>
+                 )}
+                 <Button variant="link" size="sm" className="text-primary hover:text-primary/80 mt-auto text-xs">
+                   مشاهده محصولات
+                   <ChevronLeft className="mr-1 h-3 w-3" />
+                 </Button>
               </Card>
             ))}
           </div>

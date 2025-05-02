@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown } from 'lucide-react'; // Import necessary icons
+import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X } from 'lucide-react'; // Import necessary icons, including X for close
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +13,15 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"; // Import NavigationMenu components
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose, // Import SheetClose
+} from "@/components/ui/sheet"; // Import Sheet components
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -59,6 +68,8 @@ ListItem.displayName = "ListItem"
 
 
 const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
   return (
     <header className="bg-background shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
@@ -68,7 +79,7 @@ const Header = () => {
                <ShoppingBasket className="h-8 w-8 transition-transform hover:scale-110 duration-300" />
                <span className="hidden sm:inline">خرید<span className="text-blue-600">گروهی</span></span>
             </Link>
-            {/* Mega Menu - Adjusted for RTL */}
+            {/* Desktop Mega Menu - Adjusted for RTL */}
             <NavigationMenu dir="rtl" className="hidden lg:flex"> {/* Ensure dir="rtl" on NavigationMenu */}
               <NavigationMenuList>
                 <NavigationMenuItem>
@@ -112,11 +123,54 @@ const Header = () => {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-             {/* Mobile Menu Trigger (Optional) */}
-             <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">منو</span>
-             </Button>
+             {/* Mobile Menu Trigger */}
+             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                   <Button variant="ghost" size="icon" className="lg:hidden">
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">باز کردن منو</span>
+                   </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]" dir="rtl">
+                  <SheetHeader className="mb-6 border-b pb-4">
+                    <SheetTitle className="flex items-center gap-2 text-primary">
+                      <ShoppingBasket className="h-6 w-6" />
+                       <span className="text-lg font-bold">خرید<span className="text-blue-600">گروهی</span></span>
+                    </SheetTitle>
+                     <SheetClose asChild>
+                        <Button variant="ghost" size="icon" className="absolute left-4 top-4">
+                           <X className="h-5 w-5" />
+                           <span className="sr-only">بستن</span>
+                        </Button>
+                      </SheetClose>
+                  </SheetHeader>
+                  <nav className="flex flex-col space-y-4">
+                     <SheetClose asChild>
+                      <Link href="/" className="text-lg text-foreground hover:text-primary transition-colors py-2">صفحه اصلی</Link>
+                    </SheetClose>
+                     <SheetClose asChild>
+                       <Link href="/categories" className="text-lg text-foreground hover:text-primary transition-colors py-2">دسته‌بندی‌ها</Link>
+                     </SheetClose>
+                     <SheetClose asChild>
+                       <Link href="/active-deals" className="text-lg text-foreground hover:text-primary transition-colors py-2">خریدهای فعال</Link>
+                     </SheetClose>
+                     <SheetClose asChild>
+                       <Link href="/about" className="text-lg text-foreground hover:text-primary transition-colors py-2">درباره ما</Link>
+                     </SheetClose>
+                    {/* Add category links or dropdown here if needed */}
+                     <div className="pt-6 border-t mt-4 space-y-3">
+                        <Button variant="outline" className="w-full justify-start">
+                           <UserPlus className="ml-2 rtl:mr-2 h-4 w-4" />
+                           ثبت نام
+                         </Button>
+                         <Button className="w-full justify-start">
+                           <LogIn className="ml-2 rtl:mr-2 h-4 w-4" />
+                           ورود
+                         </Button>
+                     </div>
+                  </nav>
+                </SheetContent>
+              </Sheet>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
              <div className="relative hidden sm:block">
