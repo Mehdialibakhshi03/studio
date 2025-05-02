@@ -11,8 +11,7 @@ const Header = () => {
            <span className="text-2xl font-bold text-primary">خرید گروهی</span>
         </Link>
         <nav className="flex items-center space-x-4 rtl:space-x-reverse">
-          <Button variant="ghost">دسته بندی ها</Button>
-          <Button variant="ghost">تخفیف ها</Button>
+          {/* Removed placeholder buttons */}
           <Button variant="outline">
             <UserPlus className="ml-2 h-4 w-4" />
             ثبت نام
