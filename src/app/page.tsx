@@ -68,6 +68,19 @@ const groupPurchases = [
     category: 'food', // Use slug
     aiHint: 'meat package',
   },
+    {
+    id: 9, // Add a new item for the requests section example
+    title: 'گوشی شیائومی Poco X6 Pro',
+    image: '/images/xiaomi-poco.jpg', // Use a placeholder or actual image
+    originalPrice: 15500000,
+    groupPrice: 13800000,
+    discount: 11,
+    members: 7,
+    requiredMembers: 20,
+    remainingTime: '۵ روز',
+    category: 'digital',
+    aiHint: 'smartphone xiaomi poco',
+  },
   {
     id: 5,
     title: 'زعفران درجه یک قائنات ۵ مثقالی',
@@ -224,12 +237,13 @@ export default function HomePage() {
                 />
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               </div>
-              <button className="bg-gray-100 p-2 rounded-full relative">
+              <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5 text-gray-600" />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   ۳
                 </span>
-              </button>
+                 <span className="sr-only">Notifications</span>
+              </Button>
               <Button>
                 ورود / ثبت‌نام
               </Button>
@@ -246,10 +260,10 @@ export default function HomePage() {
               <h1 className="text-4xl font-bold mb-4">با هم بخرید و تخفیف بگیرید!</h1>
               <p className="text-lg mb-6">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
               <div className="flex space-x-4 rtl:space-x-reverse">
-                <Button variant="default">
+                <Button variant="secondary"> {/* Changed variant for better contrast */}
                   شروع خرید گروهی
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600"> {/* Adjusted outline button style */}
                   راهنمای خرید
                 </Button>
               </div>
@@ -269,7 +283,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="md:w-1/2 flex justify-center">
-              <Image src="/images/group-shopping.jpg" width={500} height={300} alt="خرید گروهی" className="rounded-lg shadow-lg" />
+              <Image src="https://picsum.photos/500/300" width={500} height={300} alt="خرید گروهی" className="rounded-lg shadow-lg" data-ai-hint="group shopping people"/>
             </div>
           </div>
         </div>
@@ -285,7 +299,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-center">
               <span className="ml-3 rtl:mr-3">فقط تا پایان هفته</span>
-              <Button variant="default">
+              <Button variant="secondary"> {/* Changed variant for better contrast */}
                 مشاهده پیشنهادات
               </Button>
             </div>
@@ -300,11 +314,11 @@ export default function HomePage() {
           {specialOffers.map(offer => (
             <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow text-white`}>
               <div className="relative">
-                <Image src={offer.image} width={600} height={250} alt={offer.title} className="w-full h-40 object-cover opacity-50" data-ai-hint="discount offer sale" />
+                <Image src={`https://picsum.photos/seed/${offer.id}/600/250`} width={600} height={250} alt={offer.title} className="w-full h-40 object-cover opacity-50" data-ai-hint="discount offer sale" />
                 <div className="absolute inset-0 flex flex-col justify-center items-center p-4 text-center">
                   <h3 className="font-bold text-xl mb-2">{offer.title}</h3>
                   <p className="text-sm">{offer.description}</p>
-                  <Button variant="outline">
+                  <Button variant="outline" className="mt-4 border-white text-white hover:bg-white hover:text-current"> {/* Adjusted outline button style */}
                     مشاهده جزئیات
                   </Button>
                 </div>
@@ -317,11 +331,11 @@ export default function HomePage() {
       {/* دسته‌بندی‌ها */}
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">دسته‌بندی‌های محبوب</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map(category => (
-            <Link href={`/category/${category.slug}`} key={category.id} className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow">
+            <Link href={`/category/${category.slug}`} key={category.id} className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow aspect-square"> {/* Made aspect-square */}
               <div className="text-3xl mb-2">{category.icon}</div>
-              <div className="text-sm font-medium text-gray-700">{category.name}</div>
+              <div className="text-sm font-medium text-gray-700 text-center">{category.name}</div> {/* Centered text */}
             </Link>
           ))}
         </div>
@@ -333,35 +347,35 @@ export default function HomePage() {
           <div className="bg-white rounded-lg p-6 shadow-md">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center">
-                <Image src="/images/iran-flag.png" width={50} height={50} alt="پرچم ایران" className="w-8 h-8 rounded-full ml-2 rtl:mr-2" data-ai-hint="iran flag" />
+                <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-8 h-8 rounded-full ml-2 rtl:mr-2" data-ai-hint="iran flag" />
                 <h2 className="text-2xl font-bold">محصولات ایرانی برتر</h2>
               </div>
-              <a href="#" className="text-blue-600 text-sm flex items-center">
+              <Link href="#" className="text-blue-600 text-sm flex items-center">
                 مشاهده همه
-                <ChevronLeft className="h-4 w-4" />
-              </a>
+                <ChevronLeft className="h-4 w-4 mr-1 rtl:ml-1" />
+              </Link>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
-                <div key={item.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div key={item.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-card">
                   <div className="relative">
-                    <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-40 object-cover" data-ai-hint={item.aiHint}/>
-                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                    <Image src={`https://picsum.photos/seed/${item.id+10}/300/200`} width={300} height={200} alt={item.title} className="w-full h-40 object-cover" data-ai-hint={item.aiHint}/>
+                    <Badge variant="destructive" className="absolute top-2 right-2">
                       {item.discount}٪ تخفیف
-                    </div>
-                    <div className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    </Badge>
+                    <Badge variant="secondary" className="absolute top-2 left-2">
                       ایران
-                    </div>
+                    </Badge>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-bold text-gray-800 mb-2 text-sm h-12 overflow-hidden">{item.title}</h3>
+                    <h3 className="font-bold text-card-foreground mb-2 text-sm h-12 overflow-hidden">{item.title}</h3>
                     <div className="flex justify-between text-sm items-center">
-                      <div className="flex items-center">
-                        <Users className="h-3 w-3 ml-1 rtl:mr-1 text-gray-500" />
-                        <span className="text-xs text-gray-600">{item.members}/{item.requiredMembers}</span>
+                      <div className="flex items-center text-muted-foreground">
+                        <Users className="h-3 w-3 ml-1 rtl:mr-1" />
+                        <span className="text-xs">{item.members}/{item.requiredMembers}</span>
                       </div>
-                      <div className="text-green-600 font-bold">{formatNumber(item.groupPrice)} تومان</div>
+                      <div className="text-primary font-bold">{formatNumber(item.groupPrice)} تومان</div>
                     </div>
                   </div>
                 </div>
@@ -371,18 +385,90 @@ export default function HomePage() {
         </div>
       </div>
 
+     {/* درخواست‌های خرید گروهی */}
+      <div className="bg-gray-100 py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">درخواست‌های خرید گروهی</h2>
+            <Button variant="outline">ایجاد درخواست جدید</Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Example: Filter for items perhaps marked as 'requested' or just show a few */}
+            {groupPurchases.slice(4, 8).map(item => ( // Adjust slice or add a filter logic
+              <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
+                <div className="relative">
+                   <Image src={`https://picsum.photos/seed/${item.id + 20}/300/200`} width={300} height={200} alt={item.title} className="w-full h-48 object-cover" data-ai-hint={item.aiHint} />
+                  <Badge variant="destructive" className="absolute top-2 right-2">
+                    {item.discount}٪ تخفیف
+                  </Badge>
+                   <Badge variant="secondary" className="absolute top-2 left-2">
+                    {getCategoryNameBySlug(item.category)}
+                  </Badge>
+                  {item.isIranian && (
+                    <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                      <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                      تولید ایران
+                    </Badge>
+                  )}
+                  {item.isFeatured && (
+                    <Badge variant="secondary" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center">
+                      <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
+                      پیشنهاد ویژه
+                    </Badge>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="font-bold text-gray-800 mb-2 text-lg">{item.title}</h3>
+                  <div className="flex justify-between mb-2">
+                    <div className="text-gray-500 line-through text-sm">{formatNumber(item.originalPrice)} تومان</div>
+                    <div className="text-green-600 font-bold">{formatNumber(item.groupPrice)} تومان</div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 ml-1 rtl:mr-1" />
+                        <span>{item.members} / {item.requiredMembers} نفر</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
+                        <span>{item.remainingTime}</span>
+                      </div>
+                    </div>
+
+                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2 mt-2" />
+                  </div>
+
+                  <Button onClick={() => handleJoinClick(item.title)} variant="default" className="mt-4 w-full flex items-center justify-center">
+                    <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                    پیوستن به گروه
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center mt-8">
+            <Button variant="outline">
+              مشاهده همه درخواست‌ها
+            </Button>
+          </div>
+        </div>
+      </div>
+
+
       {/* خریدهای گروهی فعال */}
       <div className="bg-white py-8">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">خریدهای گروهی فعال</h2>
             <div className="flex">
-              <button className="p-2 bg-gray-100 rounded-full mr-2">
+               <Button variant="ghost" size="icon" className="mr-2 rtl:ml-2">
                 <ChevronRight className="h-5 w-5" />
-              </button>
-              <button className="p-2 bg-gray-100 rounded-full">
+              </Button>
+              <Button variant="ghost" size="icon">
                 <ChevronLeft className="h-5 w-5" />
-              </button>
+              </Button>
             </div>
           </div>
           
@@ -390,6 +476,7 @@ export default function HomePage() {
             <Button
               variant={activeCategory === 'همه' ? 'default' : 'outline'}
               onClick={() => setActiveCategory('همه')}
+              className="whitespace-nowrap"
             >
               همه
             </Button>
@@ -398,6 +485,7 @@ export default function HomePage() {
                 key={category.id}
                 variant={activeCategory === category.name ? 'default' : 'outline'}
                 onClick={() => setActiveCategory(category.name)}
+                className="whitespace-nowrap"
               >
                 {category.name}
               </Button>
@@ -408,24 +496,24 @@ export default function HomePage() {
             {filteredItems.map(item => (
               <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
                 <div className="relative">
-                  <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover" data-ai-hint={item.aiHint} />
-                  <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                  <Image src={`https://picsum.photos/seed/${item.id}/300/200`} width={300} height={200} alt={item.title} className="w-full h-48 object-cover" data-ai-hint={item.aiHint} />
+                  <Badge variant="destructive" className="absolute top-2 right-2">
                     {item.discount}٪ تخفیف
-                  </div>
-                  <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                  </Badge>
+                   <Badge variant="secondary" className="absolute top-2 left-2">
                     {getCategoryNameBySlug(item.category)}
-                  </div>
+                  </Badge>
                   {item.isIranian && (
-                    <div className="absolute top-10 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center">
-                      <Image src="/images/iran-flag.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                     <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                      <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                       تولید ایران
-                    </div>
+                    </Badge>
                   )}
                   {item.isFeatured && (
-                    <div className="absolute bottom-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center">
+                    <Badge variant="secondary" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center">
                       <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                       پیشنهاد ویژه
-                    </div>
+                    </Badge>
                   )}
                 </div>
                 <div className="p-4">
@@ -520,13 +608,13 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold mb-2">از تخفیف‌های ویژه باخبر شوید</h3>
             <p className="text-gray-600">با عضویت در خبرنامه ما، از جدیدترین خریدهای گروهی و تخفیف‌های ویژه باخبر شوید.</p>
           </div>
-          <div className="md:w-1/2 flex">
+          <div className="md:w-1/2 flex w-full md:w-auto"> {/* Ensure flex takes full width on mobile */}
             <Input
               type="email"
               placeholder="ایمیل خود را وارد کنید..."
-              className="flex-grow px-4 py-3 rounded-r-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-0 focus:outline-none focus:ring-2 focus:ring-blue-500" /* Adjusted rounding */
             />
-            <Button>
+            <Button className="rounded-l-lg rounded-r-none"> {/* Adjusted rounding */}
               عضویت
             </Button>
           </div>
@@ -544,7 +632,7 @@ export default function HomePage() {
             <div>
               <h4 className="font-bold mb-4">دسترسی سریع</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-white">صفحه اصلی</Link></li>
+                <li><Link href="/" className="hover:text-white">صفحه اصلی</Link></li>
                 <li><Link href="#" className="hover:text-white">خریدهای فعال</Link></li>
                 <li><Link href="#" className="hover:text-white">دسته‌بندی‌ها</Link></li>
                 <li><Link href="#" className="hover:text-white">درباره ما</Link></li>
@@ -567,20 +655,20 @@ export default function HomePage() {
                 <p>ایمیل: info@kharid-groupi.ir</p>
               </div>
               <div className="flex space-x-4 rtl:space-x-reverse mt-4">
-                <Link href="#" className="text-gray-400 hover:text-white">
+                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Twitter">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
                 </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
+                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Instagram">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
                 </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
+                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Facebook">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
                 </Link>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-            <p>© {new Date().getFullYear()} خرید گروهی - تمامی حقوق محفوظ است.</p>
+          <div className="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+            <p>&copy; {new Date().getFullYear()} خرید گروهی - تمامی حقوق محفوظ است.</p>
           </div>
         </div>
       </footer>
