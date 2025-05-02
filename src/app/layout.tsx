@@ -13,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl"> {/* Set lang to Persian and direction to right-to-left */}
+    <html lang="fa" dir="rtl">
       <body className="antialiased">
         {children}
-        <Toaster /> {/* Add Toaster for notifications */}
+        <Toaster />
       </body>
     </html>
   );
