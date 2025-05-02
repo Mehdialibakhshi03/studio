@@ -82,13 +82,28 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+        'fade-in': { // Added fade-in
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'fade-in-right': { // Added fade-in-right
+          '0%': { opacity: '0', transform: 'translateX(20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'fade-in-left': { // Added fade-in-left
+          '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fade-in 0.5s ease-out forwards', // Added forwards
+        'fade-in-right': 'fade-in-right 0.6s ease-out forwards', // Added forwards
+        'fade-in-left': 'fade-in-left 0.6s ease-out forwards', // Added forwards
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('tailwind-scrollbar'),], // Added scrollbar plugin
 } satisfies Config;

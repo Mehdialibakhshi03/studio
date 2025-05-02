@@ -10,13 +10,15 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
 import Link from 'next/link';
+import Header from '@/components/header'; // Import Header component
+import Footer from '@/components/footer'; // Import Footer component
 
 // تعریف داده‌های نمونه برای خریدهای گروهی
 const groupPurchases = [
   {
     id: 1,
     title: 'گوشی سامسونگ Galaxy S24',
-    image: '/images/samsung-s24.jpg',
+    image: 'https://picsum.photos/seed/1/300/200', // Changed to picsum
     originalPrice: 45000000,
     groupPrice: 39500000,
     discount: 12,
@@ -30,7 +32,7 @@ const groupPurchases = [
   {
     id: 2,
     title: 'روغن آفتابگردان لادن ۱ لیتری (بسته ۳ عددی)',
-    image: '/images/olive-oil.jpg',
+    image: 'https://picsum.photos/seed/2/300/200', // Changed to picsum
     originalPrice: 580000,
     groupPrice: 435000,
     discount: 25,
@@ -44,7 +46,7 @@ const groupPurchases = [
   {
     id: 3,
     title: 'ماشین لباسشویی اسنوا ۸ کیلویی',
-    image: '/images/washing-machine.jpg',
+    image: 'https://picsum.photos/seed/3/300/200', // Changed to picsum
     originalPrice: 28500000,
     groupPrice: 24225000,
     discount: 15,
@@ -58,7 +60,7 @@ const groupPurchases = [
   {
     id: 4,
     title: 'بسته گوشت گوسفندی تازه ۲ کیلویی',
-    image: '/images/meat-package.jpg',
+    image: 'https://picsum.photos/seed/4/300/200', // Changed to picsum
     originalPrice: 1200000,
     groupPrice: 984000,
     discount: 18,
@@ -71,7 +73,7 @@ const groupPurchases = [
     {
     id: 9, // Add a new item for the requests section example
     title: 'گوشی شیائومی Poco X6 Pro',
-    image: '/images/xiaomi-poco.jpg', // Use a placeholder or actual image
+    image: 'https://picsum.photos/seed/9/300/200', // Use a placeholder or actual image
     originalPrice: 15500000,
     groupPrice: 13800000,
     discount: 11,
@@ -84,7 +86,7 @@ const groupPurchases = [
   {
     id: 5,
     title: 'زعفران درجه یک قائنات ۵ مثقالی',
-    image: '/images/saffron.jpg',
+    image: 'https://picsum.photos/seed/5/300/200', // Changed to picsum
     originalPrice: 1850000,
     groupPrice: 1480000,
     discount: 20,
@@ -99,7 +101,7 @@ const groupPurchases = [
   {
     id: 6,
     title: 'تلویزیون ال‌جی ۵۵ اینچ ۴K',
-    image: '/images/smart-tv.jpg',
+    image: 'https://picsum.photos/seed/6/300/200', // Changed to picsum
     originalPrice: 38500000,
     groupPrice: 32725000,
     discount: 15,
@@ -112,7 +114,7 @@ const groupPurchases = [
   {
     id: 7,
     title: 'فرش دستباف کاشان ۹ متری',
-    image: '/images/carpet.jpg',
+    image: 'https://picsum.photos/seed/7/300/200', // Changed to picsum
     originalPrice: 18500000,
     groupPrice: 14800000,
     discount: 20,
@@ -127,7 +129,7 @@ const groupPurchases = [
   {
     id: 8,
     title: 'گز اصفهان درجه یک (جعبه ۱ کیلویی)',
-    image: '/images/gaz.jpg',
+    image: 'https://picsum.photos/seed/8/300/200', // Changed to picsum
     originalPrice: 950000,
     groupPrice: 760000,
     discount: 20,
@@ -158,27 +160,31 @@ const specialOffers = [
     id: 1,
     title: 'جشنواره نوروزی - تخفیف تا ۴۰٪',
     description: 'خرید گروهی محصولات نوروزی با تخفیف فوق‌العاده، فقط تا پایان اسفند',
-    image: '/images/norooz-offer.jpg',
-    bgColor: 'bg-green-600'
+    image: 'https://picsum.photos/seed/offer1/600/250', // Changed to picsum
+    bgColor: 'bg-green-600',
+    aiHint: 'new year sale offer',
   },
   {
     id: 2,
     title: 'محصولات ایرانی - حمایت از تولید ملی',
     description: 'خرید گروهی کالاهای ایرانی با کیفیت و قیمت مناسب',
-    image: '/images/iranian-products.jpg',
-    bgColor: 'bg-blue-600'
+    image: 'https://picsum.photos/seed/offer2/600/250', // Changed to picsum
+    bgColor: 'bg-blue-600',
+    aiHint: 'iranian product support',
   },
   {
     id: 3,
     title: 'صنایع دستی اصیل ایرانی',
     description: 'مجموعه‌ای از بهترین صنایع دستی استان‌های مختلف ایران',
-    image: '/images/handicrafts.jpg',
-    bgColor: 'bg-purple-600'
+    image: 'https://picsum.photos/seed/offer3/600/250', // Changed to picsum
+    bgColor: 'bg-purple-600',
+    aiHint: 'iranian handicraft art',
   }
 ];
 
 // تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
 const formatNumber = (num:number) => {
+  if (num === undefined || num === null) return '';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
@@ -200,6 +206,11 @@ export default function HomePage() {
   useEffect(() => {
     // شبیه‌سازی دریافت داده‌ها از سرور
     setFeaturedItems(groupPurchases);
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto'; // Cleanup on unmount
+    };
   }, []);
 
   // Filter items based on active category slug
@@ -214,60 +225,25 @@ export default function HomePage() {
   }
 
   return (
-    <div dir="rtl" className="font-['Vazirmatn'] bg-gray-50 min-h-screen">
-      {/* هدر */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <Link href="/" className="text-2xl font-bold text-green-600">خرید<span className="text-blue-600">گروهی</span></Link>
-              <nav className="hidden md:flex space-x-8 rtl:space-x-reverse">
-                <Link href="#" className="text-gray-700 hover:text-green-600 px-3">صفحه اصلی</Link>
-                <Link href="#" className="text-gray-700 hover:text-green-600 px-3">دسته‌بندی‌ها</Link>
-                <Link href="#" className="text-gray-700 hover:text-green-600 px-3">خریدهای فعال</Link>
-                <Link href="#" className="text-gray-700 hover:text-green-600 px-3">درباره ما</Link>
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="جستجو..."
-                  className="bg-gray-100 px-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-64"
-                />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-              </div>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5 text-gray-600" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  ۳
-                </span>
-                 <span className="sr-only">Notifications</span>
-              </Button>
-              <Button>
-                ورود / ثبت‌نام
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
+      <Header /> {/* Use Header component */}
 
       {/* بنر اصلی */}
-      <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white py-12">
+      <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl font-bold mb-4">با هم بخرید و تخفیف بگیرید!</h1>
-              <p className="text-lg mb-6">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
-              <div className="flex space-x-4 rtl:space-x-reverse">
-                <Button variant="secondary"> {/* Changed variant for better contrast */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-right animate-fade-in-right"> {/* Animation */}
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">با هم بخرید و تخفیف بگیرید!</h1>
+              <p className="text-lg lg:text-xl mb-8 text-blue-100">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
+              <div className="flex justify-center md:justify-start space-x-4 rtl:space-x-reverse">
+                <Button size="lg" variant="secondary" className="transition-transform hover:scale-105 duration-300"> {/* Changed variant for better contrast */}
                   شروع خرید گروهی
                 </Button>
-                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600"> {/* Adjusted outline button style */}
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 transition-transform hover:scale-105 duration-300"> {/* Adjusted outline button style */}
                   راهنمای خرید
                 </Button>
               </div>
-              <div className="flex items-center mt-8 text-sm">
+              <div className="flex items-center justify-center md:justify-start mt-10 text-sm">
                 <div className="flex items-center ml-6 rtl:mr-6">
                   <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
                   <span>تضمین اصالت کالا</span>
@@ -282,24 +258,24 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="md:w-1/2 flex justify-center">
-              <Image src="https://picsum.photos/500/300" width={500} height={300} alt="خرید گروهی" className="rounded-lg shadow-lg" data-ai-hint="group shopping people"/>
+            <div className="md:w-1/2 flex justify-center animate-fade-in-left"> {/* Animation */}
+              <Image src="https://picsum.photos/500/350" width={500} height={350} alt="خرید گروهی" className="rounded-lg shadow-2xl" data-ai-hint="group shopping people illustration"/>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* نوار کمپین */}
-      <div className="bg-red-600 text-white py-3">
+      <div className="bg-destructive text-destructive-foreground py-3 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-3 md:mb-0">
+            <div className="flex items-center mb-3 md:mb-0 animate-pulse"> {/* Animation */}
               <Gift className="h-6 w-6 ml-2 rtl:mr-2" />
               <span className="text-lg font-bold">جشنواره خرید کالای ایرانی با تخفیف ویژه تا ۴۰٪</span>
             </div>
             <div className="flex items-center">
-              <span className="ml-3 rtl:mr-3">فقط تا پایان هفته</span>
-              <Button variant="secondary"> {/* Changed variant for better contrast */}
+              <span className="ml-3 rtl:mr-3 text-sm">فقط تا پایان هفته</span>
+              <Button variant="secondary" size="sm" className="transition-transform hover:scale-105 duration-300"> {/* Changed variant and size */}
                 مشاهده پیشنهادات
               </Button>
             </div>
@@ -308,17 +284,17 @@ export default function HomePage() {
       </div>
 
       {/* تخفیف‌های شگفت‌انگیز */}
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">تخفیف‌های شگفت‌انگیز</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="container mx-auto px-4 py-12">
+        <h2 className="text-3xl font-bold mb-8 text-center">تخفیف‌های شگفت‌انگیز</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {specialOffers.map(offer => (
-            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow text-white`}>
+            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-white`}> {/* Animation & Styling */}
               <div className="relative">
-                <Image src={`https://picsum.photos/seed/${offer.id}/600/250`} width={600} height={250} alt={offer.title} className="w-full h-40 object-cover opacity-50" data-ai-hint="discount offer sale" />
-                <div className="absolute inset-0 flex flex-col justify-center items-center p-4 text-center">
+                <Image src={offer.image} width={600} height={250} alt={offer.title} className="w-full h-48 object-cover opacity-60 transition-opacity duration-300 hover:opacity-80" data-ai-hint={offer.aiHint} />
+                <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/60 to-transparent"> {/* Gradient Overlay */}
                   <h3 className="font-bold text-xl mb-2">{offer.title}</h3>
-                  <p className="text-sm">{offer.description}</p>
-                  <Button variant="outline" className="mt-4 border-white text-white hover:bg-white hover:text-current"> {/* Adjusted outline button style */}
+                  <p className="text-sm mb-4 line-clamp-2">{offer.description}</p>
+                  <Button variant="outline" className="mt-auto border-white text-white hover:bg-white hover:text-current transition-transform hover:scale-105 duration-300"> {/* Adjusted outline button style */}
                     مشاهده جزئیات
                   </Button>
                 </div>
@@ -329,56 +305,58 @@ export default function HomePage() {
       </div>
 
       {/* دسته‌بندی‌ها */}
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">دسته‌بندی‌های محبوب</h2>
+      <div className="container mx-auto px-4 py-12 bg-secondary rounded-xl"> {/* Added background */}
+        <h2 className="text-3xl font-bold mb-8 text-center text-secondary-foreground">دسته‌بندی‌های محبوب</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map(category => (
-            <Link href={`/category/${category.slug}`} key={category.id} className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow aspect-square"> {/* Made aspect-square */}
-              <div className="text-3xl mb-2">{category.icon}</div>
-              <div className="text-sm font-medium text-gray-700 text-center">{category.name}</div> {/* Centered text */}
+            <Link href={`/category/${category.slug}`} key={category.id} className="bg-card rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 aspect-square"> {/* Made aspect-square, added animation */}
+              <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">{category.icon}</div> {/* Icon animation */}
+              <div className="text-sm font-medium text-card-foreground text-center">{category.name}</div> {/* Centered text */}
             </Link>
           ))}
         </div>
       </div>
 
       {/* محصولات ایرانی برتر */}
-      <div className="bg-gray-100 py-8">
+      <div className="py-12">
         <div className="container mx-auto px-4">
-          <div className="bg-white rounded-lg p-6 shadow-md">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center">
-                <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-8 h-8 rounded-full ml-2 rtl:mr-2" data-ai-hint="iran flag" />
-                <h2 className="text-2xl font-bold">محصولات ایرانی برتر</h2>
+          <div className="bg-card rounded-lg p-6 shadow-lg border border-border"> {/* Enhanced styling */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+              <div className="flex items-center mb-4 sm:mb-0">
+                <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-10 h-10 rounded-full ml-3 rtl:mr-3 shadow-md" data-ai-hint="iran flag" />
+                <h2 className="text-3xl font-bold text-card-foreground">محصولات ایرانی برتر</h2>
               </div>
-              <Link href="#" className="text-blue-600 text-sm flex items-center">
+              <Link href="/iranian-products" className="text-primary hover:text-primary/80 text-sm font-medium flex items-center transition-colors duration-300">
                 مشاهده همه
-                <ChevronLeft className="h-4 w-4 mr-1 rtl:ml-1" />
+                <ChevronLeft className="h-4 w-4 mr-1 rtl:ml-1 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" /> {/* Arrow animation */}
               </Link>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
-                <div key={item.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-card">
-                  <div className="relative">
-                    <Image src={`https://picsum.photos/seed/${item.id+10}/300/200`} width={300} height={200} alt={item.title} className="w-full h-40 object-cover" data-ai-hint={item.aiHint}/>
-                    <Badge variant="destructive" className="absolute top-2 right-2">
-                      {item.discount}٪ تخفیف
-                    </Badge>
-                    <Badge variant="secondary" className="absolute top-2 left-2">
-                      ایران
-                    </Badge>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-bold text-card-foreground mb-2 text-sm h-12 overflow-hidden">{item.title}</h3>
-                    <div className="flex justify-between text-sm items-center">
-                      <div className="flex items-center text-muted-foreground">
-                        <Users className="h-3 w-3 ml-1 rtl:mr-1" />
-                        <span className="text-xs">{item.members}/{item.requiredMembers}</span>
+                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border"> {/* Card animation */}
+                   <CardHeader className="p-0 relative">
+                      <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint}/>
+                      <Badge variant="destructive" className="absolute top-2 right-2">
+                        {item.discount}٪ تخفیف
+                      </Badge>
+                      <Badge variant="secondary" className="absolute top-2 left-2 flex items-center">
+                         <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
+                         ایران
+                      </Badge>
+                   </CardHeader>
+                   <CardContent className="p-4">
+                      <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden">{item.title}</h3>
+                      <div className="flex justify-between text-sm items-center text-muted-foreground mb-3">
+                        <div className="flex items-center">
+                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
+                           <span>{item.members}/{item.requiredMembers}</span>
+                        </div>
+                         <span className="text-primary font-bold text-lg">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></span>
                       </div>
-                      <div className="text-primary font-bold">{formatNumber(item.groupPrice)} تومان</div>
-                    </div>
-                  </div>
-                </div>
+                       <Button variant="outline" size="sm" className="w-full transition-transform hover:scale-105 duration-300">مشاهده و پیوستن</Button>
+                   </CardContent>
+                </Card>
               ))}
             </div>
           </div>
@@ -386,23 +364,25 @@ export default function HomePage() {
       </div>
 
      {/* درخواست‌های خرید گروهی */}
-      <div className="bg-gray-100 py-8">
+      <div className="bg-secondary py-12">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">درخواست‌های خرید گروهی</h2>
-            <Button variant="outline">ایجاد درخواست جدید</Button>
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-secondary-foreground mb-4 sm:mb-0">درخواست‌های خرید گروهی</h2>
+            <Button variant="default" className="transition-transform hover:scale-105 duration-300"> {/* Animation */}
+                ایجاد درخواست جدید
+             </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Example: Filter for items perhaps marked as 'requested' or just show a few */}
             {groupPurchases.slice(4, 8).map(item => ( // Adjust slice or add a filter logic
-              <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
-                <div className="relative">
-                   <Image src={`https://picsum.photos/seed/${item.id + 20}/300/200`} width={300} height={200} alt={item.title} className="w-full h-48 object-cover" data-ai-hint={item.aiHint} />
+              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"> {/* Animation */}
+                <CardHeader className="p-0 relative">
+                   <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint} />
                   <Badge variant="destructive" className="absolute top-2 right-2">
                     {item.discount}٪ تخفیف
                   </Badge>
-                   <Badge variant="secondary" className="absolute top-2 left-2">
+                   <Badge variant="outline" className="absolute top-2 left-2 bg-background/80"> {/* Adjusted Badge */}
                     {getCategoryNameBySlug(item.category)}
                   </Badge>
                   {item.isIranian && (
@@ -412,21 +392,21 @@ export default function HomePage() {
                     </Badge>
                   )}
                   {item.isFeatured && (
-                    <Badge variant="secondary" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center">
+                    <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md"> {/* Adjusted Badge */}
                       <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                       پیشنهاد ویژه
                     </Badge>
                   )}
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-gray-800 mb-2 text-lg">{item.title}</h3>
-                  <div className="flex justify-between mb-2">
-                    <div className="text-gray-500 line-through text-sm">{formatNumber(item.originalPrice)} تومان</div>
-                    <div className="text-green-600 font-bold">{formatNumber(item.groupPrice)} تومان</div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                  <div className="flex justify-between items-baseline mb-3">
+                    <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
+                    <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                   </div>
 
-                  <div className="mt-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+                  <div className="mt-4 space-y-2">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-1">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                         <span>{item.members} / {item.requiredMembers} نفر</span>
@@ -437,19 +417,20 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2 mt-2" />
+                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
                   </div>
-
-                  <Button onClick={() => handleJoinClick(item.title)} variant="default" className="mt-4 w-full flex items-center justify-center">
-                    <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
-                    پیوستن به گروه
-                  </Button>
-                </div>
-              </div>
+                 </CardContent>
+                 <CardFooter className="p-4 pt-0">
+                      <Button onClick={() => handleJoinClick(item.title)} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Animation */}
+                        <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                        پیوستن به گروه
+                      </Button>
+                 </CardFooter>
+              </Card>
             ))}
           </div>
-          <div className="flex justify-center mt-8">
-            <Button variant="outline">
+          <div className="flex justify-center mt-10">
+            <Button variant="outline" className="transition-transform hover:scale-105 duration-300"> {/* Animation */}
               مشاهده همه درخواست‌ها
             </Button>
           </div>
@@ -458,25 +439,25 @@ export default function HomePage() {
 
 
       {/* خریدهای گروهی فعال */}
-      <div className="bg-white py-8">
+      <div className="bg-background py-12">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">خریدهای گروهی فعال</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
             <div className="flex">
-               <Button variant="ghost" size="icon" className="mr-2 rtl:ml-2">
+               <Button variant="ghost" size="icon" className="mr-2 rtl:ml-2 transition-transform hover:scale-110 duration-300"> {/* Animation */}
                 <ChevronRight className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="transition-transform hover:scale-110 duration-300"> {/* Animation */}
                 <ChevronLeft className="h-5 w-5" />
               </Button>
             </div>
           </div>
-          
-          <div className="flex space-x-4 rtl:space-x-reverse mb-8 overflow-x-auto pb-4">
+
+          <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary"> {/* Styled scrollbar */}
             <Button
               variant={activeCategory === 'همه' ? 'default' : 'outline'}
               onClick={() => setActiveCategory('همه')}
-              className="whitespace-nowrap"
+              className="whitespace-nowrap transition-transform hover:scale-105 duration-300" // Animation
             >
               همه
             </Button>
@@ -485,7 +466,7 @@ export default function HomePage() {
                 key={category.id}
                 variant={activeCategory === category.name ? 'default' : 'outline'}
                 onClick={() => setActiveCategory(category.name)}
-                className="whitespace-nowrap"
+                className="whitespace-nowrap transition-transform hover:scale-105 duration-300" // Animation
               >
                 {category.name}
               </Button>
@@ -494,13 +475,13 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredItems.map(item => (
-              <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  <Image src={`https://picsum.photos/seed/${item.id}/300/200`} width={300} height={200} alt={item.title} className="w-full h-48 object-cover" data-ai-hint={item.aiHint} />
+              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"> {/* Animation */}
+                 <CardHeader className="p-0 relative">
+                  <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint} />
                   <Badge variant="destructive" className="absolute top-2 right-2">
                     {item.discount}٪ تخفیف
                   </Badge>
-                   <Badge variant="secondary" className="absolute top-2 left-2">
+                   <Badge variant="outline" className="absolute top-2 left-2 bg-background/80"> {/* Adjusted Badge */}
                     {getCategoryNameBySlug(item.category)}
                   </Badge>
                   {item.isIranian && (
@@ -510,21 +491,21 @@ export default function HomePage() {
                     </Badge>
                   )}
                   {item.isFeatured && (
-                    <Badge variant="secondary" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center">
+                    <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md"> {/* Adjusted Badge */}
                       <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                       پیشنهاد ویژه
                     </Badge>
                   )}
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-gray-800 mb-2 text-lg">{item.title}</h3>
-                  <div className="flex justify-between mb-2">
-                    <div className="text-gray-500 line-through text-sm">{formatNumber(item.originalPrice)} تومان</div>
-                    <div className="text-green-600 font-bold">{formatNumber(item.groupPrice)} تومان</div>
+                 </CardHeader>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                  <div className="flex justify-between items-baseline mb-3">
+                    <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
+                    <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                   </div>
-                  
-                  <div className="mt-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+
+                  <div className="mt-4 space-y-2">
+                    <div className="flex justify-between text-sm text-muted-foreground mb-1">
                       <div className="flex items-center">
                         <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                         <span>{item.members} / {item.requiredMembers} نفر</span>
@@ -534,21 +515,22 @@ export default function HomePage() {
                         <span>{item.remainingTime}</span>
                       </div>
                     </div>
-                    
-                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2 mt-2" />
+
+                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
                   </div>
-                  
-                  <Button onClick={() => handleJoinClick(item.title)} variant="default" className="mt-4 w-full flex items-center justify-center">
-                    <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
-                    پیوستن به گروه
-                  </Button>
-                </div>
-              </div>
+                 </CardContent>
+                 <CardFooter className="p-4 pt-0">
+                      <Button onClick={() => handleJoinClick(item.title)} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Animation */}
+                        <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                        پیوستن به گروه
+                      </Button>
+                 </CardFooter>
+              </Card>
             ))}
           </div>
-          
-          <div className="flex justify-center mt-8">
-            <Button variant="outline">
+
+          <div className="flex justify-center mt-10">
+            <Button variant="outline" className="transition-transform hover:scale-105 duration-300"> {/* Animation */}
               مشاهده همه خریدهای گروهی
             </Button>
           </div>
@@ -556,8 +538,8 @@ export default function HomePage() {
       </div>
 
      {/* Benefits Section */}
-      <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-center mb-12">چرا خرید گروهی؟</h2>
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-12">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", color: "blue" },
@@ -565,37 +547,40 @@ export default function HomePage() {
             { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", color: "yellow" },
             { icon: Globe, title: "حمایت از تولید ملی", description: "با خرید کالاهای ایرانی، به اقتصاد کشور کمک کنید.", color: "red" }
           ].map((benefit, index) => (
-            <div key={index} className="bg-card p-6 rounded-xl shadow-md text-center border border-border hover:border-primary transition-colors">
-              <div className={`w-16 h-16 bg-${benefit.color}-100 dark:bg-${benefit.color}-900/50 rounded-full flex items-center justify-center mx-auto mb-4`}>
-                <benefit.icon className={`h-8 w-8 text-${benefit.color}-600 dark:text-${benefit.color}-400`} />
+            <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1 group"> {/* Animation & Styling */}
+              <div className={`relative w-20 h-20 bg-${benefit.color}-100 dark:bg-${benefit.color}-900/50 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}> {/* Icon container animation */}
+                 {/* Optional: Add a subtle background pattern or effect */}
+                <div className={`absolute inset-0 bg-${benefit.color}-500 opacity-10 rounded-full animate-ping group-hover:animate-none`}></div>
+                <benefit.icon className={`h-10 w-10 text-${benefit.color}-600 dark:text-${benefit.color}-400 relative z-10`} />
               </div>
-              <h3 className="font-bold text-xl mb-2 text-card-foreground">{benefit.title}</h3>
-              <p className="text-muted-foreground">{benefit.description}</p>
+              <h3 className="font-bold text-xl mb-3 text-card-foreground">{benefit.title}</h3>
+              <p className="text-muted-foreground text-sm">{benefit.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* بخش آمار */}
-      <div className="bg-blue-600 text-white py-12">
+      <div className="bg-gradient-to-br from-blue-700 to-primary text-white py-16 rounded-lg my-12 container mx-auto px-4 shadow-xl"> {/* Gradient & Styling */}
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-12">با ما همراه شوید</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold mb-2">+۲۵,۰۰۰</div>
-              <div>کاربر فعال</div>
+             {/* Added animation to stats */}
+            <div className="transition-transform hover:scale-110 duration-300">
+              <div className="text-5xl font-bold mb-2">+۲۵,۰۰۰</div>
+              <div className="text-blue-200">کاربر فعال</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">+۱۸۰</div>
-              <div>خرید گروهی موفق</div>
+            <div className="transition-transform hover:scale-110 duration-300">
+              <div className="text-5xl font-bold mb-2">+۱۸۰</div>
+              <div className="text-blue-200">خرید گروهی موفق</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">۲۵٪</div>
-              <div>میانگین تخفیف</div>
+            <div className="transition-transform hover:scale-110 duration-300">
+              <div className="text-5xl font-bold mb-2">۲۵٪</div>
+              <div className="text-blue-200">میانگین تخفیف</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">+۵۰</div>
-              <div>فروشنده معتبر</div>
+            <div className="transition-transform hover:scale-110 duration-300">
+              <div className="text-5xl font-bold mb-2">+۵۰</div>
+              <div className="text-blue-200">فروشنده معتبر</div>
             </div>
           </div>
         </div>
@@ -603,75 +588,25 @@ export default function HomePage() {
 
       {/* خبرنامه */}
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-gray-100 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between">
-          <div className="md:w-1/2 mb-6 md:mb-0">
-            <h3 className="text-2xl font-bold mb-2">از تخفیف‌های ویژه باخبر شوید</h3>
-            <p className="text-gray-600">با عضویت در خبرنامه ما، از جدیدترین خریدهای گروهی و تخفیف‌های ویژه باخبر شوید.</p>
+        <div className="bg-secondary rounded-xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between shadow-lg border border-border"> {/* Enhanced Styling */}
+          <div className="lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-right">
+            <h3 className="text-3xl font-bold mb-3 text-secondary-foreground">از تخفیف‌های ویژه باخبر شوید</h3>
+            <p className="text-muted-foreground">با عضویت در خبرنامه ما، از جدیدترین خریدهای گروهی و تخفیف‌های ویژه باخبر شوید.</p>
           </div>
-          <div className="md:w-1/2 flex w-full md:w-auto"> {/* Ensure flex takes full width on mobile */}
+          <div className="w-full lg:w-auto flex max-w-md mx-auto lg:mx-0"> {/* Ensure flex takes controlled width */}
             <Input
               type="email"
               placeholder="ایمیل خود را وارد کنید..."
-              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-0 focus:outline-none focus:ring-2 focus:ring-blue-500" /* Adjusted rounding */
+              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-border focus:outline-none focus:ring-2 focus:ring-primary text-base" /* Adjusted rounding & text size */
             />
-            <Button className="rounded-l-lg rounded-r-none"> {/* Adjusted rounding */}
+            <Button className="rounded-l-lg rounded-r-none px-6 transition-transform hover:scale-105 duration-300"> {/* Adjusted rounding & animation */}
               عضویت
             </Button>
           </div>
         </div>
       </div>
 
-      {/* فوتر */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="text-xl font-bold mb-4">خرید<span className="text-blue-400">گروهی</span></h4>
-              <p className="text-gray-400">اولین و بزرگترین سایت خرید گروهی ایران با تخفیف‌های ویژه برای شما</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">دسترسی سریع</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/" className="hover:text-white">صفحه اصلی</Link></li>
-                <li><Link href="#" className="hover:text-white">خریدهای فعال</Link></li>
-                <li><Link href="#" className="hover:text-white">دسته‌بندی‌ها</Link></li>
-                <li><Link href="#" className="hover:text-white">درباره ما</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">خدمات مشتریان</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-white">سوالات متداول</Link></li>
-                <li><Link href="#" className="hover:text-white">راهنمای خرید</Link></li>
-                <li><Link href="#" className="hover:text-white">شرایط بازگشت</Link></li>
-                <li><Link href="#" className="hover:text-white">تماس با ما</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">تماس با ما</h4>
-              <div className="text-gray-400 space-y-2">
-                <p>تهران، خیابان ولیعصر، مرکز خرید</p>
-                <p>تلفن: ۰۲۱-۱۲۳۴۵۶۷۸</p>
-                <p>ایمیل: info@kharid-groupi.ir</p>
-              </div>
-              <div className="flex space-x-4 rtl:space-x-reverse mt-4">
-                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Twitter">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Instagram">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white" aria-label="Facebook">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; {new Date().getFullYear()} خرید گروهی - تمامی حقوق محفوظ است.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer /> {/* Use Footer component */}
     </div>
   );
 }
