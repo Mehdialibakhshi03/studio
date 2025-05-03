@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from 'next/link'; // Import Link
 import Header from '@/components/header'; // Import Header component
 import Footer from '@/components/footer'; // Import Footer component
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Import Carousel
@@ -154,6 +154,7 @@ const groupPurchases = [
     aiHint: 'gaz candy',
   }
 ];
+export { groupPurchases }; // Export for use in product detail page
 
 // تعریف دسته‌بندی‌های محصولات
 const categories = [
@@ -433,32 +434,34 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
-                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group">
-                   <CardHeader className="p-0 relative aspect-[4/3]">
-                      <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint}/>
-                      <Badge variant="destructive" className="absolute top-2 right-2">
-                        {item.discount}٪ تخفیف
-                      </Badge>
-                      <Badge variant="secondary" className="absolute top-2 left-2 flex items-center">
-                         <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
-                         ایران
-                      </Badge>
-                      <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                          <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
-                      </div>
-                   </CardHeader>
-                   <CardContent className="p-4">
-                      <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden">{item.title}</h3>
-                      <div className="flex justify-between text-sm items-center text-muted-foreground mb-3">
-                        <div className="flex items-center">
-                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
-                           <span>{item.members}/{item.requiredMembers}</span>
+                <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group cursor-pointer"> {/* Added cursor-pointer */}
+                    <CardHeader className="p-0 relative aspect-[4/3]">
+                        <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint}/>
+                        <Badge variant="destructive" className="absolute top-2 right-2">
+                          {item.discount}٪ تخفیف
+                        </Badge>
+                        <Badge variant="secondary" className="absolute top-2 left-2 flex items-center">
+                           <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
+                           ایران
+                        </Badge>
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                            <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
                         </div>
-                         <span className="text-primary font-bold text-lg">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></span>
-                      </div>
-                       <Button variant="outline" size="sm" className="w-full transition-transform hover:scale-105 duration-300">مشاهده و پیوستن</Button>
-                   </CardContent>
-                </Card>
+                     </CardHeader>
+                     <CardContent className="p-4">
+                        <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden">{item.title}</h3>
+                        <div className="flex justify-between text-sm items-center text-muted-foreground mb-3">
+                          <div className="flex items-center">
+                             <Users className="h-4 w-4 ml-1 rtl:mr-1" />
+                             <span>{item.members}/{item.requiredMembers}</span>
+                          </div>
+                           <span className="text-primary font-bold text-lg">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></span>
+                        </div>
+                         <Button variant="outline" size="sm" className="w-full transition-transform hover:scale-105 duration-300">مشاهده و پیوستن</Button>
+                     </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
@@ -477,73 +480,75 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {groupPurchases.slice(4, 8).map(item => (
-              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                <CardHeader className="p-0 relative aspect-[4/3]">
-                   <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                  <Badge variant="destructive" className="absolute top-2 right-2">
-                    {item.discount}٪ تخفیف
-                  </Badge>
-                   <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
-                    {getCategoryNameBySlug(item.category)}
-                  </Badge>
-                  {item.isIranian && (
-                    <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
-                      <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
-                      تولید ایران
+              <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
+                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer"> {/* Added cursor-pointer */}
+                  <CardHeader className="p-0 relative aspect-[4/3]">
+                     <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Badge variant="destructive" className="absolute top-2 right-2">
+                      {item.discount}٪ تخفیف
                     </Badge>
-                  )}
-                  {item.isFeatured && (
-                    <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
-                      <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
-                      پیشنهاد ویژه
+                     <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
+                      {getCategoryNameBySlug(item.category)}
                     </Badge>
-                  )}
-                  <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                      <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
-                  <div className="flex justify-between items-baseline mb-3">
-                    <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
-                    <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
-                  </div>
-                   {/* Package Contents Display */}
-                  {item.isPackage && item.packageContents && (
-                    <div className="my-3 border-t border-border pt-3">
-                      <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                      <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
-                        {item.packageContents.map((content, index) => (
-                          <li key={index}>
-                            {content.name} ({content.quantity})
-                          </li>
-                        ))}
-                      </ul>
+                    {item.isIranian && (
+                      <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                        <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        تولید ایران
+                      </Badge>
+                    )}
+                    {item.isFeatured && (
+                      <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
+                        <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
+                        پیشنهاد ویژه
+                      </Badge>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                        <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
                     </div>
-                  )}
-
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between text-sm text-muted-foreground mb-1">
-                      <div className="flex items-center">
-                        <Users className="h-4 w-4 ml-1 rtl:mr-1" />
-                        <span>{item.members} / {item.requiredMembers} نفر</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
-                        <span>{item.remainingTime}</span>
-                      </div>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                    <div className="flex justify-between items-baseline mb-3">
+                      <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
+                      <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
+                     {/* Package Contents Display */}
+                    {item.isPackage && item.packageContents && (
+                      <div className="my-3 border-t border-border pt-3">
+                        <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
+                          {item.packageContents.map((content, index) => (
+                            <li key={index}>
+                              {content.name} ({content.quantity})
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
-                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
-                  </div>
-                 </CardContent>
-                 <CardFooter className="p-4 pt-0">
-                      <Button onClick={() => handleJoinClick(item.title)} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
-                        <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
-                        پیوستن به گروه
-                      </Button>
-                 </CardFooter>
-              </Card>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-sm text-muted-foreground mb-1">
+                        <div className="flex items-center">
+                          <Users className="h-4 w-4 ml-1 rtl:mr-1" />
+                          <span>{item.members} / {item.requiredMembers} نفر</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
+                          <span>{item.remainingTime}</span>
+                        </div>
+                      </div>
+
+                      <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
+                    </div>
+                   </CardContent>
+                   <CardFooter className="p-4 pt-0">
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Prevent navigation and handle click */}
+                          <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                          پیوستن به گروه
+                        </Button>
+                   </CardFooter>
+                </Card>
+              </Link>
             ))}
           </div>
           <div className="flex justify-center mt-10">
@@ -592,38 +597,40 @@ export default function HomePage() {
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
                         <CarouselItem key={product.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4">
-                          <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md">
-                            <CardHeader className="p-0 relative aspect-[4/3]">
-                              <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
-                              <Badge variant="destructive" className="absolute top-2 right-2">
-                                {product.discount}٪ تخفیف
-                              </Badge>
-                              {product.isFeatured && (
-                                <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md text-xs px-1.5 py-0.5">
-                                  <Star className="w-2.5 h-2.5 ml-1 rtl:mr-1 fill-current" />
-                                  ویژه
+                          <Link href={`/product/${product.id}`}> {/* Added Link */}
+                            <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md cursor-pointer"> {/* Added cursor-pointer */}
+                              <CardHeader className="p-0 relative aspect-[4/3]">
+                                <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
+                                <Badge variant="destructive" className="absolute top-2 right-2">
+                                  {product.discount}٪ تخفیف
                                 </Badge>
-                              )}
-                              <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                                  <Button size="sm" variant="default" className="h-7 px-2 text-xs">افزودن</Button>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="p-3 flex-grow flex flex-col">
-                              <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{product.title}</h5>
-                              <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
-                                <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
-                                <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
-                              </div>
-                              <Progress value={(product.members / product.requiredMembers) * 100} className="h-1.5 mt-auto" />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>{product.members}/{product.requiredMembers} نفر</span>
-                                <span>{product.remainingTime}</span>
-                              </div>
-                            </CardContent>
-                            <CardFooter className="p-3 pt-0">
-                              <Button onClick={() => handleJoinClick(product.title)} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button>
-                            </CardFooter>
-                          </Card>
+                                {product.isFeatured && (
+                                  <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md text-xs px-1.5 py-0.5">
+                                    <Star className="w-2.5 h-2.5 ml-1 rtl:mr-1 fill-current" />
+                                    ویژه
+                                  </Badge>
+                                )}
+                                <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                                    <Button size="sm" variant="default" className="h-7 px-2 text-xs">افزودن</Button>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="p-3 flex-grow flex flex-col">
+                                <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{product.title}</h5>
+                                <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
+                                  <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
+                                  <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
+                                </div>
+                                <Progress value={(product.members / product.requiredMembers) * 100} className="h-1.5 mt-auto" />
+                                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                  <span>{product.members}/{product.requiredMembers} نفر</span>
+                                  <span>{product.remainingTime}</span>
+                                </div>
+                              </CardContent>
+                              <CardFooter className="p-3 pt-0">
+                                <Button onClick={(e) => { e.preventDefault(); handleJoinClick(product.title); }} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button> {/* Prevent navigation */}
+                              </CardFooter>
+                            </Card>
+                          </Link>
                         </CarouselItem>
                       ))}
                     </CarouselContent>
@@ -710,73 +717,75 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredItems.map(item => (
-              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                 <CardHeader className="p-0 relative aspect-[4/3]">
-                  <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                  <Badge variant="destructive" className="absolute top-2 right-2">
-                    {item.discount}٪ تخفیف
-                  </Badge>
-                   <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
-                    {getCategoryNameBySlug(item.category)}
-                  </Badge>
-                  {item.isIranian && (
-                     <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
-                      <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
-                      تولید ایران
+              <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
+                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer"> {/* Added cursor-pointer */}
+                   <CardHeader className="p-0 relative aspect-[4/3]">
+                    <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Badge variant="destructive" className="absolute top-2 right-2">
+                      {item.discount}٪ تخفیف
                     </Badge>
-                  )}
-                  {item.isFeatured && (
-                    <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
-                      <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
-                      پیشنهاد ویژه
+                     <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
+                      {getCategoryNameBySlug(item.category)}
                     </Badge>
-                  )}
-                   <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                       <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
-                   </div>
-                 </CardHeader>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
-                  <div className="flex justify-between items-baseline mb-3">
-                    <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
-                    <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
-                  </div>
-                   {/* Package Contents Display */}
-                   {item.isPackage && item.packageContents && (
-                    <div className="my-3 border-t border-border pt-3">
-                      <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                      <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
-                        {item.packageContents.map((content, index) => (
-                          <li key={index}>
-                            {content.name} ({content.quantity})
-                          </li>
-                        ))}
-                      </ul>
+                    {item.isIranian && (
+                       <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                        <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        تولید ایران
+                      </Badge>
+                    )}
+                    {item.isFeatured && (
+                      <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
+                        <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
+                        پیشنهاد ویژه
+                      </Badge>
+                    )}
+                     <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                         <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
+                     </div>
+                   </CardHeader>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                    <div className="flex justify-between items-baseline mb-3">
+                      <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
+                      <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
-                  )}
+                     {/* Package Contents Display */}
+                     {item.isPackage && item.packageContents && (
+                      <div className="my-3 border-t border-border pt-3">
+                        <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
+                          {item.packageContents.map((content, index) => (
+                            <li key={index}>
+                              {content.name} ({content.quantity})
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between text-sm text-muted-foreground mb-1">
-                      <div className="flex items-center">
-                        <Users className="h-4 w-4 ml-1 rtl:mr-1" />
-                        <span>{item.members} / {item.requiredMembers} نفر</span>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-sm text-muted-foreground mb-1">
+                        <div className="flex items-center">
+                          <Users className="h-4 w-4 ml-1 rtl:mr-1" />
+                          <span>{item.members} / {item.requiredMembers} نفر</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
+                          <span>{item.remainingTime}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
-                        <span>{item.remainingTime}</span>
-                      </div>
+
+                      <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
                     </div>
-
-                    <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
-                  </div>
-                 </CardContent>
-                 <CardFooter className="p-4 pt-0">
-                      <Button onClick={() => handleJoinClick(item.title)} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
-                        <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
-                        پیوستن به گروه
-                      </Button>
-                 </CardFooter>
-              </Card>
+                   </CardContent>
+                   <CardFooter className="p-4 pt-0">
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Prevent navigation */}
+                          <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                          پیوستن به گروه
+                        </Button>
+                   </CardFooter>
+                </Card>
+              </Link>
             ))}
           </div>
 
