@@ -15,8 +15,18 @@ import Header from '@/components/header'; // Import Header component
 import Footer from '@/components/footer'; // Import Footer component
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Import Carousel
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Import Avatar
+import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
 
-// تعریف داده‌های نمونه برای خریدهای گروهی
+// Helper function to create future dates for consistent testing
+const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    date.setHours(date.getHours() + hours);
+    date.setMinutes(date.getMinutes() + minutes);
+    return date;
+};
+
+// تعریف داده‌های نمونه برای خریدهای گروهی - Updated with endDate
 const groupPurchases = [
   {
     id: 1,
@@ -27,7 +37,7 @@ const groupPurchases = [
     discount: 12,
     members: 18,
     requiredMembers: 25,
-    remainingTime: '۲ روز',
+    endDate: getFutureDate(2, 6), // Ends in 2 days, 6 hours
     category: 'digital',
     isFeatured: true,
     aiHint: 'smartphone samsung galaxy',
@@ -52,10 +62,10 @@ const groupPurchases = [
     discount: 25,
     members: 42,
     requiredMembers: 50,
-    remainingTime: '۱۲ ساعت',
+    endDate: getFutureDate(0, 12, 30), // Ends in 12 hours, 30 minutes
     category: 'food',
     isIranian: true,
-    aiHint: 'sunflower oil bottle', // Changed hint
+    aiHint: 'sunflower oil bottle',
     isPackage: true,
     packageContents: [
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
@@ -76,10 +86,10 @@ const groupPurchases = [
     discount: 15,
     members: 8,
     requiredMembers: 15,
-    remainingTime: '۳ روز',
+    endDate: getFutureDate(3), // Ends in 3 days
     category: 'home-appliances',
     isIranian: true,
-    aiHint: 'washing machine snowa', // Changed hint
+    aiHint: 'washing machine snowa',
     variations: [
         { type: 'رنگ', options: ['سفید', 'نقره‌ای'] },
     ],
@@ -98,9 +108,9 @@ const groupPurchases = [
     discount: 18,
     members: 34,
     requiredMembers: 40,
-    remainingTime: '۱ روز',
+    endDate: getFutureDate(1), // Ends in 1 day
     category: 'food',
-    aiHint: 'lamb meat package', // Changed hint
+    aiHint: 'lamb meat package',
     isPackage: true,
     packageContents: [
       { name: 'گوشت ران گوسفندی', quantity: '۱ کیلوگرم' },
@@ -122,7 +132,7 @@ const groupPurchases = [
     discount: 11,
     members: 7,
     requiredMembers: 20,
-    remainingTime: '۵ روز',
+    endDate: getFutureDate(5), // Ends in 5 days
     category: 'digital',
     aiHint: 'smartphone xiaomi poco',
      recentMembers: [
@@ -139,11 +149,11 @@ const groupPurchases = [
     discount: 20,
     members: 28,
     requiredMembers: 35,
-    remainingTime: '۴ روز',
+    endDate: getFutureDate(4), // Ends in 4 days
     category: 'food',
     isIranian: true,
     isFeatured: true,
-    aiHint: 'saffron spice box', // Changed hint
+    aiHint: 'saffron spice box',
     recentMembers: [
         { name: 'AS', avatar: 'https://picsum.photos/seed/user50/40/40' },
         { name: 'DF', avatar: 'https://picsum.photos/seed/user51/40/40' },
@@ -159,9 +169,9 @@ const groupPurchases = [
     discount: 15,
     members: 12,
     requiredMembers: 20,
-    remainingTime: '۲ روز',
+    endDate: getFutureDate(2), // Ends in 2 days
     category: 'digital',
-    aiHint: 'smart tv lg living room', // Changed hint
+    aiHint: 'smart tv lg living room',
     recentMembers: [
         { name: 'ZX', avatar: 'https://picsum.photos/seed/user60/40/40' },
         { name: 'CV', avatar: 'https://picsum.photos/seed/user61/40/40' },
@@ -176,11 +186,11 @@ const groupPurchases = [
     discount: 20,
     members: 5,
     requiredMembers: 10,
-    remainingTime: '۵ روز',
+    endDate: getFutureDate(5), // Ends in 5 days
     category: 'home-decor',
     isIranian: true,
     isFeatured: true,
-    aiHint: 'persian carpet detail', // Changed hint
+    aiHint: 'persian carpet detail',
     recentMembers: [
         { name: 'QW', avatar: 'https://picsum.photos/seed/user70/40/40' },
     ],
@@ -194,10 +204,10 @@ const groupPurchases = [
     discount: 20,
     members: 45,
     requiredMembers: 50,
-    remainingTime: '۱ روز',
+    endDate: getFutureDate(0, 23, 59), // Ends in just under 1 day
     category: 'food',
     isIranian: true,
-    aiHint: 'gaz candy box', // Changed hint
+    aiHint: 'gaz candy box',
      recentMembers: [
       { name: 'PL', avatar: 'https://picsum.photos/seed/user80/40/40' },
       { name: 'OK', avatar: 'https://picsum.photos/seed/user81/40/40' },
@@ -228,7 +238,7 @@ const specialOffers = [
     title: 'جشنواره نوروزی - تخفیف تا ۴۰٪',
     description: 'خرید گروهی محصولات نوروزی با تخفیف فوق‌العاده، فقط تا پایان اسفند',
     image: 'https://picsum.photos/seed/offer1/600/250',
-    bgColor: 'bg-green-600',
+    bgColor: 'bg-primary', // Use theme color
     aiHint: 'new year sale offer',
   },
   {
@@ -236,7 +246,7 @@ const specialOffers = [
     title: 'محصولات ایرانی - حمایت از تولید ملی',
     description: 'خرید گروهی کالاهای ایرانی با کیفیت و قیمت مناسب',
     image: 'https://picsum.photos/seed/offer2/600/250',
-    bgColor: 'bg-blue-600',
+    bgColor: 'bg-accent', // Use theme color
     aiHint: 'iranian product support',
   },
   {
@@ -244,7 +254,7 @@ const specialOffers = [
     title: 'صنایع دستی اصیل ایرانی',
     description: 'مجموعه‌ای از بهترین صنایع دستی استان‌های مختلف ایران',
     image: 'https://picsum.photos/seed/offer3/600/250',
-    bgColor: 'bg-purple-600',
+    bgColor: 'bg-purple-600', // Keeping purple as an example, can be themed too
     aiHint: 'iranian handicraft art',
   }
 ];
@@ -306,10 +316,10 @@ const stores = [
     aiHint: "city mega store logo",
     offersInstallments: true, // آیا قسطی می‌فروشد؟
     products: [
-      { ...groupPurchases[1], id: 201 }, // Create NEW unique IDs for products within stores
-      { ...groupPurchases[3], id: 202 },
-      { ...groupPurchases[7], id: 203 },
-      { ...groupPurchases[4], id: 204 },
+      { ...groupPurchases[1], id: 201, endDate: getFutureDate(1, 12) }, // Create NEW unique IDs and dates
+      { ...groupPurchases[3], id: 202, endDate: getFutureDate(2) },
+      { ...groupPurchases[7], id: 203, endDate: getFutureDate(4, 5) },
+      { ...groupPurchases[4], id: 204, endDate: getFutureDate(0, 10) },
     ],
   },
   {
@@ -319,9 +329,9 @@ const stores = [
     aiHint: "sun hypermarket logo",
     offersInstallments: false,
     products: [
-      { ...groupPurchases[0], id: 301 },
-      { ...groupPurchases[5], id: 302 },
-      { ...groupPurchases[8], id: 303 },
+      { ...groupPurchases[0], id: 301, endDate: getFutureDate(0, 2) },
+      { ...groupPurchases[5], id: 302, endDate: getFutureDate(3) },
+      { ...groupPurchases[8], id: 303, endDate: getFutureDate(1, 1) },
     ],
   },
   {
@@ -331,10 +341,10 @@ const stores = [
     aiHint: "luxury home living logo",
     offersInstallments: true,
     products: [
-      { ...groupPurchases[2], id: 401 },
-      { ...groupPurchases[6], id: 402 },
-      { ...groupPurchases[4], id: 403 }, // Note: Product ID 4 is used twice, give unique IDs
-      { ...groupPurchases[7], id: 404 },
+      { ...groupPurchases[2], id: 401, endDate: getFutureDate(2, 18) },
+      { ...groupPurchases[6], id: 402, endDate: getFutureDate(1) },
+      { ...groupPurchases[4], id: 403, endDate: getFutureDate(0, 5) }, // Note: Use unique IDs
+      { ...groupPurchases[7], id: 404, endDate: getFutureDate(4) },
     ],
   },
 ];
@@ -346,6 +356,16 @@ const formatNumber = (num:number | undefined) => {
   if (num === undefined || num === null) return '';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+// Check if the deal ends within 24 hours
+const isEndingSoon = (endDate: Date | undefined): boolean => {
+    if (!endDate) return false;
+    const now = new Date();
+    const timeDiff = endDate.getTime() - now.getTime();
+    const hoursRemaining = timeDiff / (1000 * 60 * 60);
+    return hoursRemaining > 0 && hoursRemaining <= 24;
+};
+
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('همه');
@@ -383,17 +403,17 @@ export default function HomePage() {
       <Header /> {/* Use Header component */}
 
       {/* بنر اصلی */}
-      <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white py-16 md:py-24">
+      <div className="bg-gradient-to-r from-accent to-primary text-white py-16 md:py-24"> {/* Use theme colors */}
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-right animate-fade-in-right">
               <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">با هم بخرید و تخفیف بگیرید!</h1>
-              <p className="text-lg lg:text-xl mb-8 text-blue-100">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
+              <p className="text-lg lg:text-xl mb-8 text-primary-foreground/80">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
               <div className="flex justify-center md:justify-start space-x-4 rtl:space-x-reverse">
                 <Button size="lg" variant="secondary" className="transition-transform hover:scale-105 duration-300">
                   شروع خرید گروهی
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 transition-transform hover:scale-105 duration-300">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary transition-transform hover:scale-105 duration-300">
                   راهنمای خرید
                 </Button>
               </div>
@@ -442,7 +462,7 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold mb-8 text-center">تخفیف‌های شگفت‌انگیز</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {specialOffers.map(offer => (
-            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-white group`}>
+            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-primary-foreground group`}> {/* Use primary-foreground for text */}
               <div className="relative h-48">
                 <Image src={offer.image} layout="fill" objectFit="cover" alt={offer.title} className="transition-transform duration-500 group-hover:scale-110" data-ai-hint={offer.aiHint} />
                 <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/70 to-transparent">
@@ -587,10 +607,15 @@ export default function HomePage() {
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                           <span>{item.members} / {item.requiredMembers} نفر</span>
                         </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
-                          <span>{item.remainingTime}</span>
-                        </div>
+                        {/* Display Countdown or Remaining Time */}
+                        {isEndingSoon(item.endDate) ? (
+                            <CountdownTimer endDate={item.endDate} />
+                        ) : (
+                            <div className="flex items-center">
+                              <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
+                              <span>{`بیش از ${Math.ceil((item.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
+                            </div>
+                        )}
                       </div>
 
                       <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
@@ -677,8 +702,13 @@ export default function HomePage() {
                                 </div>
                                 <Progress value={product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0} className="h-1.5 mt-auto" />
                                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                  <span>{product.members}/{product.requiredMembers} نفر</span>
-                                  <span>{product.remainingTime}</span>
+                                   <span>{product.members}/{product.requiredMembers} نفر</span>
+                                     {/* Display Countdown or simple time */}
+                                     {isEndingSoon(product.endDate) ? (
+                                        <CountdownTimer endDate={product.endDate} size="xs" />
+                                    ) : (
+                                         <span>{`بیش از ${Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
+                                    )}
                                 </div>
                               </CardContent>
                               <CardFooter className="p-3 pt-0">
@@ -824,10 +854,15 @@ export default function HomePage() {
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                           <span>{item.members} / {item.requiredMembers} نفر</span>
                         </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
-                          <span>{item.remainingTime}</span>
-                        </div>
+                         {/* Display Countdown or Remaining Time */}
+                         {isEndingSoon(item.endDate) ? (
+                            <CountdownTimer endDate={item.endDate} />
+                        ) : (
+                            <div className="flex items-center">
+                              <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
+                               <span>{`بیش از ${Math.ceil((item.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
+                            </div>
+                        )}
                       </div>
 
                       <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2" />
@@ -875,25 +910,25 @@ export default function HomePage() {
       </section>
 
       {/* بخش آمار */}
-      <div className="bg-gradient-to-br from-blue-700 to-primary text-white py-16 rounded-lg my-12 container mx-auto px-4 shadow-xl">
+      <div className="bg-gradient-to-br from-accent to-primary text-primary-foreground py-16 rounded-lg my-12 container mx-auto px-4 shadow-xl"> {/* Use theme colors */}
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۲۵,۰۰۰</div>
-              <div className="text-blue-200">کاربر فعال</div>
+              <div className="text-primary-foreground/80">کاربر فعال</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۱۸۰</div>
-              <div className="text-blue-200">خرید گروهی موفق</div>
+              <div className="text-primary-foreground/80">خرید گروهی موفق</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">۲۵٪</div>
-              <div className="text-blue-200">میانگین تخفیف</div>
+              <div className="text-primary-foreground/80">میانگین تخفیف</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۵۰</div>
-              <div className="text-blue-200">فروشنده معتبر</div>
+              <div className="text-primary-foreground/80">فروشنده معتبر</div>
             </div>
           </div>
         </div>

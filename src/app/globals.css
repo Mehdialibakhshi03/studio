@@ -11,73 +11,77 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* Light Gray (like bg-gray-50) */
-    --foreground: 0 0% 9%; /* Dark Gray (like text-gray-800) */
+    /* Light Theme Adjustments - Slightly warmer background, more contrast */
+    --background: 0 0% 100%; /* White */
+    --foreground: 240 10% 3.9%; /* Dark Gray */
     --card: 0 0% 100%; /* White */
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --primary: 142 71% 45%; /* Green (like bg-green-600) */
-    --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 0 0% 94%; /* Lighter Gray (like bg-gray-100) */
-    --secondary-foreground: 0 0% 9%; /* Dark Gray */
-    --muted: 0 0% 85%; /* Medium Gray (like text-gray-500) */
-    --muted-foreground: 0 0% 45%; /* Darker Medium Gray (like text-gray-600) */
-    --accent: 217 91% 60%; /* Blue (like bg-blue-600) */
-    --accent-foreground: 0 0% 100%; /* White */
-    --destructive: 0 72% 51%; /* Red (like bg-red-600) */
-    --destructive-foreground: 0 0% 100%; /* White */
-    --border: 0 0% 89.8%; /* Slightly darker gray than secondary */
-    --input: 0 0% 96%; /* bg-gray-100 equivalent */
-    --ring: 142 71% 45%; /* Primary green for rings */
-    --chart-1: 142 71% 45%;
-    --chart-2: 217 91% 60%;
-    --chart-3: 48 96% 53%; /* Yellow */
-    --chart-4: 0 0% 60%; /* Example gray */
-    --chart-5: 270 90% 65%; /* Purple */
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 142.1 70.6% 45.3%; /* Green - Adjusted slightly */
+    --primary-foreground: 355.7 100% 97.3%; /* Lighter text on primary */
+    --secondary: 240 4.8% 95.9%; /* Lighter Gray */
+    --secondary-foreground: 240 5.9% 10%; /* Darker text on secondary */
+    --muted: 240 4.8% 93%; /* Medium Gray */
+    --muted-foreground: 240 3.8% 46.1%; /* Darker Medium Gray */
+    --accent: 217.2 91.2% 59.8%; /* Blue - Adjusted slightly */
+    --accent-foreground: 210 40% 98%; /* White text on accent */
+    --destructive: 0 84.2% 60.2%; /* Red - Adjusted slightly */
+    --destructive-foreground: 0 0% 98%; /* White text on destructive */
+    --border: 240 5.9% 90%; /* Slightly darker gray */
+    --input: 240 5.9% 90%; /* Input background */
+    --ring: 142.1 70.6% 45.3%; /* Primary green for rings */
+    --chart-1: 142.1 70.6% 45.3%;
+    --chart-2: 217.2 91.2% 59.8%;
+    --chart-3: 47.9 95.8% 53.1%; /* Yellow */
+    --chart-4: 0 0% 63%; /* Example gray */
+    --chart-5: 270.7 91% 65.1%; /* Purple */
     --radius: 0.5rem;
+    /* Sidebar Colors (Keeping consistency with main theme) */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 142 71% 40%; /* Slightly darker green */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 94%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 89.8%;
-    --sidebar-ring: 142 71% 45%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 142.1 70.6% 40%; /* Slightly darker green */
+    --sidebar-primary-foreground: 355.7 100% 97.3%;
+    --sidebar-accent: 240 4.8% 95.9%; /* Same as secondary */
+    --sidebar-accent-foreground: 240 5.9% 10%; /* Same as secondary-foreground */
+    --sidebar-border: 240 5.9% 90%; /* Same as border */
+    --sidebar-ring: 142.1 70.6% 45.3%;
   }
   .dark {
-    --background: 240 10% 3.9%; /* Dark Gray */
+    /* Dark Theme Adjustments - Higher contrast */
+    --background: 240 10% 3.9%; /* Very Dark Gray */
     --foreground: 0 0% 98%; /* Near White */
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 142 71% 55%; /* Lighter Green */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4% 16%; /* Darker Gray */
+    --primary: 142.1 70.6% 45.3%; /* Keep primary same as light for vibrancy */
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 3.7% 15.9%; /* Darker Gray */
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 4% 25%; /* Medium Dark Gray */
-    --muted-foreground: 0 0% 63.9%; /* Lighter Gray */
-    --accent: 217 91% 65%; /* Lighter Blue */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 63% 45%; /* Darker Red */
-    --destructive-foreground: 0 0% 100%;
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
-    --ring: 142 71% 55%;
-    --chart-1: 142 71% 55%;
-    --chart-2: 217 91% 65%;
-    --chart-3: 48 96% 63%; /* Lighter Yellow */
-    --chart-4: 0 0% 60%;
-    --chart-5: 270 90% 70%; /* Lighter Purple */
+    --muted: 240 3.7% 25%; /* Medium Dark Gray */
+    --muted-foreground: 240 5% 64.9%; /* Lighter Gray */
+    --accent: 217.2 91.2% 59.8%; /* Keep accent same as light */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72.2% 50.6%; /* Adjusted Red */
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 142.1 70.6% 45.3%;
+    --chart-1: 142.1 70.6% 45.3%;
+    --chart-2: 217.2 91.2% 59.8%;
+    --chart-3: 47.9 95.8% 53.1%;
+    --chart-4: 0 0% 63%;
+    --chart-5: 270.7 91% 65.1%;
+     /* Sidebar Colors (Keeping consistency with main theme) */
     --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 142 71% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
+    --sidebar-primary: 142.1 70.6% 45.3%;
+    --sidebar-primary-foreground: 355.7 100% 97.3%;
+    --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 142 71% 55%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 142.1 70.6% 45.3%;
   }
 }
 
@@ -97,11 +101,12 @@ body {
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: hsl(var(--background));
+    background: hsl(var(--secondary)); /* Use secondary for track */
   }
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--muted));
     border-radius: 4px;
+    border: 2px solid hsl(var(--secondary)); /* Add border to match track */
   }
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground));

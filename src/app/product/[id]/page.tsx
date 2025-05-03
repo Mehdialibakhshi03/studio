@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react'; // Import React
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye } from 'lucide-react'; // Added more icons
+import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store } from 'lucide-react'; // Added more icons
 import { groupPurchases, stores } from '@/app/page'; // Import the sample data including stores
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -33,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip" // Import Tooltip components
+import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
 
 // Helper function to find product by ID
 const getProductById = (id: number) => {
@@ -70,6 +71,15 @@ const getRelatedProducts = (currentProductId: number, category?: string) => {
   return groupPurchases
     .filter(p => p.id !== currentProductId && (category ? p.category === category : true))
     .slice(0, 6); // Get up to 6 related products
+};
+
+// Check if the deal ends within 24 hours
+const isEndingSoon = (endDate: Date | undefined): boolean => {
+    if (!endDate) return false;
+    const now = new Date();
+    const timeDiff = endDate.getTime() - now.getTime();
+    const hoursRemaining = timeDiff / (1000 * 60 * 60);
+    return hoursRemaining > 0 && hoursRemaining <= 24;
 };
 
 
@@ -138,12 +148,13 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
         }
       }, 20); // Adjust speed as needed
 
-      // Determine group status based on members and time (simplified logic)
+      // Determine group status based on members and time
+      const now = new Date();
       if (product.members >= product.requiredMembers) {
           setGroupStatus('completed');
-      } else if (product.remainingTime.includes('پایان')) { // Simple check for expired time
+      } else if (product.endDate && product.endDate < now) { // Check if endDate has passed
           setGroupStatus('failed');
-      } else if (targetProgress > 70) { // Changed threshold for "filling"
+      } else if (targetProgress > 70) {
           setGroupStatus('filling');
       } else {
           setGroupStatus('active');
@@ -299,7 +310,9 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                        <CardTitle className="text-base font-semibold">{store.name}</CardTitle>
                      </div>
                      <Button variant="link" size="sm" asChild>
-                       <Link href={`/store/${store.id}`}>مشاهده فروشگاه</Link>
+                       <Link href={`/store/${store.id}`}>
+                           <Store className="mr-2 h-4 w-4" /> مشاهده فروشگاه
+                        </Link>
                      </Button>
                    </CardHeader>
                    {store.offersInstallments && (
@@ -389,10 +402,20 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                   <Users className="h-4 w-4" />
                   <span>{product.members} / {product.requiredMembers} نفر عضو شده‌اند</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>{product.remainingTime} باقی مانده</span>
-                </div>
+                 {/* Display Countdown or simple time */}
+                 {product.endDate && isEndingSoon(product.endDate) ? (
+                      <CountdownTimer endDate={product.endDate} />
+                  ) : product.endDate ? (
+                      <div className="flex items-center gap-1">
+                         <Clock className="h-4 w-4" />
+                         <span>{`بیش از ${Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز باقی مانده`}</span>
+                      </div>
+                  ) : (
+                      <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          <span>زمان نامشخص</span>
+                      </div>
+                  )}
               </div>
                {/* Animated Progress Bar */}
               <Progress value={progressValue} className="h-2.5 [&>div]:transition-all [&>div]:duration-500 [&>div]:ease-out" />
@@ -662,7 +685,14 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                            )}
                            <div className="flex justify-between text-xs text-muted-foreground mt-1">
                             <span>{relatedProduct.members}/{relatedProduct.requiredMembers}</span>
-                            <span>{relatedProduct.remainingTime}</span>
+                             {/* Display Countdown or simple time for related products */}
+                             {relatedProduct.endDate && isEndingSoon(relatedProduct.endDate) ? (
+                                  <CountdownTimer endDate={relatedProduct.endDate} size="xs" />
+                              ) : relatedProduct.endDate ? (
+                                   <span>{`بیش از ${Math.ceil((relatedProduct.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
+                              ) : (
+                                   <span>زمان نامشخص</span>
+                              )}
                           </div>
                         </CardContent>
                          <CardFooter className="p-3 pt-0">
@@ -702,3 +732,4 @@ const getCategoryNameBySlug = (slug: string | undefined) => {
     ];
     return categories.find(cat => cat.slug === slug)?.name || slug || 'دسته بندی';
 }
+
