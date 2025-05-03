@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -205,7 +206,8 @@ const groupPurchases = [
     ],
   }
 ];
-export { groupPurchases }; // Export for use in product detail page
+// Export for use in product detail page and other potential pages
+export { groupPurchases };
 
 // تعریف دسته‌بندی‌های محصولات
 const categories = [
@@ -295,50 +297,52 @@ const wholesalers = [
 
 
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان (برای اسلایدر)
+// IMPORTANT: Ensure product IDs here are unique and don't clash with groupPurchases IDs
 const stores = [
   {
-    id: 1,
+    id: 101, // Store ID
     name: "فروشگاه بزرگ شهر",
     logo: "https://picsum.photos/seed/store1/100/100",
     aiHint: "city mega store logo",
     offersInstallments: true, // آیا قسطی می‌فروشد؟
     products: [
-      { ...groupPurchases[1], id: 101 }, // Use existing product data, ensure unique ID
-      { ...groupPurchases[3], id: 102 },
-      { ...groupPurchases[7], id: 103 },
-      { ...groupPurchases[4], id: 104 },
+      { ...groupPurchases[1], id: 201 }, // Create NEW unique IDs for products within stores
+      { ...groupPurchases[3], id: 202 },
+      { ...groupPurchases[7], id: 203 },
+      { ...groupPurchases[4], id: 204 },
     ],
   },
   {
-    id: 2,
+    id: 102, // Store ID
     name: "هایپر مارکت آفتاب",
     logo: "https://picsum.photos/seed/store2/100/100",
     aiHint: "sun hypermarket logo",
     offersInstallments: false,
     products: [
-      { ...groupPurchases[0], id: 201 },
-      { ...groupPurchases[5], id: 202 },
-      { ...groupPurchases[8], id: 203 },
+      { ...groupPurchases[0], id: 301 },
+      { ...groupPurchases[5], id: 302 },
+      { ...groupPurchases[8], id: 303 },
     ],
   },
   {
-    id: 3,
+    id: 103, // Store ID
     name: "خانه و زندگی لوکس",
     logo: "https://picsum.photos/seed/store3/100/100",
     aiHint: "luxury home living logo",
     offersInstallments: true,
     products: [
-      { ...groupPurchases[2], id: 301 },
-      { ...groupPurchases[6], id: 302 },
-      { ...groupPurchases[4], id: 303 },
-      { ...groupPurchases[7], id: 304 },
+      { ...groupPurchases[2], id: 401 },
+      { ...groupPurchases[6], id: 402 },
+      { ...groupPurchases[4], id: 403 }, // Note: Product ID 4 is used twice, give unique IDs
+      { ...groupPurchases[7], id: 404 },
     ],
   },
 ];
+export { stores }; // Export stores data
 
 
 // تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
-const formatNumber = (num:number) => {
+const formatNumber = (num:number | undefined) => {
   if (num === undefined || num === null) return '';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -567,7 +571,7 @@ export default function HomePage() {
                     {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
                         <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4"> {/* Added pr-4 for RTL list */}
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
                               {content.name} ({content.quantity})
@@ -671,7 +675,7 @@ export default function HomePage() {
                                   <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
                                   <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
                                 </div>
-                                <Progress value={(product.members / product.requiredMembers) * 100} className="h-1.5 mt-auto" />
+                                <Progress value={product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0} className="h-1.5 mt-auto" />
                                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                                   <span>{product.members}/{product.requiredMembers} نفر</span>
                                   <span>{product.remainingTime}</span>
@@ -686,8 +690,8 @@ export default function HomePage() {
                       ))}
                     </CarouselContent>
                      {/* Carousel Arrows - Enhanced Styling */}
-                    <CarouselPrevious className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
-                    <CarouselNext className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
+                    <CarouselPrevious className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted left/right for RTL */}
+                    <CarouselNext className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted left/right for RTL */}
                   </Carousel>
                 </CardContent>
               </Card>
@@ -804,7 +808,7 @@ export default function HomePage() {
                      {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
                         <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5">
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4"> {/* Added pr-4 */}
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
                               {content.name} ({content.quantity})
@@ -826,7 +830,7 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
+                      <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2" />
                     </div>
                    </CardContent>
                    <CardFooter className="p-4 pt-0">

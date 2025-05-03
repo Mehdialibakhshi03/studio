@@ -1,10 +1,11 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react'; // Import React
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-import { groupPurchases } from '@/app/page'; // Import the sample data
+import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye } from 'lucide-react'; // Added more icons
+import { groupPurchases, stores } from '@/app/page'; // Import the sample data including stores
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Button } from '@/components/ui/button';
@@ -25,11 +26,32 @@ import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import Radio Group
 import { Label } from "@/components/ui/label"; // Import Label
 import { cn } from "@/lib/utils"; // Import cn for conditional class names
+import { Separator } from '@/components/ui/separator'; // Import Separator
 
 // Helper function to find product by ID
 const getProductById = (id: number) => {
-  return groupPurchases.find(product => product.id === id);
+  // Find in main groupPurchases
+  let product = groupPurchases.find(product => product.id === id);
+  if (product) return product;
+
+  // Find within store products if not found in main list
+  for (const store of stores) {
+      product = store.products.find(p => p.id === id);
+      if (product) return product;
+  }
+  return undefined; // Return undefined if not found anywhere
 };
+
+// Helper function to find the store that sells a specific product ID
+const getStoreByProductId = (productId: number) => {
+    for (const store of stores) {
+        if (store.products.some(p => p.id === productId)) {
+            return store;
+        }
+    }
+    return null;
+};
+
 
 // Helper function to format numbers with Persian commas
 const formatNumber = (num: number | undefined) => {
@@ -37,8 +59,13 @@ const formatNumber = (num: number | undefined) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-// Sample related products (replace with actual logic)
-const relatedProducts = groupPurchases.slice(0, 4);
+// Sample related products (adjust logic if needed)
+const getRelatedProducts = (currentProductId: number, category?: string) => {
+  return groupPurchases
+    .filter(p => p.id !== currentProductId && (category ? p.category === category : true))
+    .slice(0, 6); // Get up to 6 related products
+};
+
 
 // Define the type for the params promise
 type ParamsPromise = Promise<{ id: string }>;
@@ -47,6 +74,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
   const resolvedParams = React.use(params); // Unwrap the promise
   const productId = parseInt(resolvedParams.id, 10); // Access id from resolved params
   const product = getProductById(productId);
+  const store = getStoreByProductId(productId); // Find the store selling this product
   const { toast } = useToast();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -54,6 +82,20 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
   const [selectedVariations, setSelectedVariations] = useState<{ [key: string]: string }>({});
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
+  const [viewers, setViewers] = useState(0); // State for simulated viewers
+
+  // Simulate dynamic viewer count
+  useEffect(() => {
+    const randomViewers = Math.floor(Math.random() * 30) + 5; // 5 to 35 viewers
+    setViewers(randomViewers);
+
+    const interval = setInterval(() => {
+      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); // Fluctuate viewer count
+    }, 5000); // Update every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   useEffect(() => {
     if (product) {
@@ -70,11 +112,11 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
        // Animate progress bar and determine status
       const targetProgress = product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0;
       let currentProgress = 0;
-      const interval = setInterval(() => {
+      const progressInterval = setInterval(() => {
         currentProgress += 1;
         if (currentProgress >= targetProgress) {
           setProgressValue(targetProgress);
-          clearInterval(interval);
+          clearInterval(progressInterval);
         } else {
           setProgressValue(currentProgress);
         }
@@ -83,16 +125,16 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
       // Determine group status based on members and time (simplified logic)
       if (product.members >= product.requiredMembers) {
           setGroupStatus('completed');
-      } else if (product.remainingTime === 'پایان یافته') { // Assuming 'پایان یافته' means expired
+      } else if (product.remainingTime.includes('پایان')) { // Simple check for expired time
           setGroupStatus('failed');
-      } else if (targetProgress > 50) {
+      } else if (targetProgress > 70) { // Changed threshold for "filling"
           setGroupStatus('filling');
       } else {
           setGroupStatus('active');
       }
 
 
-      return () => clearInterval(interval);
+      return () => clearInterval(progressInterval);
 
     }
   }, [product]);
@@ -118,7 +160,8 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
 
   // Mock gallery images (replace with actual multiple images if available)
-  const galleryImages = [
+   // Using picsum for more variety
+   const galleryImages = [
     product.image,
     `https://picsum.photos/seed/${product.id + 10}/500/500`,
     `https://picsum.photos/seed/${product.id + 20}/500/500`,
@@ -132,15 +175,16 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
       case 'failed':
         return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600" };
       case 'filling':
-        return { text: "در حال تکمیل ظرفیت...", icon: AlertCircle, color: "text-yellow-600" };
+        return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-600 animate-pulse" }; // Added pulse animation
       case 'active':
       default:
         const remaining = product.requiredMembers - product.members;
-        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت!`, icon: Info, color: "text-blue-600" };
+        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!`, icon: Users2, color: "text-blue-600" }; // Changed icon and text
     }
   };
 
   const statusInfo = getStatusInfo();
+  const relatedProducts = getRelatedProducts(product.id, product.category);
 
 
   return (
@@ -148,9 +192,9 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
       <Header />
 
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Images */}
-          <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Product Images (Left Column in RTL) */}
+          <div className="lg:col-span-1 flex flex-col gap-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg border border-border">
               {selectedImage && (
                 <Image
@@ -159,13 +203,18 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                   fill
                   className="object-cover transition-transform duration-300 hover:scale-105"
                   data-ai-hint={product.aiHint || 'product image'}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority // Prioritize loading the main image
                 />
               )}
-              <Badge variant="destructive" className="absolute top-4 right-4 text-lg px-3 py-1">
+              <Badge variant="destructive" className="absolute top-4 left-4 text-lg px-3 py-1"> {/* Positioned left for RTL */}
                 {product.discount}٪ تخفیف
               </Badge>
+                 {/* Social Proof: Viewers */}
+                <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded-md text-xs flex items-center gap-1 backdrop-blur-sm">
+                   <Eye className="w-3 h-3"/>
+                   {viewers} نفر در حال مشاهده
+                 </div>
             </div>
             {/* Image Gallery Thumbnails */}
             <div className="grid grid-cols-4 gap-3">
@@ -188,8 +237,8 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
             </div>
           </div>
 
-          {/* Product Details */}
-          <div className="flex flex-col space-y-6">
+          {/* Product Details (Right Columns in RTL) */}
+          <div className="lg:col-span-2 flex flex-col space-y-6">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
             {/* Badges and Rating */}
@@ -211,7 +260,39 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-400" />
                 <span>۴.۵ (۱۲۰ رأی)</span> {/* Sample Rating */}
               </div>
+               {/* Social Proof: Purchased Recently (Simulated) */}
+               {Math.random() > 0.5 && ( // Randomly show this
+                 <Badge variant="outline" className="text-green-600 border-green-300">
+                    🔥 {Math.floor(Math.random() * 10) + 3} نفر در ساعت گذشته خریدند
+                 </Badge>
+               )}
             </div>
+
+             {/* Seller Info Card */}
+            {store && (
+                 <Card className="bg-secondary/30 border-border">
+                   <CardHeader className="flex flex-row items-center gap-3 p-4">
+                     <Avatar className="w-12 h-12 border-2 border-background">
+                       <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
+                       <AvatarFallback>{store.name.charAt(0)}</AvatarFallback>
+                     </Avatar>
+                     <div className="flex-grow">
+                       <p className="text-xs text-muted-foreground">فروشنده:</p>
+                       <CardTitle className="text-base font-semibold">{store.name}</CardTitle>
+                     </div>
+                     <Button variant="link" size="sm" asChild>
+                       <Link href={`/store/${store.id}`}>مشاهده فروشگاه</Link>
+                     </Button>
+                   </CardHeader>
+                   {store.offersInstallments && (
+                       <CardFooter className="p-4 pt-0 border-t border-border/50 mt-2">
+                           <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50 dark:bg-green-900/30">
+                               امکان خرید اقساطی این کالا وجود دارد
+                           </Badge>
+                       </CardFooter>
+                    )}
+                 </Card>
+             )}
 
             {/* Package Contents */}
              {product.isPackage && product.packageContents && (
@@ -223,7 +304,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 pr-4"> {/* Added padding for RTL list */}
                     {product.packageContents.map((content, index) => (
                       <li key={index}>
                         {content.name} ({content.quantity})
@@ -241,6 +322,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                   <div key={variation.type}>
                     <Label className="text-base font-semibold mb-3 block">{variation.type}: <span className="text-primary font-bold">{selectedVariations[variation.type]}</span></Label>
                     <RadioGroup
+                      dir="rtl" // Ensure RadioGroup itself respects RTL
                       value={selectedVariations[variation.type]}
                       onValueChange={(value) => handleVariationChange(variation.type, value)}
                       className="flex flex-wrap gap-2"
@@ -250,10 +332,8 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                           key={option}
                           htmlFor={`${variation.type}-${option}`}
                           className={cn(
-                            "cursor-pointer rounded-md border border-input px-3 py-1.5 text-sm transition-all duration-200",
-                            selectedVariations[variation.type] === option
-                              ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary ring-offset-1"
-                              : "bg-background hover:bg-accent hover:text-accent-foreground"
+                            "cursor-pointer rounded-md border border-input px-3 py-1.5 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-1", // Use has-[:checked] for styling parent
+                             "bg-background hover:bg-accent hover:text-accent-foreground"
                           )}
                         >
                           <RadioGroupItem
@@ -303,20 +383,29 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                  <span>{statusInfo.text}</span>
               </div>
 
-               {/* Recent Members */}
+               {/* Recent Members - Enhanced */}
                 {product.recentMembers && product.recentMembers.length > 0 && (
-                  <div className="mt-4">
-                    <p className="text-xs text-muted-foreground mb-2">آخرین اعضا:</p>
+                  <div className="mt-4 pt-4 border-t border-border/50">
+                    <p className="text-sm font-medium text-muted-foreground mb-3">آخرین اعضا پیوسته به گروه:</p>
                     <div className="flex -space-x-2 rtl:space-x-reverse overflow-hidden">
-                      {product.recentMembers.slice(0, 5).map((member, index) => (
-                        <Avatar key={index} className="w-8 h-8 border-2 border-background transition-transform hover:scale-110 duration-200">
-                          <AvatarImage src={member.avatar} alt={member.name} />
-                          <AvatarFallback>{member.name}</AvatarFallback>
-                        </Avatar>
+                      {product.recentMembers.slice(0, 7).map((member, index) => ( // Show up to 7
+                        <TooltipProvider key={index} delayDuration={100}>
+                           <Tooltip>
+                             <TooltipTrigger asChild>
+                                <Avatar className="w-9 h-9 border-2 border-background transition-transform hover:scale-110 duration-200 cursor-pointer shadow-sm">
+                                  <AvatarImage src={member.avatar} alt={member.name} />
+                                  <AvatarFallback>{member.name}</AvatarFallback>
+                                </Avatar>
+                             </TooltipTrigger>
+                             <TooltipContent>
+                               <p>{member.name}</p>
+                             </TooltipContent>
+                           </Tooltip>
+                         </TooltipProvider>
                       ))}
-                      {product.members > 5 && (
-                        <Avatar className="w-8 h-8 border-2 border-background bg-muted">
-                          <AvatarFallback>+{product.members - 5}</AvatarFallback>
+                      {product.members > 7 && (
+                        <Avatar className="w-9 h-9 border-2 border-background bg-muted">
+                          <AvatarFallback>+{product.members - 7}</AvatarFallback>
                         </Avatar>
                       )}
                     </div>
@@ -325,45 +414,48 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
             </div>
 
             {/* Actions (Quantity, Add to Cart, Wishlist, Share) */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 border-t border-border pt-6">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-t border-border pt-6"> {/* Changed items-center to items-stretch */}
               {/* Quantity Selector */}
-              <div className="flex items-center border border-border rounded-md">
-                <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-10 w-10 rounded-r-md rounded-l-none">
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-                <span className="px-4 font-semibold text-lg w-12 text-center">{quantity}</span>
-                <Button variant="ghost" size="icon" onClick={incrementQuantity} className="h-10 w-10 rounded-l-md rounded-r-none">
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-              </div>
+               <div className="flex items-center border border-border rounded-md h-12"> {/* Increased height */}
+                 <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-full w-12 rounded-l-md rounded-r-none"> {/* Adjusted width and rounding */}
+                   <ChevronRight className="h-5 w-5" /> {/* Right icon for decrement in RTL */}
+                 </Button>
+                 <span className="px-4 font-semibold text-lg w-16 text-center flex items-center justify-center h-full">{quantity}</span> {/* Centered vertically */}
+                 <Button variant="ghost" size="icon" onClick={incrementQuantity} className="h-full w-12 rounded-r-md rounded-l-none"> {/* Adjusted width and rounding */}
+                   <ChevronLeft className="h-5 w-5" /> {/* Left icon for increment in RTL */}
+                 </Button>
+               </div>
 
               {/* Add to Cart/Join Group Button */}
-              <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-105 duration-300" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
+              <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-105 duration-300 h-12" disabled={groupStatus === 'completed' || groupStatus === 'failed'}> {/* Increased height */}
                  <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                  {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه و افزودن به سبد'}
                </Button>
 
               {/* Wishlist and Share Buttons */}
               <div className="flex gap-2">
-                  <Button variant="outline" size="icon" aria-label="افزودن به علاقه‌مندی">
-                    <Heart className="h-5 w-5" />
+                  <Button variant="outline" size="icon" aria-label="افزودن به علاقه‌مندی" className="h-12 w-12"> {/* Increased height/width */}
+                    <Heart className="h-6 w-6" /> {/* Increased icon size */}
                   </Button>
-                  <Button variant="outline" size="icon" aria-label="اشتراک گذاری">
-                    <Share2 className="h-5 w-5" />
+                  <Button variant="outline" size="icon" aria-label="اشتراک گذاری" className="h-12 w-12"> {/* Increased height/width */}
+                    <Share2 className="h-6 w-6" /> {/* Increased icon size */}
                   </Button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Product Tabs (Description, Reviews, Details) */}
+        {/* Product Tabs (Description, Reviews, Details, Shipping/Returns) */}
         <div className="mt-16">
-           <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex mb-6 bg-secondary rounded-lg p-1">
+           <Tabs defaultValue="description" className="w-full" dir="rtl"> {/* Added dir="rtl" */}
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:w-auto md:inline-flex mb-6 bg-secondary rounded-lg p-1"> {/* Added sm:grid-cols-4 */}
               <TabsTrigger value="description" className="text-base">توضیحات</TabsTrigger>
               <TabsTrigger value="details" className="text-base">مشخصات فنی</TabsTrigger>
-              <TabsTrigger value="reviews" className="text-base">نظرات کاربران (۱۲۰)</TabsTrigger>
+              <TabsTrigger value="reviews" className="text-base">نظرات کاربران ({product.recentMembers?.length ?? 0 + 5})</TabsTrigger> {/* Sample count */}
+              <TabsTrigger value="shipping" className="text-base">ارسال و بازگشت</TabsTrigger> {/* New Tab */}
             </TabsList>
+
+            {/* Description Tab */}
             <TabsContent value="description" className="bg-card p-6 rounded-lg border border-border shadow-sm text-foreground">
               <h3 className="text-xl font-semibold mb-4">معرفی محصول</h3>
               <p className="leading-relaxed text-muted-foreground">
@@ -372,7 +464,17 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
               </p>
                {/* Add more descriptive content here */}
+               <Separator className="my-6"/>
+               <h4 className="text-lg font-semibold mb-3">ویژگی‌های کلیدی:</h4>
+               <ul className="list-disc space-y-1 pr-5 text-muted-foreground text-sm">
+                    <li>ویژگی اول محصول با توضیح کوتاه</li>
+                    <li>ویژگی دوم با جزئیات بیشتر</li>
+                    <li>ویژگی سوم و مهم</li>
+                    <li>ویژگی چهارم</li>
+               </ul>
             </TabsContent>
+
+             {/* Details Tab */}
             <TabsContent value="details" className="bg-card p-6 rounded-lg border border-border shadow-sm">
                <h3 className="text-xl font-semibold mb-4 text-foreground">مشخصات فنی</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
@@ -380,10 +482,12 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                        <span className="text-muted-foreground">برند:</span>
                        <span className="font-medium text-foreground">{product.title.split(' ')[0]}</span> {/* Example: Extract brand */}
                    </div>
-                   <div className="flex justify-between border-b border-border py-2">
-                       <span className="text-muted-foreground">رنگ:</span>
-                       <span className="font-medium text-foreground">مشکی</span> {/* Sample data */}
-                   </div>
+                   {product.variations?.find(v => v.type === 'رنگ') && (
+                     <div className="flex justify-between border-b border-border py-2">
+                         <span className="text-muted-foreground">رنگ‌های موجود:</span>
+                         <span className="font-medium text-foreground">{product.variations.find(v => v.type === 'رنگ')?.options.join(', ')}</span>
+                     </div>
+                   )}
                     <div className="flex justify-between border-b border-border py-2">
                        <span className="text-muted-foreground">گارانتی:</span>
                        <span className="font-medium text-foreground">۱۸ ماهه رسمی</span> {/* Sample data */}
@@ -401,16 +505,22 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                        <span className="text-muted-foreground">وزن:</span>
                        <span className="font-medium text-foreground">۱۸۰ گرم</span> {/* Sample data */}
                    </div>
+                    <div className="flex justify-between border-b border-border py-2">
+                       <span className="text-muted-foreground">کد محصول:</span>
+                       <span className="font-medium text-foreground">KG-{product.id.toString().padStart(5, '0')}</span>
+                   </div>
                </div>
             </TabsContent>
+
+             {/* Reviews Tab */}
             <TabsContent value="reviews" className="bg-card p-6 rounded-lg border border-border shadow-sm">
               <h3 className="text-xl font-semibold mb-6 text-foreground">نظرات کاربران</h3>
               <div className="space-y-6">
                 {/* Sample Review 1 */}
                 <div className="flex gap-4 border-b border-border pb-4">
                    <Avatar>
-                     <AvatarImage src="https://picsum.photos/seed/user1/40/40" alt="کاربر ۱" />
-                     <AvatarFallback>ک۱</AvatarFallback>
+                     <AvatarImage src="https://picsum.photos/seed/userRev1/40/40" alt="کاربر ۱" />
+                     <AvatarFallback>ع ر</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
                        <div className="flex justify-between items-center mb-1">
@@ -423,13 +533,21 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                            ))}
                        </div>
                        <p className="text-sm text-muted-foreground leading-relaxed">کیفیت محصول عالی بود و قیمت گروهی هم خیلی مناسب بود. سریع به دستم رسید. ممنون از خریدگروهی.</p>
+                       <div className="flex gap-2 mt-3">
+                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary">
+                                <Heart className="w-3 h-3 ml-1" /> مفید بود (۵)
+                            </Button>
+                             <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary">
+                                <MessageSquare className="w-3 h-3 ml-1" /> پاسخ
+                            </Button>
+                       </div>
                    </div>
                 </div>
                  {/* Sample Review 2 */}
                 <div className="flex gap-4 border-b border-border pb-4">
                    <Avatar>
-                     <AvatarImage src="https://picsum.photos/seed/user2/40/40" alt="کاربر ۲" />
-                     <AvatarFallback>ک۲</AvatarFallback>
+                     <AvatarImage src="https://picsum.photos/seed/userRev2/40/40" alt="کاربر ۲" />
+                     <AvatarFallback>م ا</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
                        <div className="flex justify-between items-center mb-1">
@@ -442,6 +560,11 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                            ))}
                        </div>
                        <p className="text-sm text-muted-foreground leading-relaxed">بسته بندی خوب بود و محصول سالم رسید. قیمت واقعا به صرفه بود. پیشنهاد می‌کنم.</p>
+                        <div className="flex gap-2 mt-3">
+                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary">
+                                <Heart className="w-3 h-3 ml-1" /> مفید بود (۱۲)
+                            </Button>
+                       </div>
                    </div>
                 </div>
                  {/* Add more reviews */}
@@ -450,18 +573,47 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 <Button>ثبت نظر جدید</Button>
               </div>
             </TabsContent>
+
+            {/* Shipping & Returns Tab */}
+             <TabsContent value="shipping" className="bg-card p-6 rounded-lg border border-border shadow-sm">
+               <h3 className="text-xl font-semibold mb-6 text-foreground">اطلاعات ارسال و بازگشت کالا</h3>
+               <div className="space-y-6 text-muted-foreground text-sm">
+                   <div className="flex items-start gap-3">
+                       <ShippingIcon className="w-6 h-6 text-primary mt-1 flex-shrink-0"/>
+                       <div>
+                           <h4 className="font-semibold text-foreground mb-1">نحوه ارسال</h4>
+                           <p>ارسال برای تهران توسط پیک (۱ تا ۲ روز کاری) و برای شهرستان‌ها توسط پست پیشتاز (۳ تا ۵ روز کاری) انجام می‌شود. هزینه ارسال بر اساس وزن و مقصد محاسبه می‌گردد.</p>
+                       </div>
+                   </div>
+                   <div className="flex items-start gap-3">
+                       <RefreshCw className="w-6 h-6 text-primary mt-1 flex-shrink-0"/>
+                       <div>
+                           <h4 className="font-semibold text-foreground mb-1">شرایط بازگشت</h4>
+                           <p>شما می‌توانید تا ۷ روز پس از دریافت کالا، در صورت عدم رضایت یا وجود مشکل، با هماهنگی پشتیبانی نسبت به بازگشت کالا اقدام نمایید. لطفاً شرایط کامل بازگشت را در صفحه <Link href="/returns-policy" className="text-primary hover:underline">قوانین بازگشت</Link> مطالعه فرمایید.</p>
+                       </div>
+                   </div>
+                   <div className="flex items-start gap-3">
+                       <ShieldCheck className="w-6 h-6 text-primary mt-1 flex-shrink-0"/>
+                       <div>
+                           <h4 className="font-semibold text-foreground mb-1">تضمین سلامت فیزیکی</h4>
+                           <p>تمامی کالاها قبل از ارسال از نظر سلامت فیزیکی بررسی می‌شوند و با بسته‌بندی مناسب ارسال می‌گردند. در صورت مشاهده هرگونه آسیب‌دیدگی در زمان تحویل، لطفاً از دریافت بسته خودداری و به پشتیبانی اطلاع دهید.</p>
+                       </div>
+                   </div>
+               </div>
+             </TabsContent>
+
           </Tabs>
         </div>
 
 
         {/* Related Products */}
         <div className="mt-16">
-          <h2 className="text-3xl font-bold mb-8 text-center text-foreground">محصولات مشابه</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-foreground">محصولات مشابه و پیشنهادی</h2>
            <Carousel
               opts={{
                 align: "start",
                 direction: "rtl",
-                loop: true,
+                loop: false, // Disable loop for related products unless many items
               }}
               className="w-full relative"
             >
@@ -469,10 +621,10 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 {relatedProducts.map((relatedProduct) => (
                   <CarouselItem key={relatedProduct.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4">
                      <Link href={`/product/${relatedProduct.id}`}>
-                      <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md cursor-pointer">
+                      <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md cursor-pointer bg-card"> {/* Ensure bg-card */}
                         <CardHeader className="p-0 relative aspect-[4/3]">
                           <Image src={relatedProduct.image} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint}/>
-                          <Badge variant="destructive" className="absolute top-2 right-2">
+                          <Badge variant="destructive" className="absolute top-2 left-2"> {/* Adjusted position */}
                             {relatedProduct.discount}٪ تخفیف
                           </Badge>
                            <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
@@ -480,7 +632,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                           </div>
                         </CardHeader>
                         <CardContent className="p-3 flex-grow flex flex-col">
-                          <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{relatedProduct.title}</h5>
+                          <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{relatedProduct.title}</h5>
                            {relatedProduct.originalPrice && relatedProduct.groupPrice && (
                              <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
                                <span className="text-muted-foreground line-through">{formatNumber(relatedProduct.originalPrice)}</span>
@@ -502,9 +654,12 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                      </Link>
                   </CarouselItem>
                 ))}
+                 {relatedProducts.length === 0 && (
+                    <p className="text-center text-muted-foreground col-span-full py-8">محصول مشابهی یافت نشد.</p>
+                 )}
               </CarouselContent>
-              <CarouselPrevious className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
-              <CarouselNext className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
+              <CarouselPrevious className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted L/R */}
+              <CarouselNext className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted L/R */}
             </Carousel>
         </div>
       </div>
@@ -529,3 +684,45 @@ const getCategoryNameBySlug = (slug: string | undefined) => {
     ];
     return categories.find(cat => cat.slug === slug)?.name || slug || 'دسته بندی';
 }
+
+// Tooltip Component (minimal wrapper)
+interface TooltipProps {
+  children: React.ReactNode;
+  content: React.ReactNode;
+}
+
+const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div
+      className="relative inline-block"
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      {children}
+      {show && (
+        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 px-2 py-1 bg-gray-700 text-white text-xs rounded shadow-lg whitespace-nowrap">
+          {content}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// TooltipProvider (basic placeholder - ShadCN/Radix provides more features)
+const TooltipProvider: React.FC<{ children: React.ReactNode; delayDuration?: number }> = ({ children }) => {
+  return <>{children}</>; // Simple pass-through for this example
+};
+
+// TooltipTrigger (basic placeholder)
+const TooltipTrigger: React.FC<{ children: React.ReactNode; asChild?: boolean }> = ({ children }) => {
+    return <>{children}</>;
+};
+
+// TooltipContent (basic placeholder)
+const TooltipContent: React.FC<{ children: React.ReactNode; side?: string; align?: string; hidden?: boolean }> = ({ children }) => {
+    return <div className="tooltip-content-placeholder">{children}</div>; // Placeholder class
+};
+
+
