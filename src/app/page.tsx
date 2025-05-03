@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -195,41 +195,52 @@ const specialOffers = [
   }
 ];
 
-// داده‌های نمونه برای فروشندگان عمده
+// داده‌های نمونه برای فروشندگان عمده (کارت‌های کوچک‌تر)
 const wholesalers = [
   {
     id: 1,
-    name: "شرکت پخش مواد غذایی بهاران",
+    name: "شرکت پخش بهاران",
     logo: "https://picsum.photos/seed/wholesaler1/100/100",
-    description: "توزیع کننده انواع مواد غذایی، بهداشتی و شوینده.",
     aiHint: "food distribution company logo",
-    products: groupPurchases.filter(p => ['food', 'beauty-health'].includes(p.category || '')).slice(0, 3), // Add sample products
+    productHints: ['food', 'drink', 'snack'], // Keywords for tiny product images
   },
   {
     id: 2,
-    name: "فروشگاه لوازم خانگی مدرن",
+    name: "لوازم خانگی مدرن",
     logo: "https://picsum.photos/seed/wholesaler2/100/100",
-    description: "عرضه کننده جدیدترین لوازم خانگی برندهای معتبر.",
     aiHint: "home appliance store logo",
-     products: groupPurchases.filter(p => ['home-appliances'].includes(p.category || '')).slice(0, 3),
+    productHints: ['tv', 'fridge', 'washing machine'],
   },
   {
     id: 3,
-    name: "تولیدی پوشاک ایرانیان",
+    name: "پوشاک ایرانیان",
     logo: "https://picsum.photos/seed/wholesaler3/100/100",
-    description: "تولید و پخش انواع پوشاک مردانه، زنانه و بچگانه.",
     aiHint: "clothing manufacturer logo",
-     products: groupPurchases.filter(p => ['fashion'].includes(p.category || '')).slice(0, 3),
+    productHints: ['shirt', 'trousers', 'dress'],
   },
   {
     id: 4,
-    name: "بازرگانی دیجیتال پارس",
+    name: "دیجیتال پارس",
     logo: "https://picsum.photos/seed/wholesaler4/100/100",
-    description: "وارد کننده و پخش کننده انواع کالاهای دیجیتال.",
     aiHint: "digital electronics company logo",
-     products: groupPurchases.filter(p => ['digital'].includes(p.category || '')).slice(0, 3),
-  }
+    productHints: ['phone', 'laptop', 'headphone'],
+  },
+    {
+    id: 5,
+    name: "ابزار یراق مرکزی",
+    logo: "https://picsum.photos/seed/wholesaler5/100/100",
+    aiHint: "hardware tools supplier logo",
+    productHints: ['drill', 'hammer', 'screwdriver'],
+  },
+    {
+    id: 6,
+    name: "دکوراسیون داخلی زیبا",
+    logo: "https://picsum.photos/seed/wholesaler6/100/100",
+    aiHint: "interior decoration shop logo",
+    productHints: ['lamp', 'vase', 'painting'],
+  },
 ];
+
 
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان (برای اسلایدر)
 const stores = [
@@ -243,6 +254,7 @@ const stores = [
       { ...groupPurchases[1], id: 101 }, // Use existing product data, ensure unique ID
       { ...groupPurchases[3], id: 102 },
       { ...groupPurchases[7], id: 103 },
+      { ...groupPurchases[4], id: 104 },
     ],
   },
   {
@@ -254,6 +266,7 @@ const stores = [
     products: [
       { ...groupPurchases[0], id: 201 },
       { ...groupPurchases[5], id: 202 },
+      { ...groupPurchases[8], id: 203 },
     ],
   },
   {
@@ -265,6 +278,8 @@ const stores = [
     products: [
       { ...groupPurchases[2], id: 301 },
       { ...groupPurchases[6], id: 302 },
+      { ...groupPurchases[4], id: 303 },
+      { ...groupPurchases[7], id: 304 },
     ],
   },
 ];
@@ -371,10 +386,10 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold mb-8 text-center">تخفیف‌های شگفت‌انگیز</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {specialOffers.map(offer => (
-            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-white`}>
-              <div className="relative">
-                <Image src={offer.image} width={600} height={250} alt={offer.title} className="w-full h-48 object-cover opacity-60 transition-opacity duration-300 hover:opacity-80" data-ai-hint={offer.aiHint} />
-                <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/60 to-transparent">
+            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-white group`}>
+              <div className="relative h-48">
+                <Image src={offer.image} layout="fill" objectFit="cover" alt={offer.title} className="transition-transform duration-500 group-hover:scale-110" data-ai-hint={offer.aiHint} />
+                <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/70 to-transparent">
                   <h3 className="font-bold text-xl mb-2">{offer.title}</h3>
                   <p className="text-sm mb-4 line-clamp-2">{offer.description}</p>
                   <Button variant="outline" className="mt-auto border-white text-white hover:bg-white hover:text-current transition-transform hover:scale-105 duration-300">
@@ -387,14 +402,15 @@ export default function HomePage() {
         </div>
       </div>
 
+
       {/* دسته‌بندی‌ها */}
       <div className="container mx-auto px-4 py-12 bg-secondary rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-center text-secondary-foreground">دسته‌بندی‌های محبوب</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map(category => (
-            <Link href={`/category/${category.slug}`} key={category.id} className="bg-card rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 aspect-square">
-              <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">{category.icon}</div>
-              <div className="text-sm font-medium text-card-foreground text-center">{category.name}</div>
+            <Link href={`/category/${category.slug}`} key={category.id} className="bg-card rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 aspect-square group">
+              <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-125">{category.icon}</div>
+              <div className="text-sm font-medium text-card-foreground text-center group-hover:text-primary transition-colors duration-300">{category.name}</div>
             </Link>
           ))}
         </div>
@@ -417,9 +433,9 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
-                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border">
-                   <CardHeader className="p-0 relative">
-                      <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint}/>
+                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group">
+                   <CardHeader className="p-0 relative aspect-[4/3]">
+                      <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint}/>
                       <Badge variant="destructive" className="absolute top-2 right-2">
                         {item.discount}٪ تخفیف
                       </Badge>
@@ -427,6 +443,9 @@ export default function HomePage() {
                          <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
                          ایران
                       </Badge>
+                      <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                          <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
+                      </div>
                    </CardHeader>
                    <CardContent className="p-4">
                       <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden">{item.title}</h3>
@@ -458,9 +477,9 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {groupPurchases.slice(4, 8).map(item => (
-              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <CardHeader className="p-0 relative">
-                   <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint} />
+              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+                <CardHeader className="p-0 relative aspect-[4/3]">
+                   <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
                   <Badge variant="destructive" className="absolute top-2 right-2">
                     {item.discount}٪ تخفیف
                   </Badge>
@@ -479,6 +498,9 @@ export default function HomePage() {
                       پیشنهاد ویژه
                     </Badge>
                   )}
+                  <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                      <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
+                  </div>
                 </CardHeader>
                 <CardContent className="p-4">
                   <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
@@ -563,12 +585,13 @@ export default function HomePage() {
                     opts={{
                       align: "start",
                       direction: "rtl", // Set carousel direction to RTL
+                      loop: true, // Enable loop for continuous scrolling
                     }}
                     className="w-full relative" // Add relative for positioning arrows
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
-                        <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4">
+                        <CarouselItem key={product.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4">
                           <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md">
                             <CardHeader className="p-0 relative aspect-[4/3]">
                               <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
@@ -576,11 +599,14 @@ export default function HomePage() {
                                 {product.discount}٪ تخفیف
                               </Badge>
                               {product.isFeatured && (
-                                <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
-                                  <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
+                                <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md text-xs px-1.5 py-0.5">
+                                  <Star className="w-2.5 h-2.5 ml-1 rtl:mr-1 fill-current" />
                                   ویژه
                                 </Badge>
                               )}
+                              <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                                  <Button size="sm" variant="default" className="h-7 px-2 text-xs">افزودن</Button>
+                              </div>
                             </CardHeader>
                             <CardContent className="p-3 flex-grow flex flex-col">
                               <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{product.title}</h5>
@@ -602,8 +628,8 @@ export default function HomePage() {
                       ))}
                     </CarouselContent>
                      {/* Carousel Arrows - Enhanced Styling */}
-                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
-                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
+                    <CarouselPrevious className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
+                    <CarouselNext className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/>
                   </Carousel>
                 </CardContent>
               </Card>
@@ -613,33 +639,32 @@ export default function HomePage() {
       </div>
 
 
-     {/* لیست فروشندگان عمده - بازطراحی شده */}
+     {/* لیست فروشندگان عمده - بازطراحی شده (کارت کوچک‌تر) */}
       <div className="bg-secondary py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">فروشندگان عمده همکار</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {wholesalers.map((wholesaler) => (
-              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center">
-                 <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-md">
+              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center text-center group">
+                 <Avatar className="w-16 h-16 mb-3 border-4 border-background shadow-md transition-transform duration-300 group-hover:scale-110">
                   <AvatarImage src={wholesaler.logo} alt={`لوگوی ${wholesaler.name}`} data-ai-hint={wholesaler.aiHint} />
                   <AvatarFallback>{wholesaler.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <CardTitle className="text-md font-semibold mb-1 text-card-foreground text-center h-10 overflow-hidden">{wholesaler.name}</CardTitle>
-                <CardDescription className="text-xs text-muted-foreground mb-3 text-center line-clamp-2 h-8">{wholesaler.description}</CardDescription>
-                 {/* Product Circles */}
-                 {wholesaler.products && wholesaler.products.length > 0 && (
-                   <div className="flex -space-x-2 rtl:space-x-reverse justify-center mt-2 mb-4">
-                     {wholesaler.products.slice(0, 3).map((product) => (
-                       <Avatar key={product.id} className="w-8 h-8 border-2 border-background shadow-sm">
-                         <AvatarImage src={product.image} alt={product.title} data-ai-hint={product.aiHint} />
-                         <AvatarFallback>{product.title.charAt(0)}</AvatarFallback>
+                <CardTitle className="text-sm font-semibold mb-2 text-card-foreground h-10 overflow-hidden flex items-center justify-center">{wholesaler.name}</CardTitle>
+                 {/* Tiny Product Image Placeholders */}
+                 {wholesaler.productHints && wholesaler.productHints.length > 0 && (
+                   <div className="flex -space-x-1 rtl:space-x-reverse justify-center mt-1 mb-3">
+                     {wholesaler.productHints.slice(0, 3).map((hint, index) => (
+                       <Avatar key={index} className="w-6 h-6 border border-background shadow-sm">
+                         {/* Use a placeholder service or a generic icon */}
+                         <AvatarImage src={`https://picsum.photos/seed/${wholesaler.id}-${index}/30/30`} alt={hint} data-ai-hint={hint} />
+                         <AvatarFallback>{hint.charAt(0)}</AvatarFallback>
                        </Avatar>
                      ))}
                    </div>
                  )}
-                 <Button variant="link" size="sm" className="text-primary hover:text-primary/80 mt-auto text-xs">
-                   مشاهده محصولات
-                   <ChevronLeft className="mr-1 h-3 w-3" />
+                 <Button variant="link" size="sm" className="text-primary hover:text-primary/80 mt-auto text-xs h-6 px-2">
+                   مشاهده
                  </Button>
               </Card>
             ))}
@@ -685,9 +710,9 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredItems.map(item => (
-              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                 <CardHeader className="p-0 relative">
-                  <Image src={item.image} width={300} height={200} alt={item.title} className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" data-ai-hint={item.aiHint} />
+              <Card key={item.id} className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+                 <CardHeader className="p-0 relative aspect-[4/3]">
+                  <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
                   <Badge variant="destructive" className="absolute top-2 right-2">
                     {item.discount}٪ تخفیف
                   </Badge>
@@ -706,6 +731,9 @@ export default function HomePage() {
                       پیشنهاد ویژه
                     </Badge>
                   )}
+                   <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                       <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
+                   </div>
                  </CardHeader>
                 <CardContent className="p-4">
                   <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
