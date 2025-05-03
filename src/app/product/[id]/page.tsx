@@ -27,6 +27,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Imp
 import { Label } from "@/components/ui/label"; // Import Label
 import { cn } from "@/lib/utils"; // Import cn for conditional class names
 import { Separator } from '@/components/ui/separator'; // Import Separator
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip" // Import Tooltip components
 
 // Helper function to find product by ID
 const getProductById = (id: number) => {
@@ -68,7 +74,7 @@ const getRelatedProducts = (currentProductId: number, category?: string) => {
 
 
 // Define the type for the params promise
-type ParamsPromise = Promise<{ id: string }>;
+type ParamsPromise = { id: string };
 
 export default function ProductDetailPage({ params }: { params: ParamsPromise }) {
   const resolvedParams = React.use(params); // Unwrap the promise
@@ -83,18 +89,28 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
   const [viewers, setViewers] = useState(0); // State for simulated viewers
+  const [showPurchasedRecently, setShowPurchasedRecently] = useState(false); // State for Math.random based UI
+  const [purchasedCount, setPurchasedCount] = useState(0); // State for random number
 
-  // Simulate dynamic viewer count
+  // Simulate dynamic viewer count and random purchase count
   useEffect(() => {
+    // Run only on client after hydration
     const randomViewers = Math.floor(Math.random() * 30) + 5; // 5 to 35 viewers
     setViewers(randomViewers);
+
+    // Decide if "purchased recently" badge should be shown
+    const shouldShow = Math.random() > 0.5;
+    setShowPurchasedRecently(shouldShow);
+    if (shouldShow) {
+      setPurchasedCount(Math.floor(Math.random() * 10) + 3); // 3 to 12
+    }
 
     const interval = setInterval(() => {
       setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); // Fluctuate viewer count
     }, 5000); // Update every 5 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount
 
 
   useEffect(() => {
@@ -211,10 +227,12 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 {product.discount}٪ تخفیف
               </Badge>
                  {/* Social Proof: Viewers */}
-                <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded-md text-xs flex items-center gap-1 backdrop-blur-sm">
-                   <Eye className="w-3 h-3"/>
-                   {viewers} نفر در حال مشاهده
-                 </div>
+                 {viewers > 0 && ( // Only render if viewers data is available
+                    <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded-md text-xs flex items-center gap-1 backdrop-blur-sm">
+                        <Eye className="w-3 h-3"/>
+                        {viewers} نفر در حال مشاهده
+                    </div>
+                 )}
             </div>
             {/* Image Gallery Thumbnails */}
             <div className="grid grid-cols-4 gap-3">
@@ -260,10 +278,10 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-400" />
                 <span>۴.۵ (۱۲۰ رأی)</span> {/* Sample Rating */}
               </div>
-               {/* Social Proof: Purchased Recently (Simulated) */}
-               {Math.random() > 0.5 && ( // Randomly show this
+               {/* Social Proof: Purchased Recently (Client-side rendered) */}
+               {showPurchasedRecently && purchasedCount > 0 && (
                  <Badge variant="outline" className="text-green-600 border-green-300">
-                    🔥 {Math.floor(Math.random() * 10) + 3} نفر در ساعت گذشته خریدند
+                    🔥 {purchasedCount} نفر در ساعت گذشته خریدند
                  </Badge>
                )}
             </div>
@@ -684,45 +702,3 @@ const getCategoryNameBySlug = (slug: string | undefined) => {
     ];
     return categories.find(cat => cat.slug === slug)?.name || slug || 'دسته بندی';
 }
-
-// Tooltip Component (minimal wrapper)
-interface TooltipProps {
-  children: React.ReactNode;
-  content: React.ReactNode;
-}
-
-const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
-  const [show, setShow] = useState(false);
-
-  return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      {children}
-      {show && (
-        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 px-2 py-1 bg-gray-700 text-white text-xs rounded shadow-lg whitespace-nowrap">
-          {content}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// TooltipProvider (basic placeholder - ShadCN/Radix provides more features)
-const TooltipProvider: React.FC<{ children: React.ReactNode; delayDuration?: number }> = ({ children }) => {
-  return <>{children}</>; // Simple pass-through for this example
-};
-
-// TooltipTrigger (basic placeholder)
-const TooltipTrigger: React.FC<{ children: React.ReactNode; asChild?: boolean }> = ({ children }) => {
-    return <>{children}</>;
-};
-
-// TooltipContent (basic placeholder)
-const TooltipContent: React.FC<{ children: React.ReactNode; side?: string; align?: string; hidden?: boolean }> = ({ children }) => {
-    return <div className="tooltip-content-placeholder">{children}</div>; // Placeholder class
-};
-
-
