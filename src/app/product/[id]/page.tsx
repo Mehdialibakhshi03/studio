@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; // Import React
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import Radio Group
 import { Label } from "@/components/ui/label"; // Import Label
+import { cn } from "@/lib/utils"; // Import cn for conditional class names
 
 // Helper function to find product by ID
 const getProductById = (id: number) => {
@@ -31,7 +32,7 @@ const getProductById = (id: number) => {
 };
 
 // Helper function to format numbers with Persian commas
-const formatNumber = (num: number) => {
+const formatNumber = (num: number | undefined) => {
   if (num === undefined || num === null) return '';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -39,8 +40,12 @@ const formatNumber = (num: number) => {
 // Sample related products (replace with actual logic)
 const relatedProducts = groupPurchases.slice(0, 4);
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const productId = parseInt(params.id, 10);
+// Define the type for the params promise
+type ParamsPromise = Promise<{ id: string }>;
+
+export default function ProductDetailPage({ params }: { params: ParamsPromise }) {
+  const resolvedParams = React.use(params); // Unwrap the promise
+  const productId = parseInt(resolvedParams.id, 10); // Access id from resolved params
   const product = getProductById(productId);
   const { toast } = useToast();
 
@@ -63,7 +68,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       }
 
        // Animate progress bar and determine status
-      const targetProgress = (product.members / product.requiredMembers) * 100;
+      const targetProgress = product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0;
       let currentProgress = 0;
       const interval = setInterval(() => {
         currentProgress += 1;
@@ -271,9 +276,11 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <span className="text-3xl font-bold text-primary">{formatNumber(product.groupPrice)} <span className="text-base font-normal">تومان</span></span>
                 <span className="text-lg text-muted-foreground line-through">{formatNumber(product.originalPrice)} <span className="text-sm">تومان</span></span>
               </div>
-              <p className="text-green-600 font-semibold">
-                شما {formatNumber(product.originalPrice - product.groupPrice)} تومان سود می‌کنید! ({product.discount}٪ تخفیف گروهی)
-              </p>
+               {product.originalPrice && product.groupPrice && (
+                <p className="text-green-600 font-semibold">
+                   شما {formatNumber(product.originalPrice - product.groupPrice)} تومان سود می‌کنید! ({product.discount}٪ تخفیف گروهی)
+                </p>
+               )}
             </div>
 
             {/* Group Buy Progress */}
@@ -474,11 +481,15 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                         </CardHeader>
                         <CardContent className="p-3 flex-grow flex flex-col">
                           <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{relatedProduct.title}</h5>
-                           <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
-                            <span className="text-muted-foreground line-through">{formatNumber(relatedProduct.originalPrice)}</span>
-                            <span className="text-primary font-bold">{formatNumber(relatedProduct.groupPrice)} <span className="text-xs">تومان</span></span>
-                          </div>
-                           <Progress value={(relatedProduct.members / relatedProduct.requiredMembers) * 100} className="h-1.5 mt-auto" />
+                           {relatedProduct.originalPrice && relatedProduct.groupPrice && (
+                             <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
+                               <span className="text-muted-foreground line-through">{formatNumber(relatedProduct.originalPrice)}</span>
+                               <span className="text-primary font-bold">{formatNumber(relatedProduct.groupPrice)} <span className="text-xs">تومان</span></span>
+                             </div>
+                           )}
+                           {relatedProduct.requiredMembers > 0 && (
+                              <Progress value={(relatedProduct.members / relatedProduct.requiredMembers) * 100} className="h-1.5 mt-auto" />
+                           )}
                            <div className="flex justify-between text-xs text-muted-foreground mt-1">
                             <span>{relatedProduct.members}/{relatedProduct.requiredMembers}</span>
                             <span>{relatedProduct.remainingTime}</span>
