@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package } from 'lucide-react';
+import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { groupPurchases } from '@/app/page'; // Import the sample data
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -22,7 +22,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Link from 'next/link';
-
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import Radio Group
+import { Label } from "@/components/ui/label"; // Import Label
 
 // Helper function to find product by ID
 const getProductById = (id: number) => {
@@ -45,10 +46,49 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariations, setSelectedVariations] = useState<{ [key: string]: string }>({});
+  const [progressValue, setProgressValue] = useState(0);
+  const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
 
   useEffect(() => {
     if (product) {
       setSelectedImage(product.image);
+      // Set initial selected variations if they exist
+      if (product.variations) {
+        const initialSelections: { [key: string]: string } = {};
+        product.variations.forEach(variation => {
+          initialSelections[variation.type] = variation.options[0]; // Default to first option
+        });
+        setSelectedVariations(initialSelections);
+      }
+
+       // Animate progress bar and determine status
+      const targetProgress = (product.members / product.requiredMembers) * 100;
+      let currentProgress = 0;
+      const interval = setInterval(() => {
+        currentProgress += 1;
+        if (currentProgress >= targetProgress) {
+          setProgressValue(targetProgress);
+          clearInterval(interval);
+        } else {
+          setProgressValue(currentProgress);
+        }
+      }, 20); // Adjust speed as needed
+
+      // Determine group status based on members and time (simplified logic)
+      if (product.members >= product.requiredMembers) {
+          setGroupStatus('completed');
+      } else if (product.remainingTime === 'پایان یافته') { // Assuming 'پایان یافته' means expired
+          setGroupStatus('failed');
+      } else if (targetProgress > 50) {
+          setGroupStatus('filling');
+      } else {
+          setGroupStatus('active');
+      }
+
+
+      return () => clearInterval(interval);
+
     }
   }, [product]);
 
@@ -56,8 +96,12 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     notFound(); // Show 404 if product not found
   }
 
+  const handleVariationChange = (type: string, value: string) => {
+    setSelectedVariations(prev => ({ ...prev, [type]: value }));
+  };
+
   const handleJoinClick = () => {
-    console.log(`Joining group buy for ${product.title} with quantity ${quantity}`);
+    console.log(`Joining group buy for ${product.title} with quantity ${quantity} and variations:`, selectedVariations);
     toast({
       title: "با موفقیت اضافه شد!",
       description: `${quantity} عدد از محصول ${product.title} به سبد خرید شما اضافه شد.`,
@@ -68,8 +112,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
 
-  const progressValue = (product.members / product.requiredMembers) * 100;
-
   // Mock gallery images (replace with actual multiple images if available)
   const galleryImages = [
     product.image,
@@ -77,6 +119,24 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     `https://picsum.photos/seed/${product.id + 20}/500/500`,
     `https://picsum.photos/seed/${product.id + 30}/500/500`,
   ];
+
+   const getStatusInfo = () => {
+    switch (groupStatus) {
+      case 'completed':
+        return { text: "ظرفیت تکمیل شد! خرید نهایی شد.", icon: CheckCircle, color: "text-green-600" };
+      case 'failed':
+        return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600" };
+      case 'filling':
+        return { text: "در حال تکمیل ظرفیت...", icon: AlertCircle, color: "text-yellow-600" };
+      case 'active':
+      default:
+        const remaining = product.requiredMembers - product.members;
+        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت!`, icon: Info, color: "text-blue-600" };
+    }
+  };
+
+  const statusInfo = getStatusInfo();
+
 
   return (
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
@@ -95,6 +155,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   className="object-cover transition-transform duration-300 hover:scale-105"
                   data-ai-hint={product.aiHint || 'product image'}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                  priority // Prioritize loading the main image
                 />
               )}
               <Badge variant="destructive" className="absolute top-4 right-4 text-lg px-3 py-1">
@@ -115,6 +176,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     fill
                     className="object-cover"
                     sizes="10vw"
+                    loading="lazy" // Lazy load thumbnails
                   />
                 </button>
               ))}
@@ -127,7 +189,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             {/* Badges and Rating */}
             <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="outline">{product.category}</Badge>
+              <Badge variant="outline">{getCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center">
                   <Image src="https://picsum.photos/seed/iranflag/20/20" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
@@ -167,6 +229,42 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               </Card>
             )}
 
+             {/* Variations Selection */}
+            {product.variations && product.variations.length > 0 && (
+              <div className="space-y-4 border-t border-border pt-6">
+                {product.variations.map((variation) => (
+                  <div key={variation.type}>
+                    <Label className="text-base font-semibold mb-3 block">{variation.type}: <span className="text-primary font-bold">{selectedVariations[variation.type]}</span></Label>
+                    <RadioGroup
+                      value={selectedVariations[variation.type]}
+                      onValueChange={(value) => handleVariationChange(variation.type, value)}
+                      className="flex flex-wrap gap-2"
+                    >
+                      {variation.options.map((option) => (
+                        <Label
+                          key={option}
+                          htmlFor={`${variation.type}-${option}`}
+                          className={cn(
+                            "cursor-pointer rounded-md border border-input px-3 py-1.5 text-sm transition-all duration-200",
+                            selectedVariations[variation.type] === option
+                              ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary ring-offset-1"
+                              : "bg-background hover:bg-accent hover:text-accent-foreground"
+                          )}
+                        >
+                          <RadioGroupItem
+                            value={option}
+                            id={`${variation.type}-${option}`}
+                            className="sr-only" // Hide the actual radio button visually
+                          />
+                          {option}
+                        </Label>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Price Section */}
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
@@ -191,10 +289,32 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   <span>{product.remainingTime} باقی مانده</span>
                 </div>
               </div>
-              <Progress value={progressValue} className="h-2.5" />
-              <p className="text-xs text-muted-foreground text-center">
-                {product.requiredMembers - product.members} نفر دیگر تا تکمیل ظرفیت و نهایی شدن خرید!
-              </p>
+               {/* Animated Progress Bar */}
+              <Progress value={progressValue} className="h-2.5 [&>div]:transition-all [&>div]:duration-500 [&>div]:ease-out" />
+              <div className={`flex items-center justify-center gap-1 text-sm font-medium mt-2 ${statusInfo.color}`}>
+                 <statusInfo.icon className="h-5 w-5" />
+                 <span>{statusInfo.text}</span>
+              </div>
+
+               {/* Recent Members */}
+                {product.recentMembers && product.recentMembers.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-xs text-muted-foreground mb-2">آخرین اعضا:</p>
+                    <div className="flex -space-x-2 rtl:space-x-reverse overflow-hidden">
+                      {product.recentMembers.slice(0, 5).map((member, index) => (
+                        <Avatar key={index} className="w-8 h-8 border-2 border-background transition-transform hover:scale-110 duration-200">
+                          <AvatarImage src={member.avatar} alt={member.name} />
+                          <AvatarFallback>{member.name}</AvatarFallback>
+                        </Avatar>
+                      ))}
+                      {product.members > 5 && (
+                        <Avatar className="w-8 h-8 border-2 border-background bg-muted">
+                          <AvatarFallback>+{product.members - 5}</AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
 
             {/* Actions (Quantity, Add to Cart, Wishlist, Share) */}
@@ -211,10 +331,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               </div>
 
               {/* Add to Cart/Join Group Button */}
-              <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-105 duration-300">
-                <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
-                پیوستن به گروه و افزودن به سبد
-              </Button>
+              <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-105 duration-300" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
+                 <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
+                 {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه و افزودن به سبد'}
+               </Button>
 
               {/* Wishlist and Share Buttons */}
               <div className="flex gap-2">
@@ -381,4 +501,20 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <Footer />
     </div>
   );
+}
+
+
+// Helper function to get category name by slug
+const getCategoryNameBySlug = (slug: string | undefined) => {
+    const categories = [
+      { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital' },
+      { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food' },
+      { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances' },
+      { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion' },
+      { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health' },
+      { id: 6, name: 'خانه و دکوراسیون', icon: '🛋️', slug: 'home-decor' },
+      { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools' },
+      { id: 8, name: 'سایر', icon: '📦', slug: 'other' }
+    ];
+    return categories.find(cat => cat.slug === slug)?.name || slug || 'دسته بندی';
 }

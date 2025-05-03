@@ -30,6 +30,17 @@ const groupPurchases = [
     category: 'digital',
     isFeatured: true,
     aiHint: 'smartphone samsung galaxy',
+    variations: [
+        { type: 'رنگ', options: ['مشکی', 'نقره‌ای', 'بنفش', 'کرم'] },
+        { type: 'حافظه', options: ['256GB', '512GB'] },
+    ],
+    recentMembers: [
+      { name: 'AR', avatar: 'https://picsum.photos/seed/user10/40/40' },
+      { name: 'ZM', avatar: 'https://picsum.photos/seed/user11/40/40' },
+      { name: 'HN', avatar: 'https://picsum.photos/seed/user12/40/40' },
+      { name: 'FK', avatar: 'https://picsum.photos/seed/user13/40/40' },
+      { name: 'MJ', avatar: 'https://picsum.photos/seed/user14/40/40' },
+    ],
   },
   {
     id: 2,
@@ -43,12 +54,16 @@ const groupPurchases = [
     remainingTime: '۱۲ ساعت',
     category: 'food',
     isIranian: true,
-    aiHint: 'olive oil bottle',
-    isPackage: true, // Mark as package
-    packageContents: [ // Add package details
+    aiHint: 'sunflower oil bottle', // Changed hint
+    isPackage: true,
+    packageContents: [
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
+    ],
+    recentMembers: [
+      { name: 'SA', avatar: 'https://picsum.photos/seed/user20/40/40' },
+      { name: 'BN', avatar: 'https://picsum.photos/seed/user21/40/40' },
     ],
   },
   {
@@ -63,7 +78,15 @@ const groupPurchases = [
     remainingTime: '۳ روز',
     category: 'home-appliances',
     isIranian: true,
-    aiHint: 'washing machine',
+    aiHint: 'washing machine snowa', // Changed hint
+    variations: [
+        { type: 'رنگ', options: ['سفید', 'نقره‌ای'] },
+    ],
+    recentMembers: [
+      { name: 'GH', avatar: 'https://picsum.photos/seed/user30/40/40' },
+      { name: 'KP', avatar: 'https://picsum.photos/seed/user31/40/40' },
+      { name: 'LM', avatar: 'https://picsum.photos/seed/user32/40/40' },
+    ],
   },
   {
     id: 4,
@@ -76,17 +99,23 @@ const groupPurchases = [
     requiredMembers: 40,
     remainingTime: '۱ روز',
     category: 'food',
-    aiHint: 'meat package',
+    aiHint: 'lamb meat package', // Changed hint
     isPackage: true,
     packageContents: [
       { name: 'گوشت ران گوسفندی', quantity: '۱ کیلوگرم' },
       { name: 'گوشت سردست گوسفندی', quantity: '۱ کیلوگرم' },
     ],
+     recentMembers: [
+      { name: 'ER', avatar: 'https://picsum.photos/seed/user40/40/40' },
+      { name: 'TY', avatar: 'https://picsum.photos/seed/user41/40/40' },
+      { name: 'UI', avatar: 'https://picsum.photos/seed/user42/40/40' },
+      { name: 'OP', avatar: 'https://picsum.photos/seed/user43/40/40' },
+    ],
   },
     {
-    id: 9, // Add a new item for the requests section example
+    id: 9,
     title: 'گوشی شیائومی Poco X6 Pro',
-    image: 'https://picsum.photos/seed/9/300/200', // Use a placeholder or actual image
+    image: 'https://picsum.photos/seed/9/300/200',
     originalPrice: 15500000,
     groupPrice: 13800000,
     discount: 11,
@@ -95,6 +124,10 @@ const groupPurchases = [
     remainingTime: '۵ روز',
     category: 'digital',
     aiHint: 'smartphone xiaomi poco',
+     recentMembers: [
+      { name: 'CV', avatar: 'https://picsum.photos/seed/user90/40/40' },
+      { name: 'BN', avatar: 'https://picsum.photos/seed/user91/40/40' },
+    ],
   },
   {
     id: 5,
@@ -109,7 +142,12 @@ const groupPurchases = [
     category: 'food',
     isIranian: true,
     isFeatured: true,
-    aiHint: 'saffron spice',
+    aiHint: 'saffron spice box', // Changed hint
+    recentMembers: [
+        { name: 'AS', avatar: 'https://picsum.photos/seed/user50/40/40' },
+        { name: 'DF', avatar: 'https://picsum.photos/seed/user51/40/40' },
+        { name: 'GH', avatar: 'https://picsum.photos/seed/user52/40/40' },
+    ],
   },
   {
     id: 6,
@@ -122,7 +160,11 @@ const groupPurchases = [
     requiredMembers: 20,
     remainingTime: '۲ روز',
     category: 'digital',
-    aiHint: 'smart tv lg',
+    aiHint: 'smart tv lg living room', // Changed hint
+    recentMembers: [
+        { name: 'ZX', avatar: 'https://picsum.photos/seed/user60/40/40' },
+        { name: 'CV', avatar: 'https://picsum.photos/seed/user61/40/40' },
+    ],
   },
   {
     id: 7,
@@ -137,7 +179,10 @@ const groupPurchases = [
     category: 'home-decor',
     isIranian: true,
     isFeatured: true,
-    aiHint: 'persian carpet',
+    aiHint: 'persian carpet detail', // Changed hint
+    recentMembers: [
+        { name: 'QW', avatar: 'https://picsum.photos/seed/user70/40/40' },
+    ],
   },
   {
     id: 8,
@@ -151,7 +196,13 @@ const groupPurchases = [
     remainingTime: '۱ روز',
     category: 'food',
     isIranian: true,
-    aiHint: 'gaz candy',
+    aiHint: 'gaz candy box', // Changed hint
+     recentMembers: [
+      { name: 'PL', avatar: 'https://picsum.photos/seed/user80/40/40' },
+      { name: 'OK', avatar: 'https://picsum.photos/seed/user81/40/40' },
+      { name: 'IJ', avatar: 'https://picsum.photos/seed/user82/40/40' },
+      { name: 'UH', avatar: 'https://picsum.photos/seed/user83/40/40' },
+    ],
   }
 ];
 export { groupPurchases }; // Export for use in product detail page
@@ -868,3 +919,4 @@ export default function HomePage() {
     </div>
   );
 }
+
