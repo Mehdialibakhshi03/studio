@@ -1,9 +1,8 @@
 
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Rocket, CreditCard, TrendingUp, CheckCircle
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2 } from 'lucide-react'; // Import necessary icons, added LinkIcon, Users2
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -415,6 +414,17 @@ export default function HomePage() {
     });
   };
 
+   const handleReferralClick = () => {
+      toast({
+        title: "لینک دعوت شما کپی شد!",
+        description: "لینک را برای دوستانتان ارسال کنید و اعتبار هدیه بگیرید.",
+        variant: "default",
+      });
+      // In a real app, generate and copy the referral link
+      // navigator.clipboard.writeText('your-referral-link.com/ref=123');
+    };
+
+
   useEffect(() => {
     setFeaturedItems(groupPurchases);
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -501,10 +511,7 @@ export default function HomePage() {
         </Carousel>
       </section>
 
-       {/* REMOVED: دسته‌بندی‌ها (Style like Instagram Stories) */}
-
-
-       {/* خریدهای گروهی فعال (Moved Higher) */}
+       {/* خریدهای گروهی فعال */}
         <section className="bg-secondary/50 py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
@@ -563,7 +570,6 @@ export default function HomePage() {
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                     {/* Removed Add to Cart button from card header hover effect */}
                    </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
                     <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
@@ -682,6 +688,35 @@ export default function HomePage() {
       </section>
 
 
+     {/* Referral Banner */}
+      <section className="bg-accent py-12">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-background rounded-xl shadow-lg p-8 md:p-10 border border-border">
+            <div className="flex items-center gap-6 text-center md:text-right">
+               <div className="hidden md:block bg-accent/20 p-4 rounded-full">
+                  <Users2 className="w-12 h-12 text-accent" />
+               </div>
+               <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground mb-2">دوستانت را دعوت کن، هدیه بگیر! 🎁</h2>
+                  <p className="text-muted-foreground text-lg">
+                      با ارسال لینک اختصاصی به دوستانت، تا <span className="font-bold">۲۰٪ اعتبار هدیه</span> برای خریدهای بعدی خود و دوستانت دریافت کنید.
+                  </p>
+               </div>
+            </div>
+            <Button
+              size="lg"
+              variant="default" // Use default (primary) color for contrast
+              className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-md mt-6 md:mt-0 w-full md:w-auto"
+              onClick={handleReferralClick}
+            >
+              <LinkIcon className="w-5 h-5 ml-2 rtl:mr-2" />
+              دریافت لینک دعوت
+            </Button>
+          </div>
+        </div>
+      </section>
+
+
       {/* How It Works Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
@@ -709,9 +744,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
-      {/* REMOVED: تخفیف‌های شگفت‌انگیز */}
 
 
      {/* درخواست‌های خرید گروهی */}
@@ -748,7 +780,6 @@ export default function HomePage() {
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                    {/* Removed Add to Cart button from card header hover effect */}
                   </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
                     <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
@@ -859,7 +890,6 @@ export default function HomePage() {
                                     ویژه
                                   </Badge>
                                 )}
-                                {/* Removed Add to Cart button from card header hover effect */}
                               </CardHeader>
                               <CardContent className="p-3 flex-grow flex flex-col">
                                 <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{product.title}</h5>
@@ -896,8 +926,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
-     {/* REMOVED Wholesalers Section */}
 
      {/* Benefits Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl"> {/* Added lg/xl padding */}
@@ -1030,8 +1058,6 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* REMOVED Statistics Section */}
-
       {/* بخش سوالات پرتکرار (FAQ) - Enhanced Styling */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">سوالات پرتکرار</h2>
@@ -1092,9 +1118,6 @@ export default function HomePage() {
           </Tabs>
         </div>
       </section>
-
-
-     {/* REMOVED Newsletter Section */}
 
       <Footer /> {/* Use Footer component */}
     </div>
