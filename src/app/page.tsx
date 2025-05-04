@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store } from 'lucide-react'; // Import necessary icons
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,11 @@ import Image from 'next/image';
 import Link from 'next/link'; // Import Link
 import Header from '@/components/header'; // Import Header component
 import Footer from '@/components/footer'; // Import Footer component
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Import Carousel
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"; // Import Carousel and types
+import Autoplay from "embla-carousel-autoplay"; // Import Autoplay plugin
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Import Avatar
 import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
+import { cn } from '@/lib/utils'; // Import cn for conditional classnames
 
 // Helper function to create future dates for consistent testing
 const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -25,6 +27,14 @@ const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Da
     date.setMinutes(date.getMinutes() + minutes);
     return date;
 };
+
+// Define hero slides data
+const heroSlides = [
+    { id: 1, image: 'https://picsum.photos/seed/hero1/1200/400', alt: 'اسلاید اول', title: 'با هم بخرید و تخفیف بگیرید!', description: 'هرچه تعداد بیشتر، قیمت کمتر!', link: '#', aiHint: 'group shopping people illustration' },
+    { id: 2, image: 'https://picsum.photos/seed/hero2/1200/400', alt: 'اسلاید دوم', title: 'جشنواره کالاهای ایرانی', description: 'تخفیف‌های ویژه برای حمایت از تولید ملی', link: '#', aiHint: 'iranian products promotion sale' },
+    { id: 3, image: 'https://picsum.photos/seed/hero3/1200/400', alt: 'اسلاید سوم', title: 'لوازم دیجیتال با بهترین قیمت', description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی', link: '#', aiHint: 'digital gadgets sale offer' },
+];
+
 
 // تعریف داده‌های نمونه برای خریدهای گروهی - Updated with endDate
 const groupPurchases = [
@@ -374,6 +384,10 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('همه');
   const [featuredItems, setFeaturedItems] = useState(groupPurchases);
   const { toast } = useToast(); // Initialize useToast
+  const [heroApi, setHeroApi] = useState<CarouselApi>(); // State for hero carousel API
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0); // State for current hero slide index
+  const autoplayPlugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true })); // Autoplay plugin ref
+
 
   const handleJoinClick = (title: string) => {
     console.log(`User wants to join the group buy for: ${title}`);
@@ -392,6 +406,15 @@ export default function HomePage() {
     };
   }, []);
 
+  // Update current slide index when hero carousel changes
+  useEffect(() => {
+    if (!heroApi) return;
+    setCurrentHeroSlide(heroApi.selectedScrollSnap());
+    heroApi.on("select", () => setCurrentHeroSlide(heroApi.selectedScrollSnap()));
+    heroApi.on("reInit", () => setCurrentHeroSlide(heroApi.selectedScrollSnap()));
+  }, [heroApi]);
+
+
   const filteredItems = activeCategory === 'همه'
     ? featuredItems
     : featuredItems.filter(item => item.category === categories.find(cat => cat.name === activeCategory)?.slug);
@@ -405,41 +428,60 @@ export default function HomePage() {
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header /> {/* Use Header component */}
 
-      {/* بنر اصلی */}
-      <section className="bg-gradient-to-r from-primary/90 via-primary to-accent text-primary-foreground py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-right animate-fade-in-right">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">با هم بخرید و تخفیف بگیرید!</h1>
-              <p className="text-lg lg:text-xl mb-8 text-primary-foreground/90">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
-              <div className="flex justify-center md:justify-start space-x-4 rtl:space-x-reverse">
-                <Button size="lg" variant="secondary" className="transition-transform hover:scale-105 duration-300 shadow-md">
-                  شروع خرید گروهی
-                </Button>
-                <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-transform hover:scale-105 duration-300">
-                  راهنمای خرید
-                </Button>
-              </div>
-              <div className="flex items-center justify-center md:justify-start mt-10 text-sm space-x-6 rtl:space-x-reverse">
-                <div className="flex items-center">
-                  <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
-                  <span>تضمین اصالت کالا</span>
+      {/* Hero Slider */}
+      <section className="relative w-full mb-12">
+        <Carousel
+          setApi={setHeroApi}
+          plugins={[autoplayPlugin.current]}
+          opts={{ loop: true, direction: 'rtl' }}
+          className="w-full"
+          onMouseEnter={autoplayPlugin.current.stop}
+          onMouseLeave={autoplayPlugin.current.reset}
+        >
+          <CarouselContent>
+            {heroSlides.map((slide) => (
+              <CarouselItem key={slide.id}>
+                <div className="relative w-full h-[300px] md:h-[400px]">
+                  <Image
+                    src={slide.image}
+                    alt={slide.alt}
+                    layout="fill"
+                    objectFit="cover"
+                    className="brightness-75"
+                    data-ai-hint={slide.aiHint}
+                    priority={slide.id === 1} // Prioritize first slide image
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-black/30 p-8">
+                    <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">{slide.title}</h1>
+                    <p className="text-lg md:text-xl mb-8 drop-shadow-md animate-fade-in animation-delay-200">{slide.description}</p>
+                    <Link href={slide.link}>
+                      <Button size="lg" variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400">
+                        مشاهده بیشتر
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
-                  <span>پرداخت امن</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
-                  <span>ارسال سریع</span>
-                </div>
-              </div>
-            </div>
-            <div className="md:w-1/2 flex justify-center animate-fade-in-left">
-              <Image src="https://picsum.photos/500/350" width={500} height={350} alt="خرید گروهی" className="rounded-lg shadow-2xl" data-ai-hint="group shopping people illustration"/>
-            </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background text-foreground border-none rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background text-foreground border-none rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30" />
+
+         {/* Pagination Dots */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex space-x-2 rtl:space-x-reverse">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => heroApi?.scrollTo(index)}
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all duration-300",
+                  index === currentHeroSlide ? "w-4 bg-primary" : "bg-white/50 hover:bg-white/80"
+                )}
+                aria-label={`برو به اسلاید ${index + 1}`}
+              />
+            ))}
           </div>
-        </div>
+        </Carousel>
       </section>
 
       {/* نوار کمپین */}
