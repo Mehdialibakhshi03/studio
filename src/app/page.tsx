@@ -229,16 +229,16 @@ const groupPurchases = [
 // Export for use in product detail page and other potential pages
 export { groupPurchases };
 
-// تعریف دسته‌بندی‌های محصولات
+// تعریف دسته‌بندی‌های محصولات - Added image property
 const categories = [
-  { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital' },
-  { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food' },
-  { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances' },
-  { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion' },
-  { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health' },
-  { id: 6, name: 'خانه و دکوراسیون', icon: '🛋️', slug: 'home-decor' },
-  { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools' },
-  { id: 8, name: 'سایر', icon: '📦', slug: 'other' }
+  { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital', image: 'https://picsum.photos/seed/cat1navy/80/80', aiHint: 'mobile phone category' },
+  { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food', image: 'https://picsum.photos/seed/cat2navy/80/80', aiHint: 'grocery food category' },
+  { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances', image: 'https://picsum.photos/seed/cat3navy/80/80', aiHint: 'home appliance category' },
+  { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion', image: 'https://picsum.photos/seed/cat4navy/80/80', aiHint: 'fashion clothing category' },
+  { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health', image: 'https://picsum.photos/seed/cat5navy/80/80', aiHint: 'beauty health cosmetic' },
+  { id: 6, name: 'خانه و دکور', icon: '🛋️', slug: 'home-decor', image: 'https://picsum.photos/seed/cat6navy/80/80', aiHint: 'home decor furniture' },
+  { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools', image: 'https://picsum.photos/seed/cat7navy/80/80', aiHint: 'tools hardware category' },
+  { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://picsum.photos/seed/cat8navy/80/80', aiHint: 'miscellaneous package box' }
 ];
 
 // تخفیف‌های شگفت‌انگیز
@@ -484,8 +484,34 @@ export default function HomePage() {
         </Carousel>
       </section>
 
+       {/* دسته‌بندی‌ها (Style like Instagram Stories) */}
+       <section className="container mx-auto px-4 py-8">
+         <h2 className="text-2xl font-bold mb-6 text-center text-foreground">دسته‌بندی‌ها</h2>
+         <div className="flex justify-center space-x-6 rtl:space-x-reverse overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
+           {categories.map(category => (
+             <Link href={`/category/${category.slug}`} key={category.id} className="flex flex-col items-center text-center group flex-shrink-0 w-20">
+               <div className="relative w-16 h-16 mb-2">
+                 <div className="absolute inset-0 rounded-full border-2 border-primary group-hover:border-accent transition-colors duration-300 p-0.5">
+                   <Image
+                     src={category.image}
+                     width={60}
+                     height={60}
+                     alt={category.name}
+                     className="rounded-full object-cover w-full h-full"
+                     data-ai-hint={category.aiHint || category.name}
+                   />
+                 </div>
+                 {/* Optional: Add story ring effect if needed */}
+                 {/* <div className="absolute -inset-1 rounded-full border-2 border-transparent group-hover:border-accent transition-all duration-300"></div> */}
+               </div>
+               <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors duration-300">{category.name}</span>
+             </Link>
+           ))}
+         </div>
+       </section>
+
       {/* نوار کمپین */}
-      <section className="bg-destructive text-destructive-foreground py-3 shadow-md">
+      <section className="bg-destructive text-destructive-foreground py-3 shadow-md my-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-3 md:mb-0 animate-pulse">
@@ -523,19 +549,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
-      {/* دسته‌بندی‌ها */}
-      <section className="container mx-auto px-4 py-16 bg-secondary rounded-xl">
-        <h2 className="text-3xl font-bold mb-10 text-center text-secondary-foreground">دسته‌بندی‌های محبوب</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6">
-          {categories.map(category => (
-            <Link href={`/category/${category.slug}`} key={category.id} className="bg-card rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 aspect-square group">
-              <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-125">{category.icon}</div>
-              <div className="text-sm font-medium text-card-foreground text-center group-hover:text-primary transition-colors duration-300">{category.name}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
 
       {/* محصولات ایرانی برتر */}
       <section className="py-16">
