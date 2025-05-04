@@ -11,77 +11,99 @@ body {
 
 @layer base {
   :root {
-    /* Light Theme Adjustments - Slightly warmer background, more contrast */
-    --background: 0 0% 100%; /* White */
+    /* Light Theme - Clean, Professional, Accessible */
+    --background: 0 0% 98%; /* Slightly off-white */
     --foreground: 240 10% 3.9%; /* Dark Gray */
+
     --card: 0 0% 100%; /* White */
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142.1 70.6% 45.3%; /* Green - Adjusted slightly */
-    --primary-foreground: 355.7 100% 97.3%; /* Lighter text on primary */
-    --secondary: 240 4.8% 95.9%; /* Lighter Gray */
+    --card-foreground: 240 10% 3.9%; /* Dark Gray */
+
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 240 10% 3.9%; /* Dark Gray */
+
+    --primary: 142.1 76.2% 42.2%; /* Vibrant Green */
+    --primary-foreground: 355.7 100% 97.3%; /* White on primary */
+
+    --secondary: 240 4.8% 95.9%; /* Light Gray */
     --secondary-foreground: 240 5.9% 10%; /* Darker text on secondary */
-    --muted: 240 4.8% 93%; /* Medium Gray */
+
+    --muted: 240 4.8% 90%; /* Medium Gray */
     --muted-foreground: 240 3.8% 46.1%; /* Darker Medium Gray */
-    --accent: 217.2 91.2% 59.8%; /* Blue - Adjusted slightly */
-    --accent-foreground: 210 40% 98%; /* White text on accent */
-    --destructive: 0 84.2% 60.2%; /* Red - Adjusted slightly */
-    --destructive-foreground: 0 0% 98%; /* White text on destructive */
-    --border: 240 5.9% 90%; /* Slightly darker gray */
-    --input: 240 5.9% 90%; /* Input background */
-    --ring: 142.1 70.6% 45.3%; /* Primary green for rings */
-    --chart-1: 142.1 70.6% 45.3%;
-    --chart-2: 217.2 91.2% 59.8%;
+
+    --accent: 217.2 91.2% 59.8%; /* Professional Blue */
+    --accent-foreground: 210 40% 98%; /* White on accent */
+
+    --destructive: 0 84.2% 60.2%; /* Clear Red */
+    --destructive-foreground: 0 0% 98%; /* White on destructive */
+
+    --border: 240 5.9% 88%; /* Slightly darker border */
+    --input: 240 5.9% 90%; /* Input background matching muted */
+    --ring: 217.2 91.2% 59.8%; /* Accent blue for focus rings */
+
+    --chart-1: 142.1 76.2% 42.2%; /* Primary Green */
+    --chart-2: 217.2 91.2% 59.8%; /* Accent Blue */
     --chart-3: 47.9 95.8% 53.1%; /* Yellow */
-    --chart-4: 0 0% 63%; /* Example gray */
+    --chart-4: 0 72.2% 50.6%;   /* Red */
     --chart-5: 270.7 91% 65.1%; /* Purple */
+
     --radius: 0.5rem;
-    /* Sidebar Colors (Keeping consistency with main theme) */
-    --sidebar-background: 0 0% 100%;
+
+    /* Sidebar Colors (Light) */
+    --sidebar-background: 0 0% 96%; /* Slightly darker than main background */
     --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 142.1 70.6% 40%; /* Slightly darker green */
+    --sidebar-primary: 142.1 76.2% 38%; /* Darker green for sidebar primary */
     --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 4.8% 95.9%; /* Same as secondary */
-    --sidebar-accent-foreground: 240 5.9% 10%; /* Same as secondary-foreground */
-    --sidebar-border: 240 5.9% 90%; /* Same as border */
-    --sidebar-ring: 142.1 70.6% 45.3%;
+    --sidebar-accent: 240 4.8% 92%; /* Slightly darker than main secondary */
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 85%; /* Matching main border */
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
-    /* Dark Theme Adjustments - Higher contrast */
-    --background: 240 10% 3.9%; /* Very Dark Gray */
+    /* Dark Theme - Higher Contrast, Modern Feel */
+    --background: 240 10% 3.9%; /* Very Dark Gray/Blue */
     --foreground: 0 0% 98%; /* Near White */
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 142.1 70.6% 45.3%; /* Keep primary same as light for vibrancy */
-    --primary-foreground: 355.7 100% 97.3%;
+
+    --card: 240 10% 5.9%; /* Slightly Lighter Dark */
+    --card-foreground: 0 0% 98%; /* Near White */
+
+    --popover: 240 10% 3.9%; /* Same as background */
+    --popover-foreground: 0 0% 98%; /* Near White */
+
+    --primary: 142.1 70.6% 45.3%; /* Maintain vibrant green */
+    --primary-foreground: 355.7 100% 97.3%; /* Light text on primary */
+
     --secondary: 240 3.7% 15.9%; /* Darker Gray */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 25%; /* Medium Dark Gray */
+    --secondary-foreground: 0 0% 98%; /* Near White */
+
+    --muted: 240 3.7% 22%; /* Medium Dark Gray */
     --muted-foreground: 240 5% 64.9%; /* Lighter Gray */
-    --accent: 217.2 91.2% 59.8%; /* Keep accent same as light */
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 72.2% 50.6%; /* Adjusted Red */
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.1 70.6% 45.3%;
+
+    --accent: 217.2 91.2% 59.8%; /* Maintain professional blue */
+    --accent-foreground: 210 40% 98%; /* White on accent */
+
+    --destructive: 0 72.2% 50.6%; /* Slightly adjusted Red */
+    --destructive-foreground: 0 0% 98%; /* White on destructive */
+
+    --border: 240 3.7% 15.9%; /* Same as secondary */
+    --input: 240 3.7% 15.9%; /* Same as secondary */
+    --ring: 217.2 91.2% 59.8%; /* Accent blue for focus rings */
+
     --chart-1: 142.1 70.6% 45.3%;
     --chart-2: 217.2 91.2% 59.8%;
     --chart-3: 47.9 95.8% 53.1%;
-    --chart-4: 0 0% 63%;
+    --chart-4: 0 72.2% 50.6%;
     --chart-5: 270.7 91% 65.1%;
-     /* Sidebar Colors (Keeping consistency with main theme) */
-    --sidebar-background: 240 10% 3.9%;
+
+    /* Sidebar Colors (Dark) */
+    --sidebar-background: 240 10% 6.5%; /* Slightly lighter than main dark bg */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 142.1 70.6% 45.3%;
     --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent: 240 3.7% 18%; /* Slightly lighter than main dark secondary */
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142.1 70.6% 45.3%;
+    --sidebar-border: 240 3.7% 15.9%; /* Same as main dark border */
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -113,20 +135,6 @@ body {
   }
 }
 
-/* Added safety CSS classes for benefit icons - these might be generated dynamically by Tailwind but ensuring they exist */
-.bg-blue-100 {}
-.dark\:bg-blue-900\/50 {}
-.text-blue-600 {}
-.dark\:text-blue-400 {}
-.bg-green-100 {}
-.dark\:bg-green-900\/50 {}
-.text-green-600 {}
-.dark\:text-green-400 {}
-.bg-yellow-100 {}
-.dark\:bg-yellow-900\/50 {}
-.text-yellow-600 {}
-.dark\:text-yellow-400 {}
-.bg-red-100 {}
-.dark\:bg-red-900\/50 {}
-.text-red-600 {}
-.dark\:text-red-400 {}
+/* Remove explicit color utility classes unless absolutely necessary */
+/* Tailwind will generate these based on theme, ensures consistency */
+/* Example: Instead of .bg-blue-100, use theme colors like bg-accent/10 or similar */

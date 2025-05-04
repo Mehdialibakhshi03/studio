@@ -238,7 +238,8 @@ const specialOffers = [
     title: 'جشنواره نوروزی - تخفیف تا ۴۰٪',
     description: 'خرید گروهی محصولات نوروزی با تخفیف فوق‌العاده، فقط تا پایان اسفند',
     image: 'https://picsum.photos/seed/offer1/600/250',
-    bgColor: 'bg-primary', // Use theme color
+    bgColorClass: 'bg-primary', // Use theme color class
+    textColorClass: 'text-primary-foreground',
     aiHint: 'new year sale offer',
   },
   {
@@ -246,7 +247,8 @@ const specialOffers = [
     title: 'محصولات ایرانی - حمایت از تولید ملی',
     description: 'خرید گروهی کالاهای ایرانی با کیفیت و قیمت مناسب',
     image: 'https://picsum.photos/seed/offer2/600/250',
-    bgColor: 'bg-accent', // Use theme color
+    bgColorClass: 'bg-accent', // Use theme color class
+    textColorClass: 'text-accent-foreground',
     aiHint: 'iranian product support',
   },
   {
@@ -254,7 +256,8 @@ const specialOffers = [
     title: 'صنایع دستی اصیل ایرانی',
     description: 'مجموعه‌ای از بهترین صنایع دستی استان‌های مختلف ایران',
     image: 'https://picsum.photos/seed/offer3/600/250',
-    bgColor: 'bg-purple-600', // Keeping purple as an example, can be themed too
+    bgColorClass: 'bg-secondary', // Use theme color class
+    textColorClass: 'text-secondary-foreground',
     aiHint: 'iranian handicraft art',
   }
 ];
@@ -403,26 +406,26 @@ export default function HomePage() {
       <Header /> {/* Use Header component */}
 
       {/* بنر اصلی */}
-      <div className="bg-gradient-to-r from-accent to-primary text-white py-16 md:py-24"> {/* Use theme colors */}
+      <section className="bg-gradient-to-r from-primary/90 via-primary to-accent text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-right animate-fade-in-right">
               <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">با هم بخرید و تخفیف بگیرید!</h1>
-              <p className="text-lg lg:text-xl mb-8 text-primary-foreground/80">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
+              <p className="text-lg lg:text-xl mb-8 text-primary-foreground/90">با پیوستن به خریدهای گروهی، از تخفیف‌های ویژه بهره‌مند شوید. هرچه تعداد بیشتر، قیمت کمتر!</p>
               <div className="flex justify-center md:justify-start space-x-4 rtl:space-x-reverse">
-                <Button size="lg" variant="secondary" className="transition-transform hover:scale-105 duration-300">
+                <Button size="lg" variant="secondary" className="transition-transform hover:scale-105 duration-300 shadow-md">
                   شروع خرید گروهی
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary transition-transform hover:scale-105 duration-300">
+                <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-transform hover:scale-105 duration-300">
                   راهنمای خرید
                 </Button>
               </div>
-              <div className="flex items-center justify-center md:justify-start mt-10 text-sm">
-                <div className="flex items-center ml-6 rtl:mr-6">
+              <div className="flex items-center justify-center md:justify-start mt-10 text-sm space-x-6 rtl:space-x-reverse">
+                <div className="flex items-center">
                   <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
                   <span>تضمین اصالت کالا</span>
                 </div>
-                <div className="flex items-center ml-6 rtl:mr-6">
+                <div className="flex items-center">
                   <Check className="h-5 w-5 ml-1 rtl:mr-1 text-yellow-300" />
                   <span>پرداخت امن</span>
                 </div>
@@ -437,10 +440,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* نوار کمپین */}
-      <div className="bg-destructive text-destructive-foreground py-3 shadow-md">
+      <section className="bg-destructive text-destructive-foreground py-3 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-3 md:mb-0 animate-pulse">
@@ -455,20 +458,20 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* تخفیف‌های شگفت‌انگیز */}
-      <div className="container mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-8 text-center">تخفیف‌های شگفت‌انگیز</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-10 text-center">تخفیف‌های شگفت‌انگیز</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {specialOffers.map(offer => (
-            <div key={offer.id} className={`${offer.bgColor} rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-primary-foreground group`}> {/* Use primary-foreground for text */}
+            <div key={offer.id} className={`rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group ${offer.bgColorClass} ${offer.textColorClass}`}>
               <div className="relative h-48">
                 <Image src={offer.image} layout="fill" objectFit="cover" alt={offer.title} className="transition-transform duration-500 group-hover:scale-110" data-ai-hint={offer.aiHint} />
                 <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/70 to-transparent">
                   <h3 className="font-bold text-xl mb-2">{offer.title}</h3>
                   <p className="text-sm mb-4 line-clamp-2">{offer.description}</p>
-                  <Button variant="outline" className="mt-auto border-white text-white hover:bg-white hover:text-current transition-transform hover:scale-105 duration-300">
+                  <Button variant="outline" className="mt-auto border-current text-current hover:bg-background hover:text-foreground transition-transform hover:scale-105 duration-300">
                     مشاهده جزئیات
                   </Button>
                 </div>
@@ -476,13 +479,13 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
 
       {/* دسته‌بندی‌ها */}
-      <div className="container mx-auto px-4 py-12 bg-secondary rounded-xl">
-        <h2 className="text-3xl font-bold mb-8 text-center text-secondary-foreground">دسته‌بندی‌های محبوب</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+      <section className="container mx-auto px-4 py-16 bg-secondary rounded-xl">
+        <h2 className="text-3xl font-bold mb-10 text-center text-secondary-foreground">دسته‌بندی‌های محبوب</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6">
           {categories.map(category => (
             <Link href={`/category/${category.slug}`} key={category.id} className="bg-card rounded-xl shadow-md p-4 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 aspect-square group">
               <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-125">{category.icon}</div>
@@ -490,12 +493,12 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* محصولات ایرانی برتر */}
-      <div className="py-12">
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="bg-card rounded-lg p-6 shadow-lg border border-border">
+          <div className="bg-card rounded-lg p-8 shadow-lg border border-border">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
               <div className="flex items-center mb-4 sm:mb-0">
                 <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-10 h-10 rounded-full ml-3 rtl:mr-3 shadow-md" data-ai-hint="iran flag" />
@@ -509,31 +512,31 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
-                <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group cursor-pointer"> {/* Added cursor-pointer */}
+                <Link href={`/product/${item.id}`} key={item.id}>
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group cursor-pointer h-full flex flex-col">
                     <CardHeader className="p-0 relative aspect-[4/3]">
                         <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint}/>
-                        <Badge variant="destructive" className="absolute top-2 right-2">
+                        <Badge variant="destructive" className="absolute top-3 right-3">
                           {item.discount}٪ تخفیف
                         </Badge>
-                        <Badge variant="secondary" className="absolute top-2 left-2 flex items-center">
+                        <Badge variant="secondary" className="absolute top-3 left-3 flex items-center bg-background/80">
                            <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
                            ایران
                         </Badge>
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
                             <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
                         </div>
                      </CardHeader>
-                     <CardContent className="p-4">
-                        <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden">{item.title}</h3>
-                        <div className="flex justify-between text-sm items-center text-muted-foreground mb-3">
+                     <CardContent className="p-4 flex-grow flex flex-col">
+                        <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
+                        <div className="flex justify-between text-sm items-center text-muted-foreground mb-3 mt-auto">
                           <div className="flex items-center">
                              <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                              <span>{item.members}/{item.requiredMembers}</span>
                           </div>
                            <span className="text-primary font-bold text-lg">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></span>
                         </div>
-                         <Button variant="outline" size="sm" className="w-full transition-transform hover:scale-105 duration-300">مشاهده و پیوستن</Button>
+                         <Button variant="outline" size="sm" className="w-full transition-transform hover:scale-105 duration-300 mt-2">مشاهده و پیوستن</Button>
                      </CardContent>
                   </Card>
                 </Link>
@@ -541,48 +544,48 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
      {/* درخواست‌های خرید گروهی */}
-      <div className="bg-secondary py-12">
+      <section className="bg-secondary py-16">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-secondary-foreground mb-4 sm:mb-0">درخواست‌های خرید گروهی</h2>
-            <Button variant="default" className="transition-transform hover:scale-105 duration-300">
+            <Button variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md">
                 ایجاد درخواست جدید
              </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {groupPurchases.slice(4, 8).map(item => (
-              <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
-                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer"> {/* Added cursor-pointer */}
+              <Link href={`/product/${item.id}`} key={item.id}>
+                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                   <CardHeader className="p-0 relative aspect-[4/3]">
                      <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                    <Badge variant="destructive" className="absolute top-2 right-2">
+                    <Badge variant="destructive" className="absolute top-3 right-3">
                       {item.discount}٪ تخفیف
                     </Badge>
-                     <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
+                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
                     {item.isIranian && (
-                      <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                      <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
                         <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
+                      <Badge variant="default" className="absolute bottom-3 right-3 bg-yellow-500 text-white flex items-center shadow-md">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                    <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                    <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
                         <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                  <CardContent className="p-4 flex-grow flex flex-col">
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
                     <div className="flex justify-between items-baseline mb-3">
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
                       <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
@@ -591,7 +594,7 @@ export default function HomePage() {
                     {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
                         <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4"> {/* Added pr-4 for RTL list */}
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4">
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
                               {content.name} ({content.quantity})
@@ -601,28 +604,28 @@ export default function HomePage() {
                       </div>
                     )}
 
-                    <div className="mt-4 space-y-2">
+                    <div className="mt-4 space-y-2 flex-grow">
                       <div className="flex justify-between text-sm text-muted-foreground mb-1">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                           <span>{item.members} / {item.requiredMembers} نفر</span>
                         </div>
                         {/* Display Countdown or Remaining Time */}
-                        {isEndingSoon(item.endDate) ? (
+                        {item.endDate && isEndingSoon(item.endDate) ? (
                             <CountdownTimer endDate={item.endDate} />
-                        ) : (
+                        ) : item.endDate ? (
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
                               <span>{`بیش از ${Math.ceil((item.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
                             </div>
-                        )}
+                        ) : null}
                       </div>
 
                       <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
                     </div>
                    </CardContent>
-                   <CardFooter className="p-4 pt-0">
-                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Prevent navigation and handle click */}
+                   <CardFooter className="p-4 pt-0 mt-auto">
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
                           <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
                           پیوستن به گروه
                         </Button>
@@ -631,54 +634,54 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-          <div className="flex justify-center mt-10">
-            <Button variant="outline" className="transition-transform hover:scale-105 duration-300">
+          <div className="flex justify-center mt-12">
+            <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
               مشاهده همه درخواست‌ها
             </Button>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
-       <div className="bg-background py-16">
+       <section className="bg-background py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
-          <div className="space-y-12">
+          <div className="space-y-16">
             {stores.map((store) => (
               <Card key={store.id} className="bg-card border border-border shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-6 bg-secondary/50 border-b border-border">
-                  <Avatar className="w-16 h-16 border-4 border-background shadow-md">
+                <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-secondary/50 border-b border-border">
+                  <Avatar className="w-20 h-20 border-4 border-background shadow-lg">
                     <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                    <AvatarFallback>{store.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="text-2xl">{store.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="text-center sm:text-right flex-grow">
-                    <CardTitle className="text-2xl font-bold text-card-foreground">{store.name}</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-card-foreground mb-1">{store.name}</CardTitle>
                     {store.offersInstallments && (
-                      <Badge variant="default" className="mt-2 bg-green-600 hover:bg-green-700">
+                      <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white">
                         فروش اقساطی
                       </Badge>
                     )}
                   </div>
-                  <Button variant="outline" size="sm" className="transition-transform hover:scale-105 duration-300 mt-4 sm:mt-0">
+                  <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 mt-4 sm:mt-0 shadow-sm">
                     مشاهده فروشگاه
-                    <Store className="mr-2 h-4 w-4" />
+                    <Store className="mr-2 h-5 w-5" />
                   </Button>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <h4 className="text-lg font-semibold mb-4 text-muted-foreground">محصولات منتخب برای خرید گروهی:</h4>
+                  <h4 className="text-lg font-semibold mb-6 text-muted-foreground">محصولات منتخب برای خرید گروهی:</h4>
                   <Carousel
                     opts={{
                       align: "start",
-                      direction: "rtl", // Set carousel direction to RTL
-                      loop: true, // Enable loop for continuous scrolling
+                      direction: "rtl",
+                      loop: store.products.length > 4, // Enable loop if enough items
                     }}
-                    className="w-full relative" // Add relative for positioning arrows
+                    className="w-full relative"
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
-                        <CarouselItem key={product.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4">
-                          <Link href={`/product/${product.id}`}> {/* Added Link */}
-                            <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-md cursor-pointer"> {/* Added cursor-pointer */}
+                        <CarouselItem key={product.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4 mb-1"> {/* Add mb-1 for spacing */}
+                          <Link href={`/product/${product.id}`} className="block h-full">
+                            <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50">
                               <CardHeader className="p-0 relative aspect-[4/3]">
                                 <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
                                 <Badge variant="destructive" className="absolute top-2 right-2">
@@ -690,12 +693,12 @@ export default function HomePage() {
                                     ویژه
                                   </Badge>
                                 )}
-                                <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                                <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
                                     <Button size="sm" variant="default" className="h-7 px-2 text-xs">افزودن</Button>
                                 </div>
                               </CardHeader>
                               <CardContent className="p-3 flex-grow flex flex-col">
-                                <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow">{product.title}</h5>
+                                <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{product.title}</h5>
                                 <div className="flex justify-between items-baseline text-xs mb-2 mt-1">
                                   <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
                                   <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
@@ -703,16 +706,15 @@ export default function HomePage() {
                                 <Progress value={product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0} className="h-1.5 mt-auto" />
                                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                                    <span>{product.members}/{product.requiredMembers} نفر</span>
-                                     {/* Display Countdown or simple time */}
-                                     {isEndingSoon(product.endDate) ? (
+                                     {product.endDate && isEndingSoon(product.endDate) ? (
                                         <CountdownTimer endDate={product.endDate} size="xs" />
-                                    ) : (
-                                         <span>{`بیش از ${Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
-                                    )}
+                                    ) : product.endDate ? (
+                                         <span className="flex items-center gap-1"> <Clock className="w-3 h-3" /> {`بیش از ${Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} ر`}</span>
+                                    ) : null}
                                 </div>
                               </CardContent>
                               <CardFooter className="p-3 pt-0">
-                                <Button onClick={(e) => { e.preventDefault(); handleJoinClick(product.title); }} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button> {/* Prevent navigation */}
+                                <Button onClick={(e) => { e.preventDefault(); handleJoinClick(product.title); }} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button>
                               </CardFooter>
                             </Card>
                           </Link>
@@ -720,37 +722,35 @@ export default function HomePage() {
                       ))}
                     </CarouselContent>
                      {/* Carousel Arrows - Enhanced Styling */}
-                    <CarouselPrevious className="absolute right-[-10px] rtl:left-[-10px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted left/right for RTL */}
-                    <CarouselNext className="absolute left-[-10px] rtl:right-[-10px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border-border hover:bg-background transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8"/> {/* Adjusted left/right for RTL */}
+                    <CarouselPrevious className="absolute right-[-12px] rtl:left-[-12px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
+                    <CarouselNext className="absolute left-[-12px] rtl:right-[-12px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
                   </Carousel>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
 
      {/* لیست فروشندگان عمده - بازطراحی شده (کارت کوچک‌تر) */}
-      <div className="bg-secondary py-16">
+      <section className="bg-secondary py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">فروشندگان عمده همکار</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {wholesalers.map((wholesaler) => (
-              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center text-center group">
+              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center text-center group aspect-[3/4]"> {/* Adjusted aspect ratio */}
                  <Avatar className="w-16 h-16 mb-3 border-4 border-background shadow-md transition-transform duration-300 group-hover:scale-110">
                   <AvatarImage src={wholesaler.logo} alt={`لوگوی ${wholesaler.name}`} data-ai-hint={wholesaler.aiHint} />
                   <AvatarFallback>{wholesaler.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <CardTitle className="text-sm font-semibold mb-2 text-card-foreground h-10 overflow-hidden flex items-center justify-center">{wholesaler.name}</CardTitle>
-                 {/* Tiny Product Image Placeholders */}
+                <CardTitle className="text-sm font-semibold mb-2 text-card-foreground h-10 overflow-hidden flex items-center justify-center flex-grow">{wholesaler.name}</CardTitle>
                  {wholesaler.productHints && wholesaler.productHints.length > 0 && (
-                   <div className="flex -space-x-1 rtl:space-x-reverse justify-center mt-1 mb-3">
+                   <div className="flex -space-x-1 rtl:space-x-reverse justify-center mt-auto mb-3"> {/* Moved to bottom */}
                      {wholesaler.productHints.slice(0, 3).map((hint, index) => (
-                       <Avatar key={index} className="w-6 h-6 border border-background shadow-sm">
-                         {/* Use a placeholder service or a generic icon */}
+                       <Avatar key={index} className="w-7 h-7 border-2 border-background shadow-sm">
                          <AvatarImage src={`https://picsum.photos/seed/${wholesaler.id}-${index}/30/30`} alt={hint} data-ai-hint={hint} />
-                         <AvatarFallback>{hint.charAt(0)}</AvatarFallback>
+                         <AvatarFallback className="text-xs">{hint.charAt(0)}</AvatarFallback>
                        </Avatar>
                      ))}
                    </div>
@@ -762,13 +762,13 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
 
-      {/* خریدهای گروهی فعال */}
-      <div className="bg-background py-12">
+      {/* خریدهای گروهی فعال (Main Product Listing) */}
+      <section className="bg-background py-16">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
             <div className="flex">
                <Button variant="ghost" size="icon" className="mr-2 rtl:ml-2 transition-transform hover:scale-110 duration-300">
@@ -780,11 +780,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary">
+          <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4"> {/* Negative margin trick for full-width scroll */}
             <Button
               variant={activeCategory === 'همه' ? 'default' : 'outline'}
               onClick={() => setActiveCategory('همه')}
-              className="whitespace-nowrap transition-transform hover:scale-105 duration-300" // Animation
+              className="whitespace-nowrap transition-transform hover:scale-105 duration-300 shadow-sm flex-shrink-0"
             >
               همه
             </Button>
@@ -793,7 +793,7 @@ export default function HomePage() {
                 key={category.id}
                 variant={activeCategory === category.name ? 'default' : 'outline'}
                 onClick={() => setActiveCategory(category.name)}
-                className="whitespace-nowrap transition-transform hover:scale-105 duration-300" // Animation
+                className="whitespace-nowrap transition-transform hover:scale-105 duration-300 shadow-sm flex-shrink-0"
               >
                 {category.name}
               </Button>
@@ -802,43 +802,42 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredItems.map(item => (
-              <Link href={`/product/${item.id}`} key={item.id}> {/* Added Link */}
-                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer"> {/* Added cursor-pointer */}
+              <Link href={`/product/${item.id}`} key={item.id}>
+                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                    <CardHeader className="p-0 relative aspect-[4/3]">
                     <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                    <Badge variant="destructive" className="absolute top-2 right-2">
+                    <Badge variant="destructive" className="absolute top-3 right-3">
                       {item.discount}٪ تخفیف
                     </Badge>
-                     <Badge variant="outline" className="absolute top-2 left-2 bg-background/80">
+                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
                     {item.isIranian && (
-                       <Badge variant="secondary" className="absolute top-10 right-2 flex items-center">
+                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
                         <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md">
+                      <Badge variant="default" className="absolute bottom-3 right-3 bg-yellow-500 text-white flex items-center shadow-md">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                     <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
+                     <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
                          <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
                      </div>
                    </CardHeader>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-card-foreground mb-2 text-lg h-14 overflow-hidden">{item.title}</h3>
+                  <CardContent className="p-4 flex-grow flex flex-col">
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
                     <div className="flex justify-between items-baseline mb-3">
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
                       <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
-                     {/* Package Contents Display */}
                      {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
                         <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
-                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4"> {/* Added pr-4 */}
+                        <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4">
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
                               {content.name} ({content.quantity})
@@ -848,28 +847,27 @@ export default function HomePage() {
                       </div>
                     )}
 
-                    <div className="mt-4 space-y-2">
+                    <div className="mt-4 space-y-2 flex-grow">
                       <div className="flex justify-between text-sm text-muted-foreground mb-1">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                           <span>{item.members} / {item.requiredMembers} نفر</span>
                         </div>
-                         {/* Display Countdown or Remaining Time */}
-                         {isEndingSoon(item.endDate) ? (
+                         {item.endDate && isEndingSoon(item.endDate) ? (
                             <CountdownTimer endDate={item.endDate} />
-                        ) : (
+                        ) : item.endDate ? (
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 ml-1 rtl:mr-1" />
                                <span>{`بیش از ${Math.ceil((item.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز`}</span>
                             </div>
-                        )}
+                        ) : null}
                       </div>
 
                       <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2" />
                     </div>
                    </CardContent>
-                   <CardFooter className="p-4 pt-0">
-                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300"> {/* Prevent navigation */}
+                   <CardFooter className="p-4 pt-0 mt-auto">
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
                           <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
                           پیوستن به گروه
                         </Button>
@@ -879,27 +877,28 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="flex justify-center mt-10">
-            <Button variant="outline" className="transition-transform hover:scale-105 duration-300">
+          <div className="flex justify-center mt-12">
+            <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
               مشاهده همه خریدهای گروهی
             </Button>
           </div>
         </div>
-      </div>
+      </section>
 
      {/* Benefits Section */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12">چرا خرید گروهی؟</h2>
+      <section className="container mx-auto px-4 py-16 bg-secondary rounded-xl">
+        <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", color: "blue" },
+            { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", color: "primary" },
             { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", color: "green" },
             { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", color: "yellow" },
             { icon: Globe, title: "حمایت از تولید ملی", description: "با خرید کالاهای ایرانی، به اقتصاد کشور کمک کنید.", color: "red" }
           ].map((benefit, index) => (
-            <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1 group">
-              <div className={`relative w-20 h-20 bg-${benefit.color}-100 dark:bg-${benefit.color}-900/50 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
-                <div className={`absolute inset-0 bg-${benefit.color}-500 opacity-10 rounded-full animate-ping group-hover:animate-none`}></div>
+            <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group">
+              <div className={`relative w-20 h-20 bg-gradient-to-br from-${benefit.color}-100 to-${benefit.color}-200 dark:from-${benefit.color}-900/50 dark:to-${benefit.color}-800/60 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
+                {/* Subtle animated ping effect */}
+                <div className={`absolute inset-0 bg-${benefit.color}-500/30 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
                 <benefit.icon className={`h-10 w-10 text-${benefit.color}-600 dark:text-${benefit.color}-400 relative z-10`} />
               </div>
               <h3 className="font-bold text-xl mb-3 text-card-foreground">{benefit.title}</h3>
@@ -910,49 +909,50 @@ export default function HomePage() {
       </section>
 
       {/* بخش آمار */}
-      <div className="bg-gradient-to-br from-accent to-primary text-primary-foreground py-16 rounded-lg my-12 container mx-auto px-4 shadow-xl"> {/* Use theme colors */}
+      <section className="bg-gradient-to-br from-accent to-primary text-primary-foreground py-16 my-16 container mx-auto px-4 rounded-xl shadow-xl">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۲۵,۰۰۰</div>
-              <div className="text-primary-foreground/80">کاربر فعال</div>
+              <div className="text-primary-foreground/90">کاربر فعال</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۱۸۰</div>
-              <div className="text-primary-foreground/80">خرید گروهی موفق</div>
+              <div className="text-primary-foreground/90">خرید گروهی موفق</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">۲۵٪</div>
-              <div className="text-primary-foreground/80">میانگین تخفیف</div>
+              <div className="text-primary-foreground/90">میانگین تخفیف</div>
             </div>
             <div className="transition-transform hover:scale-110 duration-300">
               <div className="text-5xl font-bold mb-2">+۵۰</div>
-              <div className="text-primary-foreground/80">فروشنده معتبر</div>
+              <div className="text-primary-foreground/90">فروشنده معتبر</div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* خبرنامه */}
-      <div className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 py-16">
         <div className="bg-secondary rounded-xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between shadow-lg border border-border">
           <div className="lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-right">
             <h3 className="text-3xl font-bold mb-3 text-secondary-foreground">از تخفیف‌های ویژه باخبر شوید</h3>
             <p className="text-muted-foreground">با عضویت در خبرنامه ما، از جدیدترین خریدهای گروهی و تخفیف‌های ویژه باخبر شوید.</p>
           </div>
-          <div className="w-full lg:w-auto flex max-w-md mx-auto lg:mx-0">
+          <form className="w-full lg:w-auto flex max-w-md mx-auto lg:mx-0" onSubmit={(e) => e.preventDefault()}> {/* Added form and prevent default */}
             <Input
               type="email"
               placeholder="ایمیل خود را وارد کنید..."
-              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-border focus:outline-none focus:ring-2 focus:ring-primary text-base"
+              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-input focus:outline-none focus:ring-2 focus:ring-primary text-base h-12" // Matched button height
+              required // Added required attribute
             />
-            <Button className="rounded-l-lg rounded-r-none px-6 transition-transform hover:scale-105 duration-300">
+            <Button type="submit" className="rounded-l-lg rounded-r-none px-6 transition-transform hover:scale-105 duration-300 h-12 shadow-sm">
               عضویت
             </Button>
-          </div>
+          </form>
         </div>
-      </div>
+      </section>
 
       <Footer /> {/* Use Footer component */}
     </div>
