@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">{/* Set lang to Persian and direction to right-to-left */}
-      <body className="antialiased">
+      <body className="antialiased"> {/* Removed bg-background */}
         {children}
         <Toaster /> {/* Add Toaster for notifications */}
       </body>

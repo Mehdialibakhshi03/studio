@@ -30,9 +30,9 @@ const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Da
 
 // Define hero slides data
 const heroSlides = [
-    { id: 1, image: 'https://picsum.photos/seed/hero1/1200/400', alt: 'اسلاید اول', title: 'با هم بخرید و تخفیف بگیرید!', description: 'هرچه تعداد بیشتر، قیمت کمتر!', link: '#', aiHint: 'group shopping people illustration' },
-    { id: 2, image: 'https://picsum.photos/seed/hero2/1200/400', alt: 'اسلاید دوم', title: 'جشنواره کالاهای ایرانی', description: 'تخفیف‌های ویژه برای حمایت از تولید ملی', link: '#', aiHint: 'iranian products promotion sale' },
-    { id: 3, image: 'https://picsum.photos/seed/hero3/1200/400', alt: 'اسلاید سوم', title: 'لوازم دیجیتال با بهترین قیمت', description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی', link: '#', aiHint: 'digital gadgets sale offer' },
+    { id: 1, image: 'https://picsum.photos/seed/hero1navy/1200/400', alt: 'اسلاید اول', title: 'با هم بخرید و تخفیف بگیرید!', description: 'هرچه تعداد بیشتر، قیمت کمتر!', link: '#', aiHint: 'group shopping people illustration' },
+    { id: 2, image: 'https://picsum.photos/seed/hero2navy/1200/400', alt: 'اسلاید دوم', title: 'جشنواره کالاهای ایرانی', description: 'تخفیف‌های ویژه برای حمایت از تولید ملی', link: '#', aiHint: 'iranian products promotion sale' },
+    { id: 3, image: 'https://picsum.photos/seed/hero3navy/1200/400', alt: 'اسلاید سوم', title: 'لوازم دیجیتال با بهترین قیمت', description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی', link: '#', aiHint: 'digital gadgets sale offer' },
 ];
 
 
@@ -41,7 +41,7 @@ const groupPurchases = [
   {
     id: 1,
     title: 'گوشی سامسونگ Galaxy S24',
-    image: 'https://picsum.photos/seed/1/300/200',
+    image: 'https://picsum.photos/seed/1navy/300/200',
     originalPrice: 45000000,
     groupPrice: 39500000,
     discount: 12,
@@ -56,17 +56,17 @@ const groupPurchases = [
         { type: 'حافظه', options: ['256GB', '512GB'] },
     ],
     recentMembers: [
-      { name: 'AR', avatar: 'https://picsum.photos/seed/user10/40/40' },
-      { name: 'ZM', avatar: 'https://picsum.photos/seed/user11/40/40' },
-      { name: 'HN', avatar: 'https://picsum.photos/seed/user12/40/40' },
-      { name: 'FK', avatar: 'https://picsum.photos/seed/user13/40/40' },
-      { name: 'MJ', avatar: 'https://picsum.photos/seed/user14/40/40' },
+      { name: 'AR', avatar: 'https://picsum.photos/seed/user10navy/40/40' },
+      { name: 'ZM', avatar: 'https://picsum.photos/seed/user11navy/40/40' },
+      { name: 'HN', avatar: 'https://picsum.photos/seed/user12navy/40/40' },
+      { name: 'FK', avatar: 'https://picsum.photos/seed/user13navy/40/40' },
+      { name: 'MJ', avatar: 'https://picsum.photos/seed/user14navy/40/40' },
     ],
   },
   {
     id: 2,
     title: 'روغن آفتابگردان لادن ۱ لیتری (بسته ۳ عددی)',
-    image: 'https://picsum.photos/seed/2/300/200',
+    image: 'https://picsum.photos/seed/2navy/300/200',
     originalPrice: 580000,
     groupPrice: 435000,
     discount: 25,
@@ -83,14 +83,14 @@ const groupPurchases = [
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
     ],
     recentMembers: [
-      { name: 'SA', avatar: 'https://picsum.photos/seed/user20/40/40' },
-      { name: 'BN', avatar: 'https://picsum.photos/seed/user21/40/40' },
+      { name: 'SA', avatar: 'https://picsum.photos/seed/user20navy/40/40' },
+      { name: 'BN', avatar: 'https://picsum.photos/seed/user21navy/40/40' },
     ],
   },
   {
     id: 3,
     title: 'ماشین لباسشویی اسنوا ۸ کیلویی',
-    image: 'https://picsum.photos/seed/3/300/200',
+    image: 'https://picsum.photos/seed/3navy/300/200',
     originalPrice: 28500000,
     groupPrice: 24225000,
     discount: 15,
@@ -104,15 +104,15 @@ const groupPurchases = [
         { type: 'رنگ', options: ['سفید', 'نقره‌ای'] },
     ],
     recentMembers: [
-      { name: 'GH', avatar: 'https://picsum.photos/seed/user30/40/40' },
-      { name: 'KP', avatar: 'https://picsum.photos/seed/user31/40/40' },
-      { name: 'LM', avatar: 'https://picsum.photos/seed/user32/40/40' },
+      { name: 'GH', avatar: 'https://picsum.photos/seed/user30navy/40/40' },
+      { name: 'KP', avatar: 'https://picsum.photos/seed/user31navy/40/40' },
+      { name: 'LM', avatar: 'https://picsum.photos/seed/user32navy/40/40' },
     ],
   },
   {
     id: 4,
     title: 'بسته گوشت گوسفندی تازه ۲ کیلویی',
-    image: 'https://picsum.photos/seed/4/300/200',
+    image: 'https://picsum.photos/seed/4navy/300/200',
     originalPrice: 1200000,
     groupPrice: 984000,
     discount: 18,
@@ -127,16 +127,16 @@ const groupPurchases = [
       { name: 'گوشت سردست گوسفندی', quantity: '۱ کیلوگرم' },
     ],
      recentMembers: [
-      { name: 'ER', avatar: 'https://picsum.photos/seed/user40/40/40' },
-      { name: 'TY', avatar: 'https://picsum.photos/seed/user41/40/40' },
-      { name: 'UI', avatar: 'https://picsum.photos/seed/user42/40/40' },
-      { name: 'OP', avatar: 'https://picsum.photos/seed/user43/40/40' },
+      { name: 'ER', avatar: 'https://picsum.photos/seed/user40navy/40/40' },
+      { name: 'TY', avatar: 'https://picsum.photos/seed/user41navy/40/40' },
+      { name: 'UI', avatar: 'https://picsum.photos/seed/user42navy/40/40' },
+      { name: 'OP', avatar: 'https://picsum.photos/seed/user43navy/40/40' },
     ],
   },
     {
     id: 9,
     title: 'گوشی شیائومی Poco X6 Pro',
-    image: 'https://picsum.photos/seed/9/300/200',
+    image: 'https://picsum.photos/seed/9navy/300/200',
     originalPrice: 15500000,
     groupPrice: 13800000,
     discount: 11,
@@ -146,14 +146,14 @@ const groupPurchases = [
     category: 'digital',
     aiHint: 'smartphone xiaomi poco',
      recentMembers: [
-      { name: 'CV', avatar: 'https://picsum.photos/seed/user90/40/40' },
-      { name: 'BN', avatar: 'https://picsum.photos/seed/user91/40/40' },
+      { name: 'CV', avatar: 'https://picsum.photos/seed/user90navy/40/40' },
+      { name: 'BN', avatar: 'https://picsum.photos/seed/user91navy/40/40' },
     ],
   },
   {
     id: 5,
     title: 'زعفران درجه یک قائنات ۵ مثقالی',
-    image: 'https://picsum.photos/seed/5/300/200',
+    image: 'https://picsum.photos/seed/5navy/300/200',
     originalPrice: 1850000,
     groupPrice: 1480000,
     discount: 20,
@@ -165,15 +165,15 @@ const groupPurchases = [
     isFeatured: true,
     aiHint: 'saffron spice box',
     recentMembers: [
-        { name: 'AS', avatar: 'https://picsum.photos/seed/user50/40/40' },
-        { name: 'DF', avatar: 'https://picsum.photos/seed/user51/40/40' },
-        { name: 'GH', avatar: 'https://picsum.photos/seed/user52/40/40' },
+        { name: 'AS', avatar: 'https://picsum.photos/seed/user50navy/40/40' },
+        { name: 'DF', avatar: 'https://picsum.photos/seed/user51navy/40/40' },
+        { name: 'GH', avatar: 'https://picsum.photos/seed/user52navy/40/40' },
     ],
   },
   {
     id: 6,
     title: 'تلویزیون ال‌جی ۵۵ اینچ ۴K',
-    image: 'https://picsum.photos/seed/6/300/200',
+    image: 'https://picsum.photos/seed/6navy/300/200',
     originalPrice: 38500000,
     groupPrice: 32725000,
     discount: 15,
@@ -183,14 +183,14 @@ const groupPurchases = [
     category: 'digital',
     aiHint: 'smart tv lg living room',
     recentMembers: [
-        { name: 'ZX', avatar: 'https://picsum.photos/seed/user60/40/40' },
-        { name: 'CV', avatar: 'https://picsum.photos/seed/user61/40/40' },
+        { name: 'ZX', avatar: 'https://picsum.photos/seed/user60navy/40/40' },
+        { name: 'CV', avatar: 'https://picsum.photos/seed/user61navy/40/40' },
     ],
   },
   {
     id: 7,
     title: 'فرش دستباف کاشان ۹ متری',
-    image: 'https://picsum.photos/seed/7/300/200',
+    image: 'https://picsum.photos/seed/7navy/300/200',
     originalPrice: 18500000,
     groupPrice: 14800000,
     discount: 20,
@@ -202,13 +202,13 @@ const groupPurchases = [
     isFeatured: true,
     aiHint: 'persian carpet detail',
     recentMembers: [
-        { name: 'QW', avatar: 'https://picsum.photos/seed/user70/40/40' },
+        { name: 'QW', avatar: 'https://picsum.photos/seed/user70navy/40/40' },
     ],
   },
   {
     id: 8,
     title: 'گز اصفهان درجه یک (جعبه ۱ کیلویی)',
-    image: 'https://picsum.photos/seed/8/300/200',
+    image: 'https://picsum.photos/seed/8navy/300/200',
     originalPrice: 950000,
     groupPrice: 760000,
     discount: 20,
@@ -219,10 +219,10 @@ const groupPurchases = [
     isIranian: true,
     aiHint: 'gaz candy box',
      recentMembers: [
-      { name: 'PL', avatar: 'https://picsum.photos/seed/user80/40/40' },
-      { name: 'OK', avatar: 'https://picsum.photos/seed/user81/40/40' },
-      { name: 'IJ', avatar: 'https://picsum.photos/seed/user82/40/40' },
-      { name: 'UH', avatar: 'https://picsum.photos/seed/user83/40/40' },
+      { name: 'PL', avatar: 'https://picsum.photos/seed/user80navy/40/40' },
+      { name: 'OK', avatar: 'https://picsum.photos/seed/user81navy/40/40' },
+      { name: 'IJ', avatar: 'https://picsum.photos/seed/user82navy/40/40' },
+      { name: 'UH', avatar: 'https://picsum.photos/seed/user83navy/40/40' },
     ],
   }
 ];
@@ -247,7 +247,7 @@ const specialOffers = [
     id: 1,
     title: 'جشنواره نوروزی - تخفیف تا ۴۰٪',
     description: 'خرید گروهی محصولات نوروزی با تخفیف فوق‌العاده، فقط تا پایان اسفند',
-    image: 'https://picsum.photos/seed/offer1/600/250',
+    image: 'https://picsum.photos/seed/offer1navy/600/250',
     bgColorClass: 'bg-primary', // Use theme color class
     textColorClass: 'text-primary-foreground',
     aiHint: 'new year sale offer',
@@ -256,7 +256,7 @@ const specialOffers = [
     id: 2,
     title: 'محصولات ایرانی - حمایت از تولید ملی',
     description: 'خرید گروهی کالاهای ایرانی با کیفیت و قیمت مناسب',
-    image: 'https://picsum.photos/seed/offer2/600/250',
+    image: 'https://picsum.photos/seed/offer2navy/600/250',
     bgColorClass: 'bg-accent', // Use theme color class
     textColorClass: 'text-accent-foreground',
     aiHint: 'iranian product support',
@@ -265,7 +265,7 @@ const specialOffers = [
     id: 3,
     title: 'صنایع دستی اصیل ایرانی',
     description: 'مجموعه‌ای از بهترین صنایع دستی استان‌های مختلف ایران',
-    image: 'https://picsum.photos/seed/offer3/600/250',
+    image: 'https://picsum.photos/seed/offer3navy/600/250',
     bgColorClass: 'bg-secondary', // Use theme color class
     textColorClass: 'text-secondary-foreground',
     aiHint: 'iranian handicraft art',
@@ -277,42 +277,42 @@ const wholesalers = [
   {
     id: 1,
     name: "شرکت پخش بهاران",
-    logo: "https://picsum.photos/seed/wholesaler1/100/100",
+    logo: "https://picsum.photos/seed/wholesaler1navy/100/100",
     aiHint: "food distribution company logo",
     productHints: ['food', 'drink', 'snack'], // Keywords for tiny product images
   },
   {
     id: 2,
     name: "لوازم خانگی مدرن",
-    logo: "https://picsum.photos/seed/wholesaler2/100/100",
+    logo: "https://picsum.photos/seed/wholesaler2navy/100/100",
     aiHint: "home appliance store logo",
     productHints: ['tv', 'fridge', 'washing machine'],
   },
   {
     id: 3,
     name: "پوشاک ایرانیان",
-    logo: "https://picsum.photos/seed/wholesaler3/100/100",
+    logo: "https://picsum.photos/seed/wholesaler3navy/100/100",
     aiHint: "clothing manufacturer logo",
     productHints: ['shirt', 'trousers', 'dress'],
   },
   {
     id: 4,
     name: "دیجیتال پارس",
-    logo: "https://picsum.photos/seed/wholesaler4/100/100",
+    logo: "https://picsum.photos/seed/wholesaler4navy/100/100",
     aiHint: "digital electronics company logo",
     productHints: ['phone', 'laptop', 'headphone'],
   },
     {
     id: 5,
     name: "ابزار یراق مرکزی",
-    logo: "https://picsum.photos/seed/wholesaler5/100/100",
+    logo: "https://picsum.photos/seed/wholesaler5navy/100/100",
     aiHint: "hardware tools supplier logo",
     productHints: ['drill', 'hammer', 'screwdriver'],
   },
     {
     id: 6,
     name: "دکوراسیون داخلی زیبا",
-    logo: "https://picsum.photos/seed/wholesaler6/100/100",
+    logo: "https://picsum.photos/seed/wholesaler6navy/100/100",
     aiHint: "interior decoration shop logo",
     productHints: ['lamp', 'vase', 'painting'],
   },
@@ -325,7 +325,7 @@ const stores = [
   {
     id: 101, // Store ID
     name: "فروشگاه بزرگ شهر",
-    logo: "https://picsum.photos/seed/store1/100/100",
+    logo: "https://picsum.photos/seed/store1navy/100/100",
     aiHint: "city mega store logo",
     offersInstallments: true, // آیا قسطی می‌فروشد؟
     products: [
@@ -338,7 +338,7 @@ const stores = [
   {
     id: 102, // Store ID
     name: "هایپر مارکت آفتاب",
-    logo: "https://picsum.photos/seed/store2/100/100",
+    logo: "https://picsum.photos/seed/store2navy/100/100",
     aiHint: "sun hypermarket logo",
     offersInstallments: false,
     products: [
@@ -350,7 +350,7 @@ const stores = [
   {
     id: 103, // Store ID
     name: "خانه و زندگی لوکس",
-    logo: "https://picsum.photos/seed/store3/100/100",
+    logo: "https://picsum.photos/seed/store3navy/100/100",
     aiHint: "luxury home living logo",
     offersInstallments: true,
     products: [
@@ -451,7 +451,7 @@ export default function HomePage() {
                     data-ai-hint={slide.aiHint}
                     priority={slide.id === 1} // Prioritize first slide image
                   />
-                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-black/30 p-8">
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-gradient-to-t from-black/60 to-transparent p-8">
                     <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">{slide.title}</h1>
                     <p className="text-lg md:text-xl mb-8 drop-shadow-md animate-fade-in animation-delay-200">{slide.description}</p>
                     <Link href={slide.link}>
@@ -543,7 +543,7 @@ export default function HomePage() {
           <div className="bg-card rounded-lg p-8 shadow-lg border border-border">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
               <div className="flex items-center mb-4 sm:mb-0">
-                <Image src="https://picsum.photos/seed/iranflag/50/50" width={50} height={50} alt="پرچم ایران" className="w-10 h-10 rounded-full ml-3 rtl:mr-3 shadow-md" data-ai-hint="iran flag" />
+                <Image src="https://picsum.photos/seed/iranflagnavy/50/50" width={50} height={50} alt="پرچم ایران" className="w-10 h-10 rounded-full ml-3 rtl:mr-3 shadow-md" data-ai-hint="iran flag" />
                 <h2 className="text-3xl font-bold text-card-foreground">محصولات ایرانی برتر</h2>
               </div>
               <Link href="/iranian-products" className="text-primary hover:text-primary/80 text-sm font-medium flex items-center transition-colors duration-300 group">
@@ -562,7 +562,7 @@ export default function HomePage() {
                           {item.discount}٪ تخفیف
                         </Badge>
                         <Badge variant="secondary" className="absolute top-3 left-3 flex items-center bg-background/80">
-                           <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
+                           <Image src="https://picsum.photos/seed/iranflagnavy/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full mr-1 rtl:ml-1" data-ai-hint="iran flag" />
                            ایران
                         </Badge>
                         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
@@ -612,12 +612,12 @@ export default function HomePage() {
                     </Badge>
                     {item.isIranian && (
                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
-                        <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        <Image src="https://picsum.photos/seed/iranflagnavy/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="default" className="absolute bottom-3 right-3 bg-yellow-500 text-white flex items-center shadow-md">
+                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
@@ -730,7 +730,7 @@ export default function HomePage() {
                                   {product.discount}٪ تخفیف
                                 </Badge>
                                 {product.isFeatured && (
-                                  <Badge variant="default" className="absolute bottom-2 right-2 bg-yellow-500 text-white flex items-center shadow-md text-xs px-1.5 py-0.5">
+                                  <Badge variant="accent" className="absolute bottom-2 right-2 flex items-center shadow-md text-xs px-1.5 py-0.5">
                                     <Star className="w-2.5 h-2.5 ml-1 rtl:mr-1 fill-current" />
                                     ویژه
                                   </Badge>
@@ -791,7 +791,7 @@ export default function HomePage() {
                    <div className="flex -space-x-1 rtl:space-x-reverse justify-center mt-auto mb-3"> {/* Moved to bottom */}
                      {wholesaler.productHints.slice(0, 3).map((hint, index) => (
                        <Avatar key={index} className="w-7 h-7 border-2 border-background shadow-sm">
-                         <AvatarImage src={`https://picsum.photos/seed/${wholesaler.id}-${index}/30/30`} alt={hint} data-ai-hint={hint} />
+                         <AvatarImage src={`https://picsum.photos/seed/${wholesaler.id}-${index}navy/30/30`} alt={hint} data-ai-hint={hint} />
                          <AvatarFallback className="text-xs">{hint.charAt(0)}</AvatarFallback>
                        </Avatar>
                      ))}
@@ -856,12 +856,12 @@ export default function HomePage() {
                     </Badge>
                     {item.isIranian && (
                        <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
-                        <Image src="https://picsum.photos/seed/iranflag/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        <Image src="https://picsum.photos/seed/iranflagnavy/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="default" className="absolute bottom-3 right-3 bg-yellow-500 text-white flex items-center shadow-md">
+                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
@@ -932,26 +932,26 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", color: "primary" },
-            { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", color: "green" },
-            { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", color: "yellow" },
-            { icon: Globe, title: "حمایت از تولید ملی", description: "با خرید کالاهای ایرانی، به اقتصاد کشور کمک کنید.", color: "red" }
+            { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", colorClass: "text-accent" },
+            { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", colorClass: "text-green-500" }, // Using explicit green for checkmark
+            { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", colorClass: "text-primary" },
+            { icon: Globe, title: "حمایت از تولید ملی", description: "با خرید کالاهای ایرانی، به اقتصاد کشور کمک کنید.", colorClass: "text-destructive" }
           ].map((benefit, index) => (
             <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group">
-              <div className={`relative w-20 h-20 bg-gradient-to-br from-${benefit.color}-100 to-${benefit.color}-200 dark:from-${benefit.color}-900/50 dark:to-${benefit.color}-800/60 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
-                {/* Subtle animated ping effect */}
-                <div className={`absolute inset-0 bg-${benefit.color}-500/30 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
-                <benefit.icon className={`h-10 w-10 text-${benefit.color}-600 dark:text-${benefit.color}-400 relative z-10`} />
-              </div>
-              <h3 className="font-bold text-xl mb-3 text-card-foreground">{benefit.title}</h3>
-              <p className="text-muted-foreground text-sm">{benefit.description}</p>
-            </div>
+               <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
+                 {/* Subtle animated ping effect */}
+                 <div className={`absolute inset-0 ${benefit.colorClass.replace('text-', 'bg-')}/20 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
+                 <benefit.icon className={`h-10 w-10 ${benefit.colorClass} relative z-10`} />
+               </div>
+               <h3 className="font-bold text-xl mb-3 text-card-foreground">{benefit.title}</h3>
+               <p className="text-muted-foreground text-sm">{benefit.description}</p>
+             </div>
           ))}
         </div>
       </section>
 
       {/* بخش آمار */}
-      <section className="bg-gradient-to-br from-accent to-primary text-primary-foreground py-16 my-16 container mx-auto px-4 rounded-xl shadow-xl">
+      <section className="bg-gradient-to-br from-primary to-blue-800 dark:from-primary dark:to-blue-900 text-primary-foreground py-16 my-16 container mx-auto px-4 rounded-xl shadow-xl">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">

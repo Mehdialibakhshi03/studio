@@ -11,99 +11,99 @@ body {
 
 @layer base {
   :root {
-    /* Light Theme - Clean, Professional, Accessible */
-    --background: 0 0% 98%; /* Slightly off-white */
-    --foreground: 240 10% 3.9%; /* Dark Gray */
+    /* Light Theme - Navy Blue & Gold */
+    --background: 210 20% 98%; /* Very Light Blue-Gray */
+    --foreground: 220 40% 10%; /* Dark Navy */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 240 10% 3.9%; /* Dark Gray */
+    --card-foreground: 220 40% 10%; /* Dark Navy */
 
     --popover: 0 0% 100%; /* White */
-    --popover-foreground: 240 10% 3.9%; /* Dark Gray */
+    --popover-foreground: 220 40% 10%; /* Dark Navy */
 
-    --primary: 142.1 76.2% 42.2%; /* Vibrant Green */
-    --primary-foreground: 355.7 100% 97.3%; /* White on primary */
+    --primary: 220 40% 30%; /* Classic Navy Blue */
+    --primary-foreground: 0 0% 98%; /* Near White */
 
-    --secondary: 240 4.8% 95.9%; /* Light Gray */
-    --secondary-foreground: 240 5.9% 10%; /* Darker text on secondary */
+    --secondary: 215 20% 90%; /* Light Blue-Gray */
+    --secondary-foreground: 220 25% 30%; /* Darker Blue-Gray */
 
-    --muted: 240 4.8% 90%; /* Medium Gray */
-    --muted-foreground: 240 3.8% 46.1%; /* Darker Medium Gray */
+    --muted: 215 20% 85%; /* Medium Blue-Gray */
+    --muted-foreground: 215 15% 45%; /* Darker Medium Blue-Gray */
 
-    --accent: 217.2 91.2% 59.8%; /* Professional Blue */
-    --accent-foreground: 210 40% 98%; /* White on accent */
+    --accent: 45 80% 60%; /* Gold/Yellow */
+    --accent-foreground: 220 40% 10%; /* Dark Navy on Accent */
 
-    --destructive: 0 84.2% 60.2%; /* Clear Red */
+    --destructive: 0 75% 55%; /* Clear Red (slightly desaturated) */
     --destructive-foreground: 0 0% 98%; /* White on destructive */
 
-    --border: 240 5.9% 88%; /* Slightly darker border */
-    --input: 240 5.9% 90%; /* Input background matching muted */
-    --ring: 217.2 91.2% 59.8%; /* Accent blue for focus rings */
+    --border: 215 20% 80%; /* Slightly darker border */
+    --input: 215 20% 90%; /* Input background matching secondary */
+    --ring: 45 80% 60%; /* Accent Gold for focus rings */
 
-    --chart-1: 142.1 76.2% 42.2%; /* Primary Green */
-    --chart-2: 217.2 91.2% 59.8%; /* Accent Blue */
-    --chart-3: 47.9 95.8% 53.1%; /* Yellow */
-    --chart-4: 0 72.2% 50.6%;   /* Red */
-    --chart-5: 270.7 91% 65.1%; /* Purple */
+    --chart-1: 220 40% 30%; /* Primary Navy */
+    --chart-2: 45 80% 60%;  /* Accent Gold */
+    --chart-3: 190 70% 50%; /* Cyan/Teal */
+    --chart-4: 0 75% 55%;   /* Red */
+    --chart-5: 270 50% 60%; /* Purple */
 
     --radius: 0.5rem;
 
-    /* Sidebar Colors (Light) */
-    --sidebar-background: 0 0% 96%; /* Slightly darker than main background */
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 142.1 76.2% 38%; /* Darker green for sidebar primary */
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 4.8% 92%; /* Slightly darker than main secondary */
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 240 5.9% 85%; /* Matching main border */
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar Colors (Light - Navy adjustments) */
+    --sidebar-background: 215 25% 95%; /* Slightly darker light blue-gray */
+    --sidebar-foreground: 220 40% 10%; /* Dark Navy */
+    --sidebar-primary: 220 40% 25%; /* Darker Navy for sidebar primary */
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 215 20% 88%; /* Slightly darker than main secondary */
+    --sidebar-accent-foreground: 220 25% 30%;
+    --sidebar-border: 215 20% 78%; /* Slightly darker border */
+    --sidebar-ring: 45 80% 60%;
   }
 
   .dark {
-    /* Dark Theme - Higher Contrast, Modern Feel */
-    --background: 240 10% 3.9%; /* Very Dark Gray/Blue */
-    --foreground: 0 0% 98%; /* Near White */
+    /* Dark Theme - Navy Blue & Gold */
+    --background: 220 30% 10%; /* Very Dark Navy Blue */
+    --foreground: 210 20% 95%; /* Light Gray/Off-White */
 
-    --card: 240 10% 5.9%; /* Slightly Lighter Dark */
-    --card-foreground: 0 0% 98%; /* Near White */
+    --card: 220 30% 15%; /* Slightly Lighter Dark Navy */
+    --card-foreground: 210 20% 95%; /* Light Gray/Off-White */
 
-    --popover: 240 10% 3.9%; /* Same as background */
-    --popover-foreground: 0 0% 98%; /* Near White */
+    --popover: 220 30% 12%; /* Slightly darker than card */
+    --popover-foreground: 210 20% 95%; /* Light Gray/Off-White */
 
-    --primary: 142.1 70.6% 45.3%; /* Maintain vibrant green */
-    --primary-foreground: 355.7 100% 97.3%; /* Light text on primary */
+    --primary: 220 50% 55%; /* Brighter Navy for Dark Mode */
+    --primary-foreground: 210 20% 98%; /* Light text on primary */
 
-    --secondary: 240 3.7% 15.9%; /* Darker Gray */
-    --secondary-foreground: 0 0% 98%; /* Near White */
+    --secondary: 220 20% 25%; /* Medium-Dark Blue-Gray */
+    --secondary-foreground: 210 20% 90%; /* Lighter Gray */
 
-    --muted: 240 3.7% 22%; /* Medium Dark Gray */
-    --muted-foreground: 240 5% 64.9%; /* Lighter Gray */
+    --muted: 220 20% 30%; /* Darker Medium Blue-Gray */
+    --muted-foreground: 210 15% 65%; /* Lighter Muted Gray */
 
-    --accent: 217.2 91.2% 59.8%; /* Maintain professional blue */
-    --accent-foreground: 210 40% 98%; /* White on accent */
+    --accent: 45 85% 65%; /* Slightly Brighter Gold/Yellow for Dark */
+    --accent-foreground: 220 40% 10%; /* Dark Navy on Accent */
 
-    --destructive: 0 72.2% 50.6%; /* Slightly adjusted Red */
+    --destructive: 0 70% 60%; /* Adjusted Red for dark */
     --destructive-foreground: 0 0% 98%; /* White on destructive */
 
-    --border: 240 3.7% 15.9%; /* Same as secondary */
-    --input: 240 3.7% 15.9%; /* Same as secondary */
-    --ring: 217.2 91.2% 59.8%; /* Accent blue for focus rings */
+    --border: 220 20% 25%; /* Same as secondary */
+    --input: 220 20% 25%; /* Same as secondary */
+    --ring: 45 85% 65%; /* Accent Gold for focus rings */
 
-    --chart-1: 142.1 70.6% 45.3%;
-    --chart-2: 217.2 91.2% 59.8%;
-    --chart-3: 47.9 95.8% 53.1%;
-    --chart-4: 0 72.2% 50.6%;
-    --chart-5: 270.7 91% 65.1%;
+    --chart-1: 220 50% 55%;
+    --chart-2: 45 85% 65%;
+    --chart-3: 190 65% 60%;
+    --chart-4: 0 70% 60%;
+    --chart-5: 270 45% 65%;
 
-    /* Sidebar Colors (Dark) */
-    --sidebar-background: 240 10% 6.5%; /* Slightly lighter than main dark bg */
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 142.1 70.6% 45.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 18%; /* Slightly lighter than main dark secondary */
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%; /* Same as main dark border */
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar Colors (Dark - Navy adjustments) */
+    --sidebar-background: 220 30% 13%; /* Slightly lighter than main dark bg */
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 220 50% 55%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 220 20% 28%; /* Slightly lighter than main dark secondary */
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 220 20% 25%; /* Same as main dark border */
+    --sidebar-ring: 45 85% 65%;
   }
 }
 
