@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -242,38 +243,6 @@ const categories = [
   { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools', image: 'https://picsum.photos/seed/cat7navy/80/80', aiHint: 'tools hardware category' },
   { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://picsum.photos/seed/cat8navy/80/80', aiHint: 'miscellaneous package box' }
 ];
-
-// تخفیف‌های شگفت‌انگیز
-const specialOffers = [
-  {
-    id: 1,
-    title: 'جشنواره نوروزی - تخفیف تا ۴۰٪',
-    description: 'خرید گروهی محصولات نوروزی با تخفیف فوق‌العاده، فقط تا پایان اسفند',
-    image: 'https://picsum.photos/seed/offer1navy/600/250',
-    bgColorClass: 'bg-primary', // Use theme color class
-    textColorClass: 'text-primary-foreground',
-    aiHint: 'new year sale offer',
-  },
-  {
-    id: 2,
-    title: 'محصولات ایرانی - حمایت از تولید ملی',
-    description: 'خرید گروهی کالاهای ایرانی با کیفیت و قیمت مناسب',
-    image: 'https://picsum.photos/seed/offer2navy/600/250',
-    bgColorClass: 'bg-accent', // Use theme color class
-    textColorClass: 'text-accent-foreground',
-    aiHint: 'iranian product support',
-  },
-  {
-    id: 3,
-    title: 'صنایع دستی اصیل ایرانی',
-    description: 'مجموعه‌ای از بهترین صنایع دستی استان‌های مختلف ایران',
-    image: 'https://picsum.photos/seed/offer3navy/600/250',
-    bgColorClass: 'bg-secondary', // Use theme color class
-    textColorClass: 'text-secondary-foreground',
-    aiHint: 'iranian handicraft art',
-  }
-];
-
 
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان (برای اسلایدر)
 // IMPORTANT: Ensure product IDs here are unique and don't clash with groupPurchases IDs
@@ -742,26 +711,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* تخفیف‌های شگفت‌انگیز */}
-      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
-        <h2 className="text-3xl font-bold mb-10 text-center">تخفیف‌های شگفت‌انگیز</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {specialOffers.map(offer => (
-            <div key={offer.id} className={`rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group ${offer.bgColorClass} ${offer.textColorClass}`}>
-              <div className="relative h-48">
-                <Image src={offer.image} layout="fill" objectFit="cover" alt={offer.title} className="transition-transform duration-500 group-hover:scale-110" data-ai-hint={offer.aiHint} />
-                <div className="absolute inset-0 flex flex-col justify-end items-start p-6 bg-gradient-to-t from-black/70 to-transparent">
-                  <h3 className="font-bold text-xl mb-2">{offer.title}</h3>
-                  <p className="text-sm mb-4 line-clamp-2">{offer.description}</p>
-                  <Button variant="outline" className="mt-auto border-current text-current hover:bg-background hover:text-foreground transition-transform hover:scale-105 duration-300">
-                    مشاهده جزئیات
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* REMOVED: تخفیف‌های شگفت‌انگیز */}
 
 
      {/* درخواست‌های خرید گروهی */}
