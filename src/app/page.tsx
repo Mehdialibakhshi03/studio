@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake } from 'lucide-react'; // Import necessary icons
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
 import Link from 'next/link'; // Import Link
 import Header from '@/components/header'; // Import Header component
@@ -361,6 +361,43 @@ const stores = [
   },
 ];
 export { stores }; // Export stores data
+
+
+// داده‌های نمونه برای نظرات مشتریان
+const testimonials = [
+  {
+    id: 1,
+    name: "سارا رضایی",
+    avatar: "https://picsum.photos/seed/testimonial1navy/80/80",
+    comment: "قیمت‌ها واقعا عالیه! با خرید گروهی تونستم گوشی جدیدم رو خیلی ارزون‌تر بخرم. ممنونم!",
+    rating: 5,
+    aiHint: "happy customer female",
+  },
+  {
+    id: 2,
+    name: "علی محمدی",
+    avatar: "https://picsum.photos/seed/testimonial2navy/80/80",
+    comment: "اولین بار بود از خرید گروهی استفاده می‌کردم، تجربه خوبی بود. فقط کاش تنوع کالاها بیشتر بشه.",
+    rating: 4,
+    aiHint: "satisfied customer male",
+  },
+  {
+    id: 3,
+    name: "مریم حسینی",
+    avatar: "https://picsum.photos/seed/testimonial3navy/80/80",
+    comment: "خیلی راحت و سریع بود. پشتیبانی هم خیلی خوب راهنمایی کردن. حتما دوباره از اینجا خرید می‌کنم.",
+    rating: 5,
+    aiHint: "customer service interaction",
+  },
+    {
+    id: 4,
+    name: "رضا اکبری",
+    avatar: "https://picsum.photos/seed/testimonial4navy/80/80",
+    comment: "کیفیت محصولات ایرانی که خریدم واقعا خوب بود. خوشحالم که از تولید ملی حمایت کردم.",
+    rating: 4,
+    aiHint: "customer holding product",
+  },
+];
 
 
 // تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
@@ -911,6 +948,50 @@ export default function HomePage() {
                <p className="text-muted-foreground text-sm">{benefit.description}</p>
              </div>
           ))}
+        </div>
+      </section>
+
+       {/* بخش رضایت مشتریان (Social Proof) */}
+      <section className="bg-background py-16">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16">
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">صدای مشتریان ما</h2>
+          <Carousel
+            opts={{ align: "start", direction: "rtl", loop: true }}
+            className="w-full"
+            plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
+          >
+            <CarouselContent className="-ml-4 rtl:-mr-4">
+              {testimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
+                  <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
+                    <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
+                      <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
+                        <AvatarFallback className="text-2xl">{testimonial.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
+                      <div className="flex items-center justify-center mb-4">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={cn(
+                              "w-4 h-4",
+                              i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"
+                            )}
+                          />
+                        ))}
+                      </div>
+                      <Quote className="w-8 h-8 text-muted-foreground/30 mb-2 rotate-180" />
+                      <p className="text-muted-foreground text-sm leading-relaxed flex-grow">{testimonial.comment}</p>
+                       <Quote className="w-8 h-8 text-muted-foreground/30 mt-2" />
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+          </Carousel>
         </div>
       </section>
 
