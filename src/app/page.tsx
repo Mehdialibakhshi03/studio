@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store } from 'lucide-react'; // Import necessary icons
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake } from 'lucide-react'; // Import necessary icons
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -528,10 +528,39 @@ export default function HomePage() {
         </div>
       </section>
 
+       {/* How It Works Section */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
+                <Search className="h-10 w-10 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۱. کالا را پیدا کنید</h3>
+            <p className="text-muted-foreground text-sm">کالای مورد نظر خود را از بین خریدهای گروهی فعال پیدا کنید یا درخواست جدید ثبت کنید.</p>
+          </div>
+          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
+                <Users className="h-10 w-10 text-primary" />
+             </div>
+            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۲. به گروه بپیوندید</h3>
+            <p className="text-muted-foreground text-sm">به گروه خرید کالا بپیوندید و دوستان خود را برای رسیدن به حد نصاب دعوت کنید.</p>
+          </div>
+          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
+                 <Target className="h-10 w-10 text-primary" />
+             </div>
+            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۳. خرید نهایی و تحویل</h3>
+            <p className="text-muted-foreground text-sm">پس از رسیدن به حد نصاب، خرید نهایی شده و کالا با تخفیف ویژه برای شما ارسال می‌شود.</p>
+          </div>
+        </div>
+      </section>
+
+
       {/* تخفیف‌های شگفت‌انگیز */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold mb-10 text-center">تخفیف‌های شگفت‌انگیز</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8"> {/* Changed grid-cols-3 */}
           {specialOffers.map(offer => (
             <div key={offer.id} className={`rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group ${offer.bgColorClass} ${offer.textColorClass}`}>
               <div className="relative h-48">
@@ -565,8 +594,8 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {groupPurchases.filter(item => item.isIranian).slice(0, 4).map(item => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Changed grid-cols-3 */}
+              {groupPurchases.filter(item => item.isIranian).slice(0, 3).map(item => ( // Slice 3 items
                 <Link href={`/product/${item.id}`} key={item.id}>
                   <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-card border group cursor-pointer h-full flex flex-col">
                     <CardHeader className="p-0 relative aspect-[4/3]">
@@ -611,8 +640,8 @@ export default function HomePage() {
              </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {groupPurchases.slice(4, 8).map(item => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Changed grid-cols-3 */}
+            {groupPurchases.slice(4, 7).map(item => ( // Slice 3 items
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                   <CardHeader className="p-0 relative aspect-[4/3]">
@@ -728,13 +757,13 @@ export default function HomePage() {
                     opts={{
                       align: "start",
                       direction: "rtl",
-                      loop: store.products.length > 4, // Enable loop if enough items
+                      loop: store.products.length > 3, // Enable loop if enough items for 3 columns
                     }}
                     className="w-full relative"
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
-                        <CarouselItem key={product.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4 mb-1"> {/* Add mb-1 for spacing */}
+                        <CarouselItem key={product.id} className="basis-full md:basis-1/3 pl-4 rtl:pr-4 mb-1"> {/* Changed basis-1/3 */}
                           <Link href={`/product/${product.id}`} className="block h-full">
                             <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50">
                               <CardHeader className="p-0 relative aspect-[4/3]">
@@ -855,8 +884,8 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredItems.map(item => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Changed grid-cols-3 */}
+            {filteredItems.slice(0, 6).map(item => ( // Slice 6 items for 2 rows of 3
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                    <CardHeader className="p-0 relative aspect-[4/3]">
@@ -948,7 +977,7 @@ export default function HomePage() {
             { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", colorClass: "text-accent" },
             { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", colorClass: "text-green-500" }, // Using explicit green for checkmark
             { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", colorClass: "text-primary" },
-            { icon: Globe, title: "حمایت از تولید ملی", description: "با خرید کالاهای ایرانی، به اقتصاد کشور کمک کنید.", colorClass: "text-destructive" }
+            { icon: Handshake, title: "خرید مستقیم", description: "ارتباط مستقیم با فروشندگان عمده و تولیدکنندگان.", colorClass: "text-purple-500" } // Added new benefit
           ].map((benefit, index) => (
             <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group">
                <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
@@ -1013,4 +1042,3 @@ export default function HomePage() {
     </div>
   );
 }
-
