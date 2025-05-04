@@ -363,6 +363,39 @@ const testimonials = [
   },
 ];
 
+
+// داده‌های نمونه برای نظرات فروشندگان
+const sellerTestimonials = [
+  {
+    id: 101,
+    name: "فروشگاه لوازم خانگی ممتاز",
+    avatar: "https://picsum.photos/seed/seller1navy/80/80",
+    comment: "پلتفرم خریدگروهی به ما کمک کرد تا به مشتریان بیشتری دسترسی پیدا کنیم و فروش عمده‌مون رو افزایش بدیم. همکاری بسیار خوبی داشتیم.",
+    rating: 5,
+    productsSold: 500, // Example metric
+    aiHint: "store owner portrait",
+  },
+  {
+    id: 102,
+    name: "تولیدی پوشاک الوند",
+    avatar: "https://picsum.photos/seed/seller2navy/80/80",
+    comment: "ایده خرید گروهی برای فروش محصولات فصلی ما عالی بود. تونستیم حجم زیادی از کالا رو در زمان کوتاهی بفروشیم.",
+    rating: 4,
+    productsSold: 1200,
+    aiHint: "factory manager",
+  },
+  {
+    id: 103,
+    name: "شرکت پخش مواد غذایی سالم",
+    avatar: "https://picsum.photos/seed/seller3navy/80/80",
+    comment: "فرایند ثبت محصول و مدیریت خرید گروهی بسیار ساده بود. تیم پشتیبانی هم همیشه پاسخگو بودند.",
+    rating: 5,
+    productsSold: 800,
+    aiHint: "food distribution manager",
+  },
+];
+
+
 // FAQ Data
 const buyerFaqs = [
   { question: "خرید گروهی چیست؟", answer: "خرید گروهی روشی برای خرید کالا با قیمت پایین‌تر است. با جمع شدن تعداد مشخصی خریدار، تخفیف عمده‌فروشی برای همه اعمال می‌شود." },
@@ -900,105 +933,175 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* بخش رضایت مشتریان (Social Proof) */}
+       {/* بخش رضایت مشتریان و فروشندگان */}
       <section className="bg-background py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">صدای مشتریان ما</h2>
-          <Carousel
-            opts={{ align: "start", direction: "rtl", loop: true }}
-            className="w-full"
-            plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
-          >
-            <CarouselContent className="-ml-4 rtl:-mr-4">
-              {testimonials.map((testimonial) => (
-                <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
-                  <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
-                    <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
-                      <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
-                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
-                        <AvatarFallback className="text-2xl">{testimonial.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
-                       {/* Display Group Buy Info and Discount */}
-                      <div className="text-xs text-muted-foreground mb-3">
-                        خرید گروهی: <span className="font-medium text-primary">{testimonial.groupBuyTitle}</span> با <span className="font-medium text-destructive">{testimonial.discountAchieved}%</span> تخفیف
-                      </div>
-                      <div className="flex items-center justify-center mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={cn(
-                              "w-4 h-4",
-                              i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <Quote className="w-8 h-8 text-muted-foreground/30 mb-2 rotate-180" />
-                      <p className="text-muted-foreground text-sm leading-relaxed flex-grow">{testimonial.comment}</p>
-                       <Quote className="w-8 h-8 text-muted-foreground/30 mt-2" />
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
-            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
-          </Carousel>
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">صدای مشتریان و فروشندگان ما</h2>
+          <Tabs defaultValue="customers" className="w-full" dir="rtl">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-secondary rounded-lg p-1 shadow-sm max-w-md mx-auto">
+              <TabsTrigger value="customers" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                خریداران
+              </TabsTrigger>
+              <TabsTrigger value="sellers" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
+                <Store className="w-4 h-4" />
+                فروشندگان
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Customer Testimonials Tab */}
+            <TabsContent value="customers">
+              <Carousel
+                opts={{ align: "start", direction: "rtl", loop: testimonials.length > 3 }}
+                className="w-full"
+                plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
+              >
+                <CarouselContent className="-ml-4 rtl:-mr-4">
+                  {testimonials.map((testimonial) => (
+                    <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
+                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
+                        <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
+                          <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
+                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
+                            <AvatarFallback className="text-2xl">{testimonial.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
+                          {/* Display Group Buy Info and Discount */}
+                          <div className="text-xs text-muted-foreground mb-3">
+                            خرید گروهی: <span className="font-medium text-primary">{testimonial.groupBuyTitle}</span> با <span className="font-medium text-destructive">{testimonial.discountAchieved}%</span> تخفیف
+                          </div>
+                          <div className="flex items-center justify-center mb-4">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={cn(
+                                  "w-4 h-4",
+                                  i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <Quote className="w-8 h-8 text-muted-foreground/30 mb-2 rotate-180" />
+                          <p className="text-muted-foreground text-sm leading-relaxed flex-grow">{testimonial.comment}</p>
+                          <Quote className="w-8 h-8 text-muted-foreground/30 mt-2" />
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+              </Carousel>
+            </TabsContent>
+
+             {/* Seller Testimonials Tab */}
+             <TabsContent value="sellers">
+              <Carousel
+                opts={{ align: "start", direction: "rtl", loop: sellerTestimonials.length > 3 }}
+                className="w-full"
+                plugins={[Autoplay({ delay: 5500, stopOnInteraction: true })]} // Slightly different delay
+              >
+                <CarouselContent className="-ml-4 rtl:-mr-4">
+                  {sellerTestimonials.map((testimonial) => (
+                    <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
+                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
+                        <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
+                          <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
+                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
+                            <AvatarFallback className="text-xl">{testimonial.name.substring(0, 2)}</AvatarFallback> {/* Show 2 letters for sellers */}
+                          </Avatar>
+                          <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
+                          <div className="text-xs text-muted-foreground mb-3">
+                             {testimonial.productsSold && `بیش از ${formatNumber(testimonial.productsSold)} محصول فروخته شده`}
+                          </div>
+                          <div className="flex items-center justify-center mb-4">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={cn(
+                                  "w-4 h-4",
+                                  i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <Quote className="w-8 h-8 text-muted-foreground/30 mb-2 rotate-180" />
+                          <p className="text-muted-foreground text-sm leading-relaxed flex-grow">{testimonial.comment}</p>
+                           <Quote className="w-8 h-8 text-muted-foreground/30 mt-2" />
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                 <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+              </Carousel>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
        {/* REMOVED Statistics Section */}
 
-      {/* بخش سوالات پرتکرار (FAQ) */}
+      {/* بخش سوالات پرتکرار (FAQ) - Enhanced Styling */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">سوالات پرتکرار</h2>
-        <Tabs defaultValue="buyer" className="w-full max-w-3xl mx-auto" dir="rtl">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-secondary rounded-lg p-1 shadow-sm">
-            <TabsTrigger value="buyer" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4" />
-              سوالات خریداران
-            </TabsTrigger>
-            <TabsTrigger value="seller" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
-              <UserCheck className="w-4 h-4" />
-              سوالات فروشندگان
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="buyer" className="bg-card p-6 rounded-lg border border-border shadow-sm">
-            <Accordion type="single" collapsible className="w-full">
-              {buyerFaqs.map((faq, index) => (
-                <AccordionItem value={`buyer-item-${index}`} key={`buyer-${index}`}>
-                  <AccordionTrigger className="text-right text-base hover:no-underline">
-                    <div className="flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5 text-primary"/>
-                      <span>{faq.question}</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed pr-9"> {/* Added padding right for indentation */}
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </TabsContent>
-          <TabsContent value="seller" className="bg-card p-6 rounded-lg border border-border shadow-sm">
-            <Accordion type="single" collapsible className="w-full">
-              {sellerFaqs.map((faq, index) => (
-                <AccordionItem value={`seller-item-${index}`} key={`seller-${index}`}>
-                  <AccordionTrigger className="text-right text-base hover:no-underline">
-                    <div className="flex items-center gap-2">
-                        <HelpCircle className="w-5 h-5 text-primary"/>
-                       <span>{faq.question}</span>
-                    </div>
+        <div className="max-w-4xl mx-auto">
+          <Tabs defaultValue="buyer" className="w-full" dir="rtl">
+            <TabsList className="grid w-full grid-cols-2 mb-10 bg-secondary rounded-xl p-1.5 shadow-inner">
+              <TabsTrigger value="buyer" className="text-base data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300">
+                <ShoppingBag className="w-5 h-5" />
+                سوالات خریداران
+              </TabsTrigger>
+              <TabsTrigger value="seller" className="text-base data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300">
+                <UserCheck className="w-5 h-5" />
+                سوالات فروشندگان
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Buyer FAQs */}
+            <TabsContent value="buyer" className="space-y-4">
+              <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
+                {buyerFaqs.map((faq, index) => (
+                  <AccordionItem value={`buyer-item-${index}`} key={`buyer-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5">
+                      <div className="flex items-center gap-3">
+                        <HelpCircle className="w-5 h-5 text-primary flex-shrink-0"/>
+                        <span className="text-foreground">{faq.question}</span>
+                      </div>
                     </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed pr-9"> {/* Added padding right for indentation */}
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </TabsContent>
-        </Tabs>
+                    <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
+                       <div className="pl-8 rtl:pr-8"> {/* Indent content */}
+                         {faq.answer}
+                       </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </TabsContent>
+
+            {/* Seller FAQs */}
+            <TabsContent value="seller" className="space-y-4">
+              <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
+                {sellerFaqs.map((faq, index) => (
+                  <AccordionItem value={`seller-item-${index}`} key={`seller-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5">
+                      <div className="flex items-center gap-3">
+                          <HelpCircle className="w-5 h-5 text-primary flex-shrink-0"/>
+                         <span className="text-foreground">{faq.question}</span>
+                      </div>
+                      </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
+                       <div className="pl-8 rtl:pr-8"> {/* Indent content */}
+                         {faq.answer}
+                       </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </TabsContent>
+          </Tabs>
+        </div>
       </section>
 
 
