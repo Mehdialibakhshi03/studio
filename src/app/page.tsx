@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -1064,14 +1064,14 @@ export default function HomePage() {
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {buyerFaqs.map((faq, index) => (
                   <AccordionItem value={`buyer-item-${index}`} key={`buyer-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
-                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5">
-                      <div className="flex items-center gap-3">
-                        <HelpCircle className="w-5 h-5 text-primary flex-shrink-0"/>
-                        <span className="text-foreground">{faq.question}</span>
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group">
+                      <div className="flex items-center gap-3 w-full">
+                        <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-12"/>
+                        <span className="text-foreground flex-grow text-right">{faq.question}</span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8"> {/* Indent content */}
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0"> {/* Indent content with border */}
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -1085,14 +1085,14 @@ export default function HomePage() {
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {sellerFaqs.map((faq, index) => (
                   <AccordionItem value={`seller-item-${index}`} key={`seller-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
-                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5">
-                      <div className="flex items-center gap-3">
-                          <HelpCircle className="w-5 h-5 text-primary flex-shrink-0"/>
-                         <span className="text-foreground">{faq.question}</span>
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group">
+                      <div className="flex items-center gap-3 w-full">
+                          <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-12"/>
+                         <span className="text-foreground flex-grow text-right">{faq.question}</span>
                       </div>
                       </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8"> {/* Indent content */}
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0"> {/* Indent content with border */}
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -1105,26 +1105,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* خبرنامه */}
-      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
-        <div className="bg-secondary rounded-xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between shadow-lg border border-border">
-          <div className="lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-right">
-            <h3 className="text-3xl font-bold mb-3 text-secondary-foreground">از تخفیف‌های ویژه باخبر شوید</h3>
-            <p className="text-muted-foreground">با عضویت در خبرنامه ما، از جدیدترین خریدهای گروهی و تخفیف‌های ویژه باخبر شوید.</p>
-          </div>
-          <form className="w-full lg:w-auto flex max-w-md mx-auto lg:mx-0" onSubmit={(e) => e.preventDefault()}> {/* Added form and prevent default */}
-            <Input
-              type="email"
-              placeholder="ایمیل خود را وارد کنید..."
-              className="flex-grow px-4 py-3 rounded-r-lg rounded-l-none border-input focus:outline-none focus:ring-2 focus:ring-primary text-base h-12" // Matched button height
-              required // Added required attribute
-            />
-            <Button type="submit" className="rounded-l-lg rounded-r-none px-6 transition-transform hover:scale-105 duration-300 h-12 shadow-sm">
-              عضویت
-            </Button>
-          </form>
-        </div>
-      </section>
+     {/* REMOVED Newsletter Section */}
 
       <Footer /> {/* Use Footer component */}
     </div>
