@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,8 @@ import Autoplay from "embla-carousel-autoplay"; // Import Autoplay plugin
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Import Avatar
 import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
 import { cn } from '@/lib/utils'; // Import cn for conditional classnames
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs
 
 // Helper function to create future dates for consistent testing
 const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -361,6 +363,20 @@ const testimonials = [
   },
 ];
 
+// FAQ Data
+const buyerFaqs = [
+  { question: "خرید گروهی چیست؟", answer: "خرید گروهی روشی برای خرید کالا با قیمت پایین‌تر است. با جمع شدن تعداد مشخصی خریدار، تخفیف عمده‌فروشی برای همه اعمال می‌شود." },
+  { question: "چگونه می‌توانم در خرید گروهی شرکت کنم؟", answer: "کالای مورد نظر خود را پیدا کرده و دکمه 'پیوستن به گروه' را بزنید. پس از رسیدن به حد نصاب، خرید نهایی می‌شود." },
+  { question: "اگر گروه به حد نصاب نرسد چه می‌شود؟", answer: "در صورت عدم تکمیل ظرفیت گروه تا زمان مشخص شده، هزینه پرداخت شده (در صورت پیش‌پرداخت) به شما بازگردانده می‌شود یا می‌توانید به گروه دیگری بپیوندید." },
+  { question: "زمان تحویل کالا چقدر است؟", answer: "زمان تحویل پس از نهایی شدن خرید گروهی و پرداخت وجه، معمولا بین ۳ تا ۷ روز کاری است و به نوع کالا و آدرس شما بستگی دارد." },
+];
+
+const sellerFaqs = [
+  { question: "چگونه می‌توانم محصولاتم را برای خرید گروهی عرضه کنم؟", answer: "ابتدا باید به عنوان فروشنده در سایت ثبت نام کنید. سپس می‌توانید محصولات خود را با تعیین قیمت گروهی و حداقل تعداد مورد نیاز برای فروش، ثبت کنید." },
+  { question: "تسویه حساب با فروشندگان چگونه انجام می‌شود؟", answer: "پس از تکمیل موفقیت‌آمیز خرید گروهی و تحویل کالا به خریداران، وجه مربوطه پس از کسر کارمزد پلتفرم، به حساب شما واریز خواهد شد." },
+  { question: "کارمزد پلتفرم چقدر است؟", answer: "کارمزد بر اساس نوع کالا و توافق اولیه تعیین می‌شود. برای اطلاع دقیق از درصد کارمزد، لطفا به بخش قوانین و مقررات فروشندگان مراجعه کنید." },
+];
+
 
 // تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
 const formatNumber = (num:number | undefined) => {
@@ -507,7 +523,7 @@ export default function HomePage() {
        </section>
 
        {/* خریدهای گروهی فعال (Moved Higher) */}
-        <section className="bg-background py-16">
+        <section className="bg-secondary/50 py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
@@ -932,30 +948,59 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* بخش آمار */}
-      <section className="bg-gradient-to-br from-primary to-blue-800 dark:from-primary dark:to-blue-900 text-primary-foreground py-16 my-16 container mx-auto px-4 lg:px-8 xl:px-16 rounded-xl shadow-xl"> {/* Added lg/xl padding */}
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="transition-transform hover:scale-110 duration-300">
-              <div className="text-5xl font-bold mb-2">+۲۵,۰۰۰</div>
-              <div className="text-primary-foreground/90">کاربر فعال</div>
-            </div>
-            <div className="transition-transform hover:scale-110 duration-300">
-              <div className="text-5xl font-bold mb-2">+۱۸۰</div>
-              <div className="text-primary-foreground/90">خرید گروهی موفق</div>
-            </div>
-            <div className="transition-transform hover:scale-110 duration-300">
-              <div className="text-5xl font-bold mb-2">۲۵٪</div>
-              <div className="text-primary-foreground/90">میانگین تخفیف</div>
-            </div>
-            <div className="transition-transform hover:scale-110 duration-300">
-              <div className="text-5xl font-bold mb-2">+۵۰</div>
-              <div className="text-primary-foreground/90">فروشنده معتبر</div>
-            </div>
-          </div>
-        </div>
+       {/* REMOVED Statistics Section */}
+
+      {/* بخش سوالات پرتکرار (FAQ) */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
+        <h2 className="text-3xl font-bold text-center mb-12 text-foreground">سوالات پرتکرار</h2>
+        <Tabs defaultValue="buyer" className="w-full max-w-3xl mx-auto" dir="rtl">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-secondary rounded-lg p-1 shadow-sm">
+            <TabsTrigger value="buyer" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4" />
+              سوالات خریداران
+            </TabsTrigger>
+            <TabsTrigger value="seller" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
+              <UserCheck className="w-4 h-4" />
+              سوالات فروشندگان
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="buyer" className="bg-card p-6 rounded-lg border border-border shadow-sm">
+            <Accordion type="single" collapsible className="w-full">
+              {buyerFaqs.map((faq, index) => (
+                <AccordionItem value={`buyer-item-${index}`} key={`buyer-${index}`}>
+                  <AccordionTrigger className="text-right text-base hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <HelpCircle className="w-5 h-5 text-primary"/>
+                      <span>{faq.question}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed pr-9"> {/* Added padding right for indentation */}
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </TabsContent>
+          <TabsContent value="seller" className="bg-card p-6 rounded-lg border border-border shadow-sm">
+            <Accordion type="single" collapsible className="w-full">
+              {sellerFaqs.map((faq, index) => (
+                <AccordionItem value={`seller-item-${index}`} key={`seller-${index}`}>
+                  <AccordionTrigger className="text-right text-base hover:no-underline">
+                    <div className="flex items-center gap-2">
+                        <HelpCircle className="w-5 h-5 text-primary"/>
+                       <span>{faq.question}</span>
+                    </div>
+                    </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed pr-9"> {/* Added padding right for indentation */}
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </TabsContent>
+        </Tabs>
       </section>
+
 
       {/* خبرنامه */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
@@ -982,5 +1027,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
