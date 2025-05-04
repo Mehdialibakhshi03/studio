@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -531,29 +532,8 @@ export default function HomePage() {
         </Carousel>
       </section>
 
-       {/* دسته‌بندی‌ها (Style like Instagram Stories) */}
-       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-8"> {/* Added lg/xl padding */}
-         <h2 className="text-2xl font-bold mb-6 text-center text-foreground">دسته‌بندی‌ها</h2>
-         <div className="flex justify-center space-x-6 rtl:space-x-reverse overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
-           {categories.map(category => (
-             <Link href={`/category/${category.slug}`} key={category.id} className="flex flex-col items-center text-center group flex-shrink-0 w-20">
-               <div className="relative w-16 h-16 mb-2">
-                 <div className="absolute inset-0 rounded-full border-2 border-primary group-hover:border-accent transition-colors duration-300 p-0.5">
-                   <Image
-                     src={category.image}
-                     width={60}
-                     height={60}
-                     alt={category.name}
-                     className="rounded-full object-cover w-full h-full"
-                     data-ai-hint={category.aiHint || category.name}
-                   />
-                 </div>
-               </div>
-               <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors duration-300">{category.name}</span>
-             </Link>
-           ))}
-         </div>
-       </section>
+       {/* REMOVED: دسته‌بندی‌ها (Style like Instagram Stories) */}
+
 
        {/* خریدهای گروهی فعال (Moved Higher) */}
         <section className="bg-secondary/50 py-16">
