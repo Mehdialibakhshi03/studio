@@ -221,7 +221,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header />
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12"> {/* Added lg/xl padding */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
           {/* Product Images (Left Column in RTL, spanning 2 cols) */}
           <div className="lg:col-span-2 flex flex-col gap-4">
@@ -723,9 +723,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                           <Badge variant="destructive" className="absolute top-3 left-3">
                             {relatedProduct.discount}٪ تخفیف
                           </Badge>
-                           <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                              <Button size="sm" variant="default" className="h-7 px-2 text-xs">مشاهده</Button>
-                          </div>
+                           {/* Removed Add to Cart button from related product hover */}
                         </CardHeader>
                         <CardContent className="p-3 flex-grow flex flex-col">
                           <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{relatedProduct.title}</h5>

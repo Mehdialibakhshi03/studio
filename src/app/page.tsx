@@ -484,7 +484,7 @@ export default function HomePage() {
       </section>
 
        {/* دسته‌بندی‌ها (Style like Instagram Stories) */}
-       <section className="container mx-auto px-4 py-8">
+       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-8"> {/* Added lg/xl padding */}
          <h2 className="text-2xl font-bold mb-6 text-center text-foreground">دسته‌بندی‌ها</h2>
          <div className="flex justify-center space-x-6 rtl:space-x-reverse overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
            {categories.map(category => (
@@ -500,8 +500,6 @@ export default function HomePage() {
                      data-ai-hint={category.aiHint || category.name}
                    />
                  </div>
-                 {/* Optional: Add story ring effect if needed */}
-                 {/* <div className="absolute -inset-1 rounded-full border-2 border-transparent group-hover:border-accent transition-all duration-300"></div> */}
                </div>
                <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors duration-300">{category.name}</span>
              </Link>
@@ -511,7 +509,7 @@ export default function HomePage() {
 
        {/* خریدهای گروهی فعال (Moved Higher) */}
         <section className="bg-background py-16">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
             <div className="flex">
@@ -544,8 +542,8 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Changed grid-cols-3 */}
-            {filteredItems.slice(0, 6).map(item => ( // Slice 6 items for 2 rows of 3
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {filteredItems.slice(0, 6).map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                    <CardHeader className="p-0 relative aspect-[4/3]">
@@ -568,9 +566,7 @@ export default function HomePage() {
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                     <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                         <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
-                     </div>
+                     {/* Removed Add to Cart button from card header hover effect */}
                    </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
                     <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
@@ -631,7 +627,7 @@ export default function HomePage() {
 
 
       {/* How It Works Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
@@ -660,9 +656,9 @@ export default function HomePage() {
 
 
       {/* تخفیف‌های شگفت‌انگیز */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
         <h2 className="text-3xl font-bold mb-10 text-center">تخفیف‌های شگفت‌انگیز</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8"> {/* Changed grid-cols-3 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {specialOffers.map(offer => (
             <div key={offer.id} className={`rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group ${offer.bgColorClass} ${offer.textColorClass}`}>
               <div className="relative h-48">
@@ -683,7 +679,7 @@ export default function HomePage() {
 
      {/* درخواست‌های خرید گروهی */}
       <section className="bg-secondary py-16">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-secondary-foreground mb-4 sm:mb-0">درخواست‌های خرید گروهی</h2>
             <Button variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md">
@@ -691,7 +687,7 @@ export default function HomePage() {
              </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> {/* Changed grid-cols-3 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {groupPurchases.slice(4, 7).map(item => ( // Slice 3 items
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
@@ -715,9 +711,7 @@ export default function HomePage() {
                         پیشنهاد ویژه
                       </Badge>
                     )}
-                    <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                        <Button size="sm" variant="default" className="h-8 px-3 text-xs">افزودن به سبد</Button>
-                    </div>
+                    {/* Removed Add to Cart button from card header hover effect */}
                   </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
                     <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
@@ -779,7 +773,7 @@ export default function HomePage() {
 
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
        <section className="bg-background py-16">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
           <div className="space-y-16">
             {stores.map((store) => (
@@ -814,7 +808,7 @@ export default function HomePage() {
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
-                        <CarouselItem key={product.id} className="basis-full md:basis-1/3 pl-4 rtl:pr-4 mb-1"> {/* Changed basis-1/3 */}
+                        <CarouselItem key={product.id} className="basis-full md:basis-1/3 pl-4 rtl:pr-4 mb-1">
                           <Link href={`/product/${product.id}`} className="block h-full">
                             <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50">
                               <CardHeader className="p-0 relative aspect-[4/3]">
@@ -828,9 +822,7 @@ export default function HomePage() {
                                     ویژه
                                   </Badge>
                                 )}
-                                <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-end">
-                                    <Button size="sm" variant="default" className="h-7 px-2 text-xs">افزودن</Button>
-                                </div>
+                                {/* Removed Add to Cart button from card header hover effect */}
                               </CardHeader>
                               <CardContent className="p-3 flex-grow flex flex-col">
                                 <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{product.title}</h5>
@@ -870,7 +862,7 @@ export default function HomePage() {
 
      {/* لیست فروشندگان عمده - بازطراحی شده (کارت کوچک‌تر) */}
       <section className="bg-secondary py-16">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
           <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">فروشندگان عمده همکار</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {wholesalers.map((wholesaler) => (
@@ -900,7 +892,7 @@ export default function HomePage() {
       </section>
 
      {/* Benefits Section */}
-      <section className="container mx-auto px-4 py-16 bg-secondary rounded-xl">
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl"> {/* Added lg/xl padding */}
         <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
@@ -923,7 +915,7 @@ export default function HomePage() {
       </section>
 
       {/* بخش آمار */}
-      <section className="bg-gradient-to-br from-primary to-blue-800 dark:from-primary dark:to-blue-900 text-primary-foreground py-16 my-16 container mx-auto px-4 rounded-xl shadow-xl">
+      <section className="bg-gradient-to-br from-primary to-blue-800 dark:from-primary dark:to-blue-900 text-primary-foreground py-16 my-16 container mx-auto px-4 lg:px-8 xl:px-16 rounded-xl shadow-xl"> {/* Added lg/xl padding */}
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">با ما همراه شوید</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -948,7 +940,7 @@ export default function HomePage() {
       </section>
 
       {/* خبرنامه */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
         <div className="bg-secondary rounded-xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between shadow-lg border border-border">
           <div className="lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-right">
             <h3 className="text-3xl font-bold mb-3 text-secondary-foreground">از تخفیف‌های ویژه باخبر شوید</h3>
