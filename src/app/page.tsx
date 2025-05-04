@@ -271,52 +271,6 @@ const specialOffers = [
   }
 ];
 
-// داده‌های نمونه برای فروشندگان عمده (کارت‌های کوچک‌تر)
-const wholesalers = [
-  {
-    id: 1,
-    name: "شرکت پخش بهاران",
-    logo: "https://picsum.photos/seed/wholesaler1navy/100/100",
-    aiHint: "food distribution company logo",
-    productHints: ['food', 'drink', 'snack'], // Keywords for tiny product images
-  },
-  {
-    id: 2,
-    name: "لوازم خانگی مدرن",
-    logo: "https://picsum.photos/seed/wholesaler2navy/100/100",
-    aiHint: "home appliance store logo",
-    productHints: ['tv', 'fridge', 'washing machine'],
-  },
-  {
-    id: 3,
-    name: "پوشاک ایرانیان",
-    logo: "https://picsum.photos/seed/wholesaler3navy/100/100",
-    aiHint: "clothing manufacturer logo",
-    productHints: ['shirt', 'trousers', 'dress'],
-  },
-  {
-    id: 4,
-    name: "دیجیتال پارس",
-    logo: "https://picsum.photos/seed/wholesaler4navy/100/100",
-    aiHint: "digital electronics company logo",
-    productHints: ['phone', 'laptop', 'headphone'],
-  },
-    {
-    id: 5,
-    name: "ابزار یراق مرکزی",
-    logo: "https://picsum.photos/seed/wholesaler5navy/100/100",
-    aiHint: "hardware tools supplier logo",
-    productHints: ['drill', 'hammer', 'screwdriver'],
-  },
-    {
-    id: 6,
-    name: "دکوراسیون داخلی زیبا",
-    logo: "https://picsum.photos/seed/wholesaler6navy/100/100",
-    aiHint: "interior decoration shop logo",
-    productHints: ['lamp', 'vase', 'painting'],
-  },
-];
-
 
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان (برای اسلایدر)
 // IMPORTANT: Ensure product IDs here are unique and don't clash with groupPurchases IDs
@@ -363,7 +317,7 @@ const stores = [
 export { stores }; // Export stores data
 
 
-// داده‌های نمونه برای نظرات مشتریان
+// داده‌های نمونه برای نظرات مشتریان - Updated with groupBuyTitle and discountAchieved
 const testimonials = [
   {
     id: 1,
@@ -371,6 +325,8 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/testimonial1navy/80/80",
     comment: "قیمت‌ها واقعا عالیه! با خرید گروهی تونستم گوشی جدیدم رو خیلی ارزون‌تر بخرم. ممنونم!",
     rating: 5,
+    groupBuyTitle: 'گوشی سامسونگ Galaxy S24', // Added
+    discountAchieved: 12, // Added
     aiHint: "happy customer female",
   },
   {
@@ -379,6 +335,8 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/testimonial2navy/80/80",
     comment: "اولین بار بود از خرید گروهی استفاده می‌کردم، تجربه خوبی بود. فقط کاش تنوع کالاها بیشتر بشه.",
     rating: 4,
+    groupBuyTitle: 'روغن آفتابگردان لادن', // Added
+    discountAchieved: 25, // Added
     aiHint: "satisfied customer male",
   },
   {
@@ -387,6 +345,8 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/testimonial3navy/80/80",
     comment: "خیلی راحت و سریع بود. پشتیبانی هم خیلی خوب راهنمایی کردن. حتما دوباره از اینجا خرید می‌کنم.",
     rating: 5,
+    groupBuyTitle: 'ماشین لباسشویی اسنوا', // Added
+    discountAchieved: 15, // Added
     aiHint: "customer service interaction",
   },
     {
@@ -395,6 +355,8 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/testimonial4navy/80/80",
     comment: "کیفیت محصولات ایرانی که خریدم واقعا خوب بود. خوشحالم که از تولید ملی حمایت کردم.",
     rating: 4,
+    groupBuyTitle: 'زعفران درجه یک قائنات', // Added
+    discountAchieved: 20, // Added
     aiHint: "customer holding product",
   },
 ];
@@ -897,36 +859,7 @@ export default function HomePage() {
       </section>
 
 
-     {/* لیست فروشندگان عمده - بازطراحی شده (کارت کوچک‌تر) */}
-      <section className="bg-secondary py-16">
-        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
-          <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">فروشندگان عمده همکار</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {wholesalers.map((wholesaler) => (
-              <Card key={wholesaler.id} className="bg-card p-4 rounded-xl shadow-md border border-border transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex flex-col items-center text-center group aspect-[3/4]"> {/* Adjusted aspect ratio */}
-                 <Avatar className="w-16 h-16 mb-3 border-4 border-background shadow-md transition-transform duration-300 group-hover:scale-110">
-                  <AvatarImage src={wholesaler.logo} alt={`لوگوی ${wholesaler.name}`} data-ai-hint={wholesaler.aiHint} />
-                  <AvatarFallback>{wholesaler.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <CardTitle className="text-sm font-semibold mb-2 text-card-foreground h-10 overflow-hidden flex items-center justify-center flex-grow">{wholesaler.name}</CardTitle>
-                 {wholesaler.productHints && wholesaler.productHints.length > 0 && (
-                   <div className="flex -space-x-1 rtl:space-x-reverse justify-center mt-auto mb-3"> {/* Moved to bottom */}
-                     {wholesaler.productHints.slice(0, 3).map((hint, index) => (
-                       <Avatar key={index} className="w-7 h-7 border-2 border-background shadow-sm">
-                         <AvatarImage src={`https://picsum.photos/seed/${wholesaler.id}-${index}navy/30/30`} alt={hint} data-ai-hint={hint} />
-                         <AvatarFallback className="text-xs">{hint.charAt(0)}</AvatarFallback>
-                       </Avatar>
-                     ))}
-                   </div>
-                 )}
-                 <Button variant="link" size="sm" className="text-primary hover:text-primary/80 mt-auto text-xs h-6 px-2">
-                   مشاهده
-                 </Button>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+     {/* REMOVED Wholesalers Section */}
 
      {/* Benefits Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl"> {/* Added lg/xl padding */}
@@ -970,6 +903,10 @@ export default function HomePage() {
                         <AvatarFallback className="text-2xl">{testimonial.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
+                       {/* Display Group Buy Info and Discount */}
+                      <div className="text-xs text-muted-foreground mb-3">
+                        خرید گروهی: <span className="font-medium text-primary">{testimonial.groupBuyTitle}</span> با <span className="font-medium text-destructive">{testimonial.discountAchieved}%</span> تخفیف
+                      </div>
                       <div className="flex items-center justify-center mb-4">
                         {[...Array(5)].map((_, i) => (
                           <Star
@@ -1045,3 +982,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
