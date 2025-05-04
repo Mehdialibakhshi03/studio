@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle } from 'lucide-react'; // Import necessary icons, added MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Rocket, CreditCard, TrendingUp, CheckCircle
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -671,6 +671,65 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
+      </section>
+
+
+      {/* Seller CTA Section */}
+      <section className="relative bg-gradient-to-r from-primary/90 to-blue-800/90 dark:from-primary/70 dark:to-blue-900/70 py-20 overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+              <Image
+                  src="https://picsum.photos/seed/happy-seller/1600/600" // Placeholder for seller image
+                  alt="فروشنده خوشحال"
+                  layout="fill"
+                  objectFit="cover"
+                  data-ai-hint="happy online seller business owner"
+                  className="scale-110 blur-sm"
+              />
+          </div>
+          <div className="container mx-auto px-4 lg:px-8 xl:px-16 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                  <div className="text-white">
+                      <h2 className="text-3xl md:text-4xl font-bold mb-6 drop-shadow-lg">
+                          ایجاد فروشگاه گروهی تو، تنها در ۳ دقیقه! 🚀
+                      </h2>
+                      <p className="text-lg mb-8 text-blue-100 dark:text-blue-200 leading-relaxed drop-shadow-md">
+                          محصولات خود را به هزاران خریدار معرفی کنید و فروش خود را چند برابر کنید.
+                      </p>
+                      <div className="space-y-4 mb-10">
+                          <div className="flex items-center gap-3 text-base">
+                              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                              <span>بدون هزینه راه‌اندازی اولیه</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-base">
+                              <CreditCard className="w-6 h-6 text-green-400 flex-shrink-0" />
+                              <span>اتصال سریع و آسان به درگاه پرداخت امن</span>
+                          </div>
+                           <div className="flex items-center gap-3 text-base">
+                              <TrendingUp className="w-6 h-6 text-green-400 flex-shrink-0" />
+                              <span>دسترسی به جامعه بزرگ خریداران</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-base">
+                              <Rocket className="w-6 h-6 text-green-400 flex-shrink-0" />
+                              <span>رشد سریع کسب و کار شما</span>
+                          </div>
+                      </div>
+                      <Button
+                          size="lg"
+                          variant="accent" // Use accent color for CTA
+                          className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-lg"
+                      >
+                         <Rocket className="w-5 h-5 ml-2 rtl:mr-2"/>
+                          شروع ثبت‌نام فروشنده
+                      </Button>
+                  </div>
+                  <div className="hidden md:flex justify-center items-center">
+                    {/* Optional: Add a visual element here, maybe a simplified graphic */}
+                    <div className="bg-white/10 p-8 rounded-full backdrop-blur-md shadow-2xl">
+                         <Store className="w-32 h-32 text-white opacity-80" />
+                    </div>
+                  </div>
+              </div>
+          </div>
       </section>
 
 
