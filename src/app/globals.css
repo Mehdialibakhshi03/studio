@@ -12,7 +12,7 @@ body {
 @layer base {
   :root {
     /* Light Theme - Navy Blue & Orange/Gold */
-    --background: 220 13% 91%; /* Soft Gray: #E5E7EB */
+    --background: 220 13% 95%; /* Very Light Gray - increased lightness for more white space feel */
     --foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
     --card: 0 0% 100%; /* White: #FFFFFF */
@@ -21,42 +21,50 @@ body {
     --popover: 0 0% 100%; /* White: #FFFFFF */
     --popover-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --primary: 215 30% 17%; /* Dark Navy: #1E293B */
+    --primary: 215 30% 22%; /* Dark Navy: #1E293B - slightly lighter for better differentiation */
     --primary-foreground: 0 0% 100%; /* White: #FFFFFF */
 
-    --secondary: 220 13% 93%; /* Lighter Gray, slightly different from background */
-    --secondary-foreground: 215 30% 25%; /* Dark Navy, slightly lighter for secondary text */
+    --secondary: 220 13% 90%; /* Lighter Gray, for subtle backgrounds */
+    --secondary-foreground: 215 30% 30%; /* Dark Navy, slightly lighter for secondary text */
 
     --muted: 215 14% 85%; /* Medium-Light Gray for muted elements */
-    --muted-foreground: 215 14% 45%; /* Darker Medium Gray for muted text */
+    --muted-foreground: 215 14% 50%; /* Darker Medium Gray for muted text - slightly darker for better contrast */
 
     --accent: 27 96% 60%; /* Orange: #FB923C */
     --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --destructive: 0 75% 55%; /* Clear Red (current) */
-    --destructive-foreground: 0 0% 98%; /* White on destructive (current) */
+    --destructive: 0 75% 55%; /* Clear Red */
+    --destructive-foreground: 0 0% 98%; /* White on destructive */
 
-    --border: 220 13% 85%; /* Light Gray Border */
+    --border: 220 13% 80%; /* Light Gray Border - slightly darker for more definition */
     --input: 0 0% 100%; /* White input background */
     --ring: 27 96% 60%; /* Orange: #FB923C for focus rings */
 
-    --chart-1: 215 30% 17%; /* Primary Navy */
+    --chart-1: 215 30% 22%; /* Primary Navy */
     --chart-2: 27 96% 60%;  /* Accent Orange */
-    --chart-3: 190 70% 50%; /* Cyan/Teal */
+    --chart-3: 159 82% 38%; /* Green for positive indicators like some charts */
     --chart-4: 0 75% 55%;   /* Red */
     --chart-5: 270 50% 60%; /* Purple */
 
     --radius: 0.5rem;
 
-    /* Sidebar Colors (Light - Navy/Orange adjustments) */
-    --sidebar-background: 220 13% 94%; /* Very light gray */
-    --sidebar-foreground: 220 47% 11%; /* Darkest Navy */
-    --sidebar-primary: 215 30% 17%; /* Main primary Navy */
-    --sidebar-primary-foreground: 0 0% 100%; /* White */
-    --sidebar-accent: 220 13% 88%; /* Light gray for selected items */
-    --sidebar-accent-foreground: 215 30% 17%; /* Dark Navy */
-    --sidebar-border: 215 14% 75%; /* Medium-Light Gray border */
-    --sidebar-ring: 27 96% 60%; /* Main accent Orange */
+    /* Sidebar Colors */
+    --sidebar-background: 220 13% 94%;
+    --sidebar-foreground: 220 47% 11%;
+    --sidebar-primary: 215 30% 22%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 88%;
+    --sidebar-accent-foreground: 215 30% 22%;
+    --sidebar-border: 215 14% 75%;
+    --sidebar-ring: 27 96% 60%;
+
+    /* CTA Gradient Colors */
+    --cta-gradient-from: hsl(var(--accent)); /* Uses the main accent orange */
+    --cta-gradient-to: hsl(35, 95%, 65%); /* Lighter, yellower orange */
+    --cta-foreground: hsl(var(--foreground)); /* Dark navy for text on gradient */
+
+    /* Progress Bar Color */
+    --progress-indicator: hsl(159, 82%, 38%); /* Green #10B981 */
   }
 
   .dark {
@@ -82,8 +90,8 @@ body {
     --accent: 27 94% 53%; /* Brighter Orange: #F97316 */
     --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --destructive: 0 70% 60%; /* Adjusted Red for dark (current) */
-    --destructive-foreground: 0 0% 98%; /* White on destructive (current) */
+    --destructive: 0 70% 60%; /* Adjusted Red for dark */
+    --destructive-foreground: 0 0% 98%; /* White on destructive */
 
     --border: 215 30% 25%; /* Dark Navy Border */
     --input: 215 30% 20%; /* Same as secondary */
@@ -91,19 +99,27 @@ body {
 
     --chart-1: 27 96% 60%; /* Primary Orange */
     --chart-2: 27 94% 53%; /* Accent Brighter Orange */
-    --chart-3: 190 65% 60%; /* Cyan/Teal */
+    --chart-3: 159 70% 50%; /* Green for dark theme */
     --chart-4: 0 70% 60%;   /* Red */
     --chart-5: 270 45% 65%; /* Purple */
 
-    /* Sidebar Colors (Dark - Navy/Orange adjustments) */
-    --sidebar-background: 220 47% 9%; /* Slightly darker than main dark BG */
-    --sidebar-foreground: 220 13% 91%; /* Lightest Gray */
-    --sidebar-primary: 27 96% 60%; /* Main dark primary Orange */
-    --sidebar-primary-foreground: 220 47% 11%; /* Darkest Navy */
-    --sidebar-accent: 215 30% 15%; /* Dark navy for selected items */
-    --sidebar-accent-foreground: 220 13% 91%; /* Lightest Gray */
-    --sidebar-border: 215 30% 14%; /* Dark navy border */
-    --sidebar-ring: 27 94% 53%; /* Main dark accent Brighter Orange */
+    /* Sidebar Colors (Dark) */
+    --sidebar-background: 220 47% 9%;
+    --sidebar-foreground: 220 13% 91%;
+    --sidebar-primary: 27 96% 60%;
+    --sidebar-primary-foreground: 220 47% 11%;
+    --sidebar-accent: 215 30% 15%;
+    --sidebar-accent-foreground: 220 13% 91%;
+    --sidebar-border: 215 30% 14%;
+    --sidebar-ring: 27 94% 53%;
+    
+    /* CTA Gradient Colors */
+    --cta-gradient-from: hsl(var(--accent)); 
+    --cta-gradient-to: hsl(35, 95%, 65%); 
+    --cta-foreground: hsl(var(--primary-foreground)); /* Light text on dark gradient for dark theme */
+
+    /* Progress Bar Color */
+    --progress-indicator: hsl(159, 70%, 50%); /* Lighter Green for dark theme */
   }
 }
 
@@ -123,18 +139,14 @@ body {
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: hsl(var(--secondary)); /* Use secondary for track */
+    background: hsl(var(--secondary));
   }
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--muted));
     border-radius: 4px;
-    border: 2px solid hsl(var(--secondary)); /* Add border to match track */
+    border: 2px solid hsl(var(--secondary));
   }
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground));
   }
 }
-
-/* Remove explicit color utility classes unless absolutely necessary */
-/* Tailwind will generate these based on theme, ensures consistency */
-/* Example: Instead of .bg-blue-100, use theme colors like bg-accent/10 or similar */

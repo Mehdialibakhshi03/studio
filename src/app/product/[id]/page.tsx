@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare } from 'lucide-react';
+import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -36,12 +36,10 @@ import {
 import CountdownTimer from '@/components/countdown-timer';
 import type { GroupPurchaseItem } from '@/lib/data';
 
-// Helper function to find product by ID from allGroupProducts
 const getProductById = (id: number): GroupPurchaseItem | undefined => {
   return allGroupProducts.find(product => product.id === id);
 };
 
-// Helper function to find the store that sells a specific product ID
 const getStoreByProductId = (productId: number) => {
     for (const store of stores) {
         if (store.products.some(p => p.id === productId)) {
@@ -51,7 +49,6 @@ const getStoreByProductId = (productId: number) => {
     return null;
 };
 
-// Sample related products (adjust logic if needed)
 const getRelatedProducts = (currentProductId: number, categorySlug?: string) => {
   return allGroupProducts
     .filter(p => p.id !== currentProductId && (categorySlug ? p.category === categorySlug : true))
@@ -159,15 +156,15 @@ export default function ProductDetailPage() {
    const getStatusInfo = () => {
     switch (groupStatus) {
       case 'completed':
-        return { text: "ظرفیت تکمیل شد! خرید نهایی شد.", icon: CheckCircle, color: "text-green-600 dark:text-green-400" };
+        return { text: "ظرفیت تکمیل شد! خرید نهایی شد.", icon: CheckCircle, color: "text-[hsl(var(--progress-indicator))]" };
       case 'failed':
-        return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600 dark:text-red-400" };
+        return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-destructive" };
       case 'filling':
         return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-500 dark:text-yellow-400 animate-pulse" };
       case 'active':
       default:
         const remaining = product.requiredMembers - product.members;
-        return { text: `${remaining > 0 ? formatNumber(remaining) + ' نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!' : 'در آستانه تکمیل ظرفیت!'}`, icon: Users2, color: "text-blue-600 dark:text-blue-400" };
+        return { text: `${remaining > 0 ? formatNumber(remaining) + ' نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!' : 'در آستانه تکمیل ظرفیت!'}`, icon: Users2, color: "text-primary" };
     }
   };
 
@@ -236,7 +233,7 @@ export default function ProductDetailPage() {
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header />
 
-      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12">
+      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
           <div className="lg:col-span-2 flex flex-col gap-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg border border-border">
@@ -290,7 +287,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Badge variant="outline" className="bg-secondary/70 border-border/30">{dataGetCategoryNameBySlug(product.category)}</Badge>
+              <Badge variant="outline" className="bg-secondary/70 border-border/30 text-secondary-foreground">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
                   <Image src="https://placehold.co/20x20.png" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
@@ -313,15 +310,15 @@ export default function ProductDetailPage() {
             {store && (
                  <Card className="bg-card border border-border shadow-md rounded-xl overflow-hidden my-4">
                    <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-card border-b border-border">
-                     <Avatar className="w-12 h-12 sm:w-14 sm:h-14 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
+                     <Avatar className="w-16 h-16 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                       <AvatarFallback className="text-lg sm:text-xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
+                       <AvatarFallback className="text-xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
                      </Avatar>
                      <div className="flex-grow text-center sm:text-right">
                        <p className="text-xs text-muted-foreground mb-0.5">فروشنده:</p>
                        <CardTitle className="text-lg font-semibold text-primary mb-1">{store.name}</CardTitle>
                        {store.offersInstallments && (
-                           <Badge variant="outline" className="mt-1 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40 shadow-sm">
+                           <Badge variant="outline" className="mt-1 text-xs text-[hsl(var(--progress-indicator))] border-[hsl(var(--progress-indicator))]/50 bg-[hsl(var(--progress-indicator))]/10 dark:bg-[hsl(var(--progress-indicator))]/20 shadow-sm">
                                امکان خرید اقساطی
                            </Badge>
                         )}
@@ -395,7 +392,7 @@ export default function ProductDetailPage() {
                 <span className="text-lg text-muted-foreground line-through">{formatNumber(product.originalPrice)} <span className="text-sm">تومان</span></span>
               </div>
                {product.originalPrice && product.groupPrice && (
-                <p className="text-green-600 dark:text-green-400 font-semibold text-sm">
+                <p className="text-[hsl(var(--progress-indicator))] font-semibold text-sm">
                    شما {formatNumber(product.originalPrice - product.groupPrice)} تومان سود می‌کنید! ({formatNumber(product.discount)}٪ تخفیف گروهی)
                 </p>
                )}
@@ -477,7 +474,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-t border-border pt-6">
-              <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-[1.02] duration-300 h-12 shadow-md" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
+              <Button size="lg" onClick={handleJoinClick} variant="cta" className="flex-grow w-full sm:w-auto transition-transform hover:scale-[1.02] duration-300 h-12 shadow-md" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
                  <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                  {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه'}
                </Button>
@@ -500,12 +497,11 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Discount Tiers Section */}
         <div className="mt-16 md:mt-20">
-          <h3 className="text-2xl font-bold mb-4 text-center text-foreground">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-center text-foreground">
             تخفیف پلکانی: هرچه بیشتر، ارزان‌تر!
           </h3>
-          <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
+          <p className="text-center text-muted-foreground mb-10 md:mb-12 max-w-2xl mx-auto">
             ببینید چگونه با افزایش تعداد اعضای گروه، قیمت محصول کاهش پیدا می‌کند و شما سود بیشتری می‌کنید.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"> 
@@ -513,18 +509,19 @@ export default function ProductDetailPage() {
               <Card
                 key={index}
                 className={cn(
-                  "text-center p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 group relative flex flex-col justify-between min-h-[280px] sm:min-h-[300px]",
-                  currentTierIndex > index && product.members < product.requiredMembers && "opacity-60", 
-                  currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10", 
-                  product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-green-500 shadow-green-500/30 scale-105 z-10", 
-                  index === discountTiersDisplayData.length - 1 && !(product.members >= product.requiredMembers) && "bg-secondary/30 dark:bg-secondary/20", 
-                  index === discountTiersDisplayData.length - 1 && (product.members >= product.requiredMembers) && "bg-green-500/10 dark:bg-green-500/20" 
+                  "text-center p-6 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 group relative flex flex-col justify-between min-h-[280px] sm:min-h-[300px]",
+                  "bg-card border-border", // Default card style
+                  currentTierIndex > index && product.members < product.requiredMembers && "opacity-70", 
+                  currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10 bg-primary/5", 
+                  product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-[hsl(var(--progress-indicator))] shadow-green-500/30 scale-105 z-10 bg-[hsl(var(--progress-indicator))]/10", 
+                  index === discountTiersDisplayData.length - 1 && !(product.members >= product.requiredMembers) && "bg-secondary/50 dark:bg-secondary/40", 
+                  index === discountTiersDisplayData.length - 1 && (product.members >= product.requiredMembers) && "bg-[hsl(var(--progress-indicator))]/10 dark:bg-[hsl(var(--progress-indicator))]/20" 
                 )}
               >
                 <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-background p-1 rounded-full border border-border shadow-md z-20">
                   <div className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center text-white",
-                     (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "bg-green-500" : 
+                     (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "bg-[hsl(var(--progress-indicator))]" : 
                      (currentTierIndex === index && product.members < product.requiredMembers ) ? "bg-primary animate-pulse" :
                      "bg-muted-foreground"
                   )}>
@@ -537,7 +534,7 @@ export default function ProductDetailPage() {
                 <CardContent className="flex-grow flex flex-col justify-center items-center">
                   <p className={cn(
                       "text-3xl font-bold my-2",
-                      (currentTierIndex === index && product.members < product.requiredMembers) || (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "text-primary" : "text-muted-foreground"
+                      (currentTierIndex === index && product.members < product.requiredMembers) || (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "text-primary" : "text-card-foreground" // Use card-foreground for non-active tiers
                     )}
                   >
                     {formatNumber(Math.round(tier.price))} <span className="text-sm font-normal">تومان</span>
@@ -548,7 +545,7 @@ export default function ProductDetailPage() {
                     </Badge>
                   )}
                   {tier.discountPercent === 0 && (
-                     <Badge variant="outline" className="text-sm px-3 py-1">قیمت پایه</Badge>
+                     <Badge variant="outline" className="text-sm px-3 py-1 text-muted-foreground">قیمت پایه</Badge>
                   )}
                 </CardContent>
                 { (currentTierIndex === index && product.members < product.requiredMembers ) && (
@@ -560,7 +557,7 @@ export default function ProductDetailPage() {
                 )}
                 { product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && (
                      <div className="absolute bottom-2 right-2 left-2 text-center">
-                        <Badge variant="default" className="bg-green-600 text-white text-xs px-2 py-1 shadow">
+                        <Badge variant="default" className="bg-[hsl(var(--progress-indicator))] text-white text-xs px-2 py-1 shadow">
                            گروه شما تکمیل شده!
                         </Badge>
                      </div>
@@ -576,12 +573,12 @@ export default function ProductDetailPage() {
         <div className="mt-16 md:mt-20">
            <Tabs defaultValue="description" className="w-full" dir="rtl">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 mb-8 bg-secondary/50 dark:bg-secondary/30 rounded-lg p-1 shadow-sm">
-              <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">توضیحات</TabsTrigger>
-              <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">مشخصات فنی</TabsTrigger>
-              <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">ارسال و بازگشت</TabsTrigger>
+              <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">توضیحات</TabsTrigger>
+              <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">مشخصات فنی</TabsTrigger>
+              <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">ارسال و بازگشت</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="description" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm text-foreground">
+            <TabsContent value="description" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm text-card-foreground">
               <h3 className="text-xl font-semibold mb-5 text-card-foreground">معرفی محصول</h3>
               <article className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-muted-foreground leading-relaxed space-y-4">
                 <p>
@@ -608,37 +605,37 @@ export default function ProductDetailPage() {
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">برند:</span>
-                       <span className="font-medium text-foreground">{product.title.split(' ')[0]}</span>
+                       <span className="font-medium text-card-foreground">{product.title.split(' ')[0]}</span>
                    </div>
                    {product.variations?.find(v => v.type === 'رنگ') && (
                      <div className="flex justify-between border-b border-border/70 pb-2">
                          <span className="text-muted-foreground">رنگ‌های موجود:</span>
-                         <span className="font-medium text-foreground">{product.variations.find(v => v.type === 'رنگ')?.options.join('، ')}</span>
+                         <span className="font-medium text-card-foreground">{product.variations.find(v => v.type === 'رنگ')?.options.join('، ')}</span>
                      </div>
                    )}
                     <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">گارانتی:</span>
-                       <span className="font-medium text-foreground">۱۸ ماهه رسمی + کد فعالسازی</span>
+                       <span className="font-medium text-card-foreground">۱۸ ماهه رسمی + کد فعالسازی</span>
                    </div>
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">کشور سازنده:</span>
-                       <span className="font-medium text-foreground">{product.isIranian ? 'ایران' : 'خارجی'}</span>
+                       <span className="font-medium text-card-foreground">{product.isIranian ? 'ایران' : 'خارجی'}</span>
                    </div>
                      <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">ابعاد:</span>
-                       <span className="font-medium text-foreground text-left" dir="ltr">15 x 8 x 1 cm</span>
+                       <span className="font-medium text-card-foreground text-left" dir="ltr">15 x 8 x 1 cm</span>
                    </div>
                     <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">وزن:</span>
-                       <span className="font-medium text-foreground">۱۸۰ گرم</span>
+                       <span className="font-medium text-card-foreground">۱۸۰ گرم</span>
                    </div>
                     <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">کد محصول:</span>
-                       <span className="font-medium text-foreground font-mono">KG-{product.id.toString().padStart(5, '0')}</span>
+                       <span className="font-medium text-card-foreground font-mono">KG-{product.id.toString().padStart(5, '0')}</span>
                    </div>
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">سال عرضه:</span>
-                       <span className="font-medium text-foreground">۲۰۲۴</span>
+                       <span className="font-medium text-card-foreground">۲۰۲۴</span>
                    </div>
                </div>
             </TabsContent>
@@ -678,7 +675,7 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="mt-16 md:mt-20">
-          <h2 className="text-3xl font-bold mb-10 text-center text-foreground">محصولات مشابه و پیشنهادی</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-foreground">محصولات مشابه و پیشنهادی</h2>
            <Carousel
               opts={{
                 align: "start",
@@ -697,7 +694,7 @@ export default function ProductDetailPage() {
                           <Badge variant="destructive" className="absolute top-3 left-3 rtl:right-3 rtl:left-auto">
                             {formatNumber(relatedProduct.discount)}٪ تخفیف
                           </Badge>
-                           <Badge variant="outline" className="absolute top-3 right-3 rtl:left-3 rtl:right-auto bg-background/80 text-xs">
+                           <Badge variant="outline" className="absolute top-3 right-3 rtl:left-3 rtl:right-auto bg-background/80 text-secondary-foreground text-xs">
                               {dataGetCategoryNameBySlug(relatedProduct.category)}
                            </Badge>
                         </CardHeader>

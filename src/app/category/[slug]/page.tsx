@@ -71,7 +71,6 @@ export default function CategoryPage() {
       const categoryProducts = allGroupProducts.filter(p => p.category === categorySlug);
       setProducts(categoryProducts);
 
-      // Extract unique sellers for this category
       const sellerIdsInCategory = new Set<number>();
       categoryProducts.forEach(p => {
         const store = allStores.find(s => s.products.some(sp => sp.id === p.id));
@@ -79,7 +78,6 @@ export default function CategoryPage() {
       });
       setAvailableSellers(allStores.filter(s => sellerIdsInCategory.has(s.id)));
 
-      // Extract unique locations for this category
       const locationsInCategory = new Set<string>();
       categoryProducts.forEach(p => {
         if (p.location) locationsInCategory.add(p.location);
@@ -94,12 +92,10 @@ export default function CategoryPage() {
   useEffect(() => {
     let tempProducts = [...products];
 
-    // Filter by search term
     if (searchTerm) {
       tempProducts = tempProducts.filter(p => p.title.toLowerCase().includes(searchTerm.toLowerCase()));
     }
 
-    // Filter by seller
     if (selectedSeller !== 'all') {
       const store = allStores.find(s => s.id === parseInt(selectedSeller));
       if (store) {
@@ -108,22 +104,19 @@ export default function CategoryPage() {
       }
     }
     
-    // Filter by location
     if (selectedLocation !== 'all') {
         tempProducts = tempProducts.filter(p => p.location === selectedLocation);
     }
 
-    // Filter by urgent (ending in 24h)
     if (onlyUrgent) {
         tempProducts = tempProducts.filter(p => isEndingSoon(p.endDate));
     }
 
-    // Filter by max days remaining
     if (maxDaysRemaining) {
         const maxDays = parseInt(maxDaysRemaining, 10);
         if (!isNaN(maxDays) && maxDays >= 0) {
             tempProducts = tempProducts.filter(p => {
-                if (!p.endDate) return false; // Or true, depending on desired behavior for no end date
+                if (!p.endDate) return false; 
                 const timeDiff = p.endDate.getTime() - new Date().getTime();
                 const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                 return daysRemaining >=0 && daysRemaining <= maxDays;
@@ -132,7 +125,6 @@ export default function CategoryPage() {
     }
 
 
-    // Filter by price range
     if (minPrice) {
       tempProducts = tempProducts.filter(p => p.groupPrice >= parseFloat(minPrice));
     }
@@ -140,7 +132,6 @@ export default function CategoryPage() {
       tempProducts = tempProducts.filter(p => p.groupPrice <= parseFloat(maxPrice));
     }
 
-    // Sort products
     switch (sortBy) {
       case 'price-asc':
         tempProducts.sort((a, b) => a.groupPrice - b.groupPrice);
@@ -151,7 +142,7 @@ export default function CategoryPage() {
       case 'ending-soon':
         tempProducts.sort((a, b) => (a.endDate ? a.endDate.getTime() : Infinity) - (b.endDate ? b.endDate.getTime() : Infinity));
         break;
-      case 'popularity': // Placeholder for popularity - could be based on members/required ratio
+      case 'popularity': 
       default:
         tempProducts.sort((a,b) => (b.members/b.requiredMembers) - (a.members/a.requiredMembers));
         break;
@@ -183,21 +174,21 @@ export default function CategoryPage() {
   return (
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header />
-      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-8">
-        <div className="flex justify-between items-center mb-8">
+      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-8 md:py-12">
+        <div className="flex justify-between items-center mb-8 md:mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-primary">
             {categoryName || 'دسته بندی محصولات'}
           </h1>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="flex items-center">
+              <Button variant="outline" className="flex items-center shadow-sm">
                 <Filter className="w-4 h-4 ml-2 rtl:mr-2" />
                 فیلترها
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
+            <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col bg-card">
               <SheetHeader className="p-6 pb-4 border-b">
-                <SheetTitle>فیلتر پیشرفته</SheetTitle>
+                <SheetTitle className="text-card-foreground">فیلتر پیشرفته</SheetTitle>
                 <SheetClose className="absolute right-4 top-4 rtl:left-4 rtl:right-auto" />
               </SheetHeader>
               <ScrollArea className="flex-grow">
@@ -210,13 +201,13 @@ export default function CategoryPage() {
                       placeholder="مثلا: گوشی سامسونگ"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="h-10"
+                      className="h-10 bg-background"
                     />
                   </div>
                   <div>
                     <Label htmlFor="location-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">مکان</Label>
                     <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                      <SelectTrigger id="location-filter" className="h-10">
+                      <SelectTrigger id="location-filter" className="h-10 bg-background">
                         <SelectValue placeholder="همه مکان‌ها" />
                       </SelectTrigger>
                       <SelectContent>
@@ -230,7 +221,7 @@ export default function CategoryPage() {
                   <div>
                     <Label htmlFor="seller-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">فروشنده</Label>
                     <Select value={selectedSeller} onValueChange={setSelectedSeller}>
-                      <SelectTrigger id="seller-filter" className="h-10">
+                      <SelectTrigger id="seller-filter" className="h-10 bg-background">
                         <SelectValue placeholder="همه فروشندگان" />
                       </SelectTrigger>
                       <SelectContent>
@@ -244,16 +235,16 @@ export default function CategoryPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="min-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداقل قیمت</Label>
-                      <Input id="min-price" type="number" placeholder="مثلا: ۱۰۰,۰۰۰" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="h-10" />
+                      <Input id="min-price" type="number" placeholder="مثلا: ۱۰۰,۰۰۰" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="h-10 bg-background" />
                     </div>
                     <div>
                       <Label htmlFor="max-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر قیمت</Label>
-                      <Input id="max-price" type="number" placeholder="مثلا: ۵,۰۰۰,۰۰۰" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="h-10" />
+                      <Input id="max-price" type="number" placeholder="مثلا: ۵,۰۰۰,۰۰۰" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="h-10 bg-background" />
                     </div>
                   </div>
                   <div>
                     <Label htmlFor="max-days-remaining" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر روز مانده</Label>
-                    <Input id="max-days-remaining" type="number" placeholder="مثلا: ۳" value={maxDaysRemaining} onChange={(e) => setMaxDaysRemaining(e.target.value)} className="h-10" />
+                    <Input id="max-days-remaining" type="number" placeholder="مثلا: ۳" value={maxDaysRemaining} onChange={(e) => setMaxDaysRemaining(e.target.value)} className="h-10 bg-background" />
                   </div>
                   <div className="flex items-center pt-2">
                     <Checkbox
@@ -268,7 +259,7 @@ export default function CategoryPage() {
                   <div>
                     <Label htmlFor="sort-by" className="mb-1.5 block text-sm font-medium text-muted-foreground">مرتب سازی</Label>
                     <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger id="sort-by" className="h-10">
+                        <SelectTrigger id="sort-by" className="h-10 bg-background">
                         <SelectValue placeholder="مرتب سازی بر اساس..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -287,51 +278,50 @@ export default function CategoryPage() {
                       پاک کردن همه
                   </Button>
                   <SheetClose asChild>
-                      <Button className="w-full sm:w-auto">اعمال فیلتر</Button>
+                      <Button variant="cta" className="w-full sm:w-auto">اعمال فیلتر</Button>
                   </SheetClose>
               </div>
             </SheetContent>
           </Sheet>
         </div>
         
-        {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {filteredProducts.map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
-                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
-                   <CardHeader className="p-0 relative aspect-[4/3]">
-                    <Image src={item.image as string} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                    <Badge variant="destructive" className="absolute top-3 right-3">
+                <Card className="bg-card rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 group cursor-pointer h-full flex flex-col">
+                   <CardHeader className="p-0 relative aspect-[16/10]">
+                    <Image src={item.image as string} width={400} height={250} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Badge variant="destructive" className="absolute top-3 right-3 text-sm px-2.5 py-1 shadow">
                       {item.discount}٪ تخفیف
                     </Badge>
-                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
+                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80 text-xs px-2 py-0.5 text-secondary-foreground">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
                     {item.location && (
-                        <Badge variant="secondary" className="absolute bottom-3 left-3 flex items-center bg-background/80 text-xs">
+                        <Badge variant="secondary" className="absolute bottom-3 left-3 flex items-center bg-background/80 text-xs px-2 py-0.5 text-secondary-foreground">
                            <MapPin className="w-3 h-3 ml-1 rtl:mr-1"/>
                            {item.location}
                         </Badge>
                     )}
                     {item.isIranian && (
-                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
+                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80 text-xs px-2 py-0.5 text-secondary-foreground">
                         <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md">
+                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md text-xs px-2 py-0.5">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
                     )}
                    </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
-                    <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg h-14 overflow-hidden flex-grow">{item.title}</h3>
                     <div className="flex justify-between items-baseline mb-3">
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
-                      <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
+                      <div className="text-primary font-bold text-xl lg:text-2xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
                      {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
@@ -349,7 +339,7 @@ export default function CategoryPage() {
                       </div>
                     )}
 
-                    <div className="mt-4 space-y-2 flex-grow">
+                    <div className="mt-auto space-y-2">
                       <div className="flex justify-between text-sm text-muted-foreground mb-1">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
@@ -364,12 +354,12 @@ export default function CategoryPage() {
                             </div>
                         ) : null}
                       </div>
-                      <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2" />
+                      <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2.5 rounded-full" />
                     </div>
                    </CardContent>
-                   <CardFooter className="p-4 pt-0 mt-auto">
-                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
-                          <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                   <CardFooter className="p-4 pt-2">
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="cta" className="w-full text-base py-2.5 flex items-center justify-center transition-transform hover:scale-105 duration-300">
+                          <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                           پیوستن به گروه
                         </Button>
                    </CardFooter>
@@ -378,7 +368,7 @@ export default function CategoryPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 md:py-20">
             <Filter className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
             <p className="text-xl text-muted-foreground">محصولی با این مشخصات یافت نشد.</p>
             <p className="text-sm text-muted-foreground mt-2">لطفا فیلترهای خود را تغییر دهید یا آنها را پاک کنید.</p>
@@ -388,7 +378,6 @@ export default function CategoryPage() {
             </Button>
           </div>
         )}
-        {/* TODO: Pagination if many products */}
       </main>
       <Footer />
     </div>
