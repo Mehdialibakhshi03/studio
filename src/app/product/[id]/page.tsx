@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation'; // Import useParams
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp } from 'lucide-react';
+import { Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data'; // Import from centralized data file
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -314,14 +314,10 @@ export default function ProductDetailPage() {
               )}
               {product.isFeatured && (
                 <Badge variant="accent" className="shadow">
-                  <Star className="w-4 h-4 ml-1 rtl:mr-1 fill-current" />
+                  <StarIcon className="w-4 h-4 ml-1 rtl:mr-1 fill-current" />
                   پیشنهاد ویژه
                 </Badge>
               )}
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                <span>۴.۵ (۱۲۰ رأی)</span>
-              </div>
                {showPurchasedRecently && purchasedCount > 0 && (
                  <Badge variant="outline" className="text-destructive border-destructive/50 bg-destructive/10 dark:bg-destructive/20 animate-pulse">
                     🔥 {formatNumber(purchasedCount)} نفر در ساعت گذشته خریدند
@@ -330,22 +326,22 @@ export default function ProductDetailPage() {
             </div>
 
             {store && (
-                 <Card className="bg-secondary/30 dark:bg-secondary/20 border-border shadow-sm">
-                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4">
-                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-background shadow-md">
+                 <Card className="bg-card border border-border shadow-lg rounded-xl overflow-hidden my-4">
+                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-5 bg-secondary/40 dark:bg-secondary/20 border-b border-border">
+                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-background shadow-lg transition-transform duration-300 hover:scale-110">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                       <AvatarFallback className="text-xl sm:text-2xl">{store.name.charAt(0)}</AvatarFallback>
+                       <AvatarFallback className="text-xl sm:text-2xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
                      </Avatar>
                      <div className="flex-grow text-center sm:text-right">
                        <p className="text-xs text-muted-foreground mb-0.5">فروشنده:</p>
-                       <CardTitle className="text-lg font-semibold text-card-foreground">{store.name}</CardTitle>
+                       <CardTitle className="text-xl font-bold text-primary mb-1">{store.name}</CardTitle>
                        {store.offersInstallments && (
-                           <Badge variant="outline" className="mt-1.5 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40">
+                           <Badge variant="outline" className="mt-1.5 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40 shadow-sm">
                                امکان خرید اقساطی
                            </Badge>
                         )}
                      </div>
-                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/50 text-primary hover:bg-primary/10">
+                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/70 text-primary hover:bg-primary/10 hover:border-primary shadow-sm">
                        <Link href={`/store/${store.id}`}>
                            <Store className="mr-2 rtl:ml-2 h-4 w-4" /> مشاهده فروشگاه
                         </Link>
@@ -512,18 +508,6 @@ export default function ProductDetailPage() {
                </Button>
 
               <div className="flex gap-2">
-                 <TooltipProvider delayDuration={100}>
-                     <Tooltip>
-                         <TooltipTrigger asChild>
-                             <Button variant="outline" size="icon" aria-label="افزودن به علاقه‌مندی" className="h-12 w-12 border-border shadow-sm text-muted-foreground hover:text-rose-500 hover:border-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/30">
-                               <Heart className="h-6 w-6" />
-                             </Button>
-                         </TooltipTrigger>
-                         <TooltipContent>
-                           <p>افزودن به علاقه‌مندی</p>
-                         </TooltipContent>
-                     </Tooltip>
-                  </TooltipProvider>
                   <TooltipProvider delayDuration={100}>
                       <Tooltip>
                           <TooltipTrigger asChild>
@@ -703,14 +687,11 @@ export default function ProductDetailPage() {
                        </div>
                        <div className="flex gap-0.5 mb-3">
                            {[...Array(5)].map((_, i) => (
-                               <Star key={i} className={`w-4 h-4 ${i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
+                               <StarIcon key={i} className={`w-4 h-4 ${i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
                            ))}
                        </div>
                        <p className="text-sm text-muted-foreground leading-relaxed mb-3">کیفیت محصول عالی بود و قیمت گروهی هم خیلی مناسب بود. سریع به دستم رسید. ممنون از خریدگروهی.</p>
                        <div className="flex gap-3">
-                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <Heart className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> مفید بود (۵)
-                            </Button>
                              <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
                                 <MessageSquare className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> پاسخ
                             </Button>
@@ -729,15 +710,10 @@ export default function ProductDetailPage() {
                        </div>
                        <div className="flex gap-0.5 mb-3">
                            {[...Array(5)].map((_, i) => (
-                               <Star key={i} className={`w-4 h-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
+                               <StarIcon key={i} className={`w-4 h-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
                            ))}
                        </div>
                        <p className="text-sm text-muted-foreground leading-relaxed mb-3">بسته بندی خوب بود و محصول سالم رسید. قیمت واقعا به صرفه بود. پیشنهاد می‌کنم.</p>
-                        <div className="flex gap-3">
-                            <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <Heart className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> مفید بود (۱۲)
-                            </Button>
-                       </div>
                    </div>
                 </div>
                  <div className="text-center text-muted-foreground py-4">نظرات بیشتری بارگذاری خواهد شد...</div>
@@ -849,4 +825,3 @@ export default function ProductDetailPage() {
     </div>
   );
 }
-
