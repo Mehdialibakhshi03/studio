@@ -11,8 +11,8 @@ body {
 
 @layer base {
   :root {
-    /* KharidGroupi Theme - Based on user's palette */
-    --background: 220 13% 95%; /* Light Gray (#F0F0F0 equivalent) */
+    /* KharidGroupi Theme - Professional Palette */
+    --background: 220 13% 96%; /* Very Light Gray (near white for breathing space - derived from E5E7EB but lighter) */
     --foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
     --card: 0 0% 100%; /* White: #FFFFFF */
@@ -21,54 +21,54 @@ body {
     --popover: 0 0% 100%; /* White: #FFFFFF */
     --popover-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --primary: 120 61% 50%; /* Green: #32CD32 */
+    --primary: 215 30% 17%; /* Dark Navy: #1E293B */
     --primary-foreground: 0 0% 100%; /* White: #FFFFFF */
 
-    --secondary: 220 13% 90%; /* Lighter Gray (derived from #E5E7EB) */
-    --secondary-foreground: 215 14% 45%; /* Darker Medium Gray for secondary text (adjusted from #9CA3AF) */
+    --secondary: 220 13% 91%; /* Light Gray: #E5E7EB */
+    --secondary-foreground: 215 14% 45%; /* Medium Gray: #9CA3AF adjusted for better contrast on light gray */
 
-    --muted: 215 14% 85%; /* Medium-Light Gray (derived from #9CA3AF) */
+    --muted: 215 14% 85%; /* Lighter shade of #9CA3AF for muted backgrounds */
     --muted-foreground: 215 14% 50%; /* Darker Medium Gray for muted text */
 
-    --accent: 39 100% 50%; /* Orange: #FFA500 */
-    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A for contrast on orange */
+    --accent: 27 96% 60%; /* Softer Orange: #FB923C (for CTAs) */
+    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A (for text on orange) */
 
-    --destructive: 0 75% 55%; /* Clear Red */
+    --destructive: 0 75% 55%; /* Clear Red - kept for standard destructive states */
     --destructive-foreground: 0 0% 98%; /* White on destructive */
 
-    --border: 220 13% 80%; /* Light Gray Border */
+    --border: 220 13% 88%; /* Light Gray Border (between #E5E7EB and white) */
     --input: 0 0% 100%; /* White input background */
-    --ring: 39 100% 50%; /* Orange: #FFA500 for focus rings */
+    --ring: 27 94% 53%; /* Bright Orange: #F97316 (for focus rings) */
 
-    --chart-1: 120 61% 50%; /* Primary Green */
-    --chart-2: 39 100% 50%;  /* Accent Orange */
-    --chart-3: 215 30% 17%; /* Dark Navy for contrast or other charts */
+    --chart-1: 215 30% 17%; /* Dark Navy (Primary) */
+    --chart-2: 27 96% 60%;  /* Softer Orange (Accent) */
+    --chart-3: 159 82% 38%; /* Green (Discount) */
     --chart-4: 0 75% 55%;   /* Red */
-    --chart-5: 270 50% 60%; /* Purple */
+    --chart-5: 215 14% 65%; /* Medium Gray */
 
     --radius: 0.5rem;
 
-    /* Sidebar Colors (Light) */
-    --sidebar-background: 220 13% 94%;
-    --sidebar-foreground: 220 47% 11%;
-    --sidebar-primary: 120 61% 50%; /* Green */
+    /* Sidebar Colors (Light) - Derived from main palette */
+    --sidebar-background: 220 13% 94%; /* Slightly darker than main bg */
+    --sidebar-foreground: 220 47% 11%; /* Darkest Navy */
+    --sidebar-primary: 215 30% 17%; /* Dark Navy */
     --sidebar-primary-foreground: 0 0% 100%; /* White */
-    --sidebar-accent: 220 13% 88%; 
-    --sidebar-accent-foreground: 120 61% 50%; /* Green on lighter accent */
+    --sidebar-accent: 220 13% 88%; /* Light gray for active items */
+    --sidebar-accent-foreground: 215 30% 17%; /* Dark Navy on light gray accent */
     --sidebar-border: 215 14% 75%;
-    --sidebar-ring: 39 100% 50%; /* Orange */
+    --sidebar-ring: 27 94% 53%; /* Bright Orange */
 
     /* CTA Gradient Colors (Orange/Yellow) */
-    --cta-gradient-from: hsl(39, 100%, 50%); /* Orange: #FFA500 */
-    --cta-gradient-to: hsl(35, 95%, 58%); /* Lighter Orange: #F4A236 */
+    --cta-gradient-from: hsl(27, 94%, 53%); /* Bright Orange: #F97316 */
+    --cta-gradient-to: hsl(34, 96%, 57%);   /* Lighter/Yellowish Orange: #F59E0B */
     --cta-foreground: hsl(220, 47%, 11%); /* Darkest Navy: #0F172A for text on gradient */
 
-    /* Progress Bar Color (Green - can be same as primary or a dedicated green) */
-    --progress-indicator: 120 61% 45%; /* Slightly darker Green: #28B428 for progress */
+    /* Progress Bar Color (Green for discount) */
+    --progress-indicator: 159 82% 38%; /* Green: #10B981 */
   }
 
   .dark {
-    /* KharidGroupi Dark Theme - Based on user's palette */
+    /* KharidGroupi Dark Theme - Professional Palette */
     --background: 220 47% 11%; /* Darkest Navy: #0F172A */
     --foreground: 220 13% 91%; /* Light Gray: #E5E7EB */
 
@@ -78,7 +78,7 @@ body {
     --popover: 215 30% 17%; /* Dark Navy: #1E293B */
     --popover-foreground: 220 13% 91%; /* Light Gray: #E5E7EB */
 
-    --primary: 39 100% 50%; /* Orange: #FFA500 (Main interactive color in dark mode) */
+    --primary: 27 96% 60%; /* Softer Orange: #FB923C (Main interactive color in dark mode) */
     --primary-foreground: 220 47% 11%; /* Darkest Navy: #0F172A (Text on Orange buttons) */
 
     --secondary: 215 30% 20%; /* Slightly lighter Navy than card */
@@ -87,7 +87,7 @@ body {
     --muted: 215 30% 14%; /* Darker than card */
     --muted-foreground: 215 14% 65%; /* Medium Gray: #9CA3AF */
 
-    --accent: 120 61% 50%; /* Green: #32CD32 (For secondary accents or success states) */
+    --accent: 159 82% 38%; /* Green: #10B981 (For secondary accents or success states) */
     --accent-foreground: 0 0% 100%; /* White on Green */
 
     --destructive: 0 70% 60%; /* Adjusted Red for dark */
@@ -95,31 +95,31 @@ body {
 
     --border: 215 30% 25%; /* Dark Navy Border */
     --input: 215 30% 20%; /* Same as secondary */
-    --ring: 39 100% 50%; /* Orange: #FFA500 for focus rings */
+    --ring: 27 94% 53%; /* Bright Orange: #F97316 (for focus rings) */
 
-    --chart-1: 39 100% 50%; /* Primary Orange */
-    --chart-2: 120 61% 50%; /* Accent Green */
+    --chart-1: 27 96% 60%; /* Primary Orange */
+    --chart-2: 159 82% 38%; /* Accent Green */
     --chart-3: 220 13% 91%; /* Light Gray for contrast */
     --chart-4: 0 70% 60%;   /* Red */
-    --chart-5: 270 45% 65%; /* Purple */
+    --chart-5: 215 14% 50%; /* Darker Medium Gray */
 
-    /* Sidebar Colors (Dark) */
-    --sidebar-background: 220 47% 9%; 
-    --sidebar-foreground: 220 13% 91%;
-    --sidebar-primary: 39 100% 50%; /* Orange */
-    --sidebar-primary-foreground: 220 47% 11%; /* Dark Navy */
-    --sidebar-accent: 215 30% 15%; 
-    --sidebar-accent-foreground: 220 13% 91%;
+    /* Sidebar Colors (Dark) - Derived from main palette */
+    --sidebar-background: 220 47% 9%; /* Even Darker Navy */
+    --sidebar-foreground: 220 13% 91%; /* Light Gray */
+    --sidebar-primary: 27 96% 60%; /* Softer Orange */
+    --sidebar-primary-foreground: 220 47% 11%; /* Darkest Navy */
+    --sidebar-accent: 215 30% 15%; /* Darker than card */
+    --sidebar-accent-foreground: 220 13% 91%; /* Light Gray */
     --sidebar-border: 215 30% 14%;
-    --sidebar-ring: 39 100% 50%; /* Orange */
+    --sidebar-ring: 27 94% 53%; /* Bright Orange */
     
-    /* CTA Gradient Colors (Orange/Yellow) - Matches user example */
-    --cta-gradient-from: hsl(39, 100%, 50%); /* Orange: #FFA500 */
-    --cta-gradient-to: hsl(35, 95%, 58%); /* Lighter Orange: #F4A236 */
+    /* CTA Gradient Colors (Orange/Yellow) - Matches light theme */
+    --cta-gradient-from: hsl(27, 94%, 53%); /* Bright Orange: #F97316 */
+    --cta-gradient-to: hsl(34, 96%, 57%);   /* Lighter/Yellowish Orange: #F59E0B */
     --cta-foreground: hsl(220, 47%, 11%); /* Darkest Navy on orange gradient */
 
     /* Progress Bar Color (Green) */
-    --progress-indicator: 120 58% 55%; /* Lighter Green for dark theme (e.g. from #32CD32) */
+    --progress-indicator: 159 75% 45%; /* Slightly brighter Green for dark theme */
   }
 }
 
