@@ -12,7 +12,7 @@ body {
 @layer base {
   :root {
     /* Light Theme - Navy Blue & Orange/Gold */
-    --background: 220 13% 95%; /* Very Light Gray - increased lightness for more white space feel */
+    --background: 220 13% 95%; /* Very Light Gray - derived from #E5E7EB but lighter */
     --foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
     --card: 0 0% 100%; /* White: #FFFFFF */
@@ -24,16 +24,16 @@ body {
     --primary: 215 30% 22%; /* Dark Navy: #1E293B - slightly lighter for better differentiation */
     --primary-foreground: 0 0% 100%; /* White: #FFFFFF */
 
-    --secondary: 220 13% 90%; /* Lighter Gray, for subtle backgrounds */
+    --secondary: 220 13% 90%; /* Lighter Gray, for subtle backgrounds - derived from #E5E7EB */
     --secondary-foreground: 215 30% 30%; /* Dark Navy, slightly lighter for secondary text */
 
-    --muted: 215 14% 85%; /* Medium-Light Gray for muted elements */
-    --muted-foreground: 215 14% 50%; /* Darker Medium Gray for muted text - slightly darker for better contrast */
+    --muted: 215 14% 85%; /* Medium-Light Gray for muted elements - derived from #9CA3AF */
+    --muted-foreground: 215 14% 50%; /* Darker Medium Gray for muted text - for better contrast */
 
     --accent: 27 96% 60%; /* Orange: #FB923C */
-    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
+    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A for contrast on orange */
 
-    --destructive: 0 75% 55%; /* Clear Red */
+    --destructive: 0 75% 55%; /* Clear Red - kept similar for standard error indication */
     --destructive-foreground: 0 0% 98%; /* White on destructive */
 
     --border: 220 13% 80%; /* Light Gray Border - slightly darker for more definition */
@@ -42,29 +42,29 @@ body {
 
     --chart-1: 215 30% 22%; /* Primary Navy */
     --chart-2: 27 96% 60%;  /* Accent Orange */
-    --chart-3: 159 82% 38%; /* Green for positive indicators like some charts */
+    --chart-3: 159 82% 38%; /* Green: #10B981 */
     --chart-4: 0 75% 55%;   /* Red */
-    --chart-5: 270 50% 60%; /* Purple */
+    --chart-5: 270 50% 60%; /* Purple - A contrasting color for charts if needed */
 
     --radius: 0.5rem;
 
-    /* Sidebar Colors */
+    /* Sidebar Colors (Light) */
     --sidebar-background: 220 13% 94%;
     --sidebar-foreground: 220 47% 11%;
     --sidebar-primary: 215 30% 22%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 13% 88%;
-    --sidebar-accent-foreground: 215 30% 22%;
+    --sidebar-accent: 220 13% 88%; /* Light gray for active/hover items in sidebar */
+    --sidebar-accent-foreground: 215 30% 22%; /* Dark Navy for text on sidebar accent */
     --sidebar-border: 215 14% 75%;
     --sidebar-ring: 27 96% 60%;
 
-    /* CTA Gradient Colors */
-    --cta-gradient-from: hsl(var(--accent)); /* Uses the main accent orange */
-    --cta-gradient-to: hsl(35, 95%, 65%); /* Lighter, yellower orange */
-    --cta-foreground: hsl(var(--foreground)); /* Dark navy for text on gradient */
+    /* CTA Gradient Colors (Orange/Yellow) */
+    --cta-gradient-from: hsl(27, 94%, 53%); /* Brighter Orange: #F97316 */
+    --cta-gradient-to: hsl(35, 95%, 65%); /* Lighter, yellower orange, e.g., #F59E0B equivalent HSL */
+    --cta-foreground: 220 47% 11%; /* Darkest Navy: #0F172A for text on gradient */
 
-    /* Progress Bar Color */
-    --progress-indicator: hsl(159, 82%, 38%); /* Green #10B981 */
+    /* Progress Bar Color (Green) */
+    --progress-indicator: 159 82% 38%; /* Green: #10B981 */
   }
 
   .dark {
@@ -78,8 +78,8 @@ body {
     --popover: 215 30% 17%; /* Dark Navy: #1E293B */
     --popover-foreground: 220 13% 91%; /* Lightest Gray: #E5E7EB */
 
-    --primary: 27 96% 60%; /* Orange: #FB923C */
-    --primary-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
+    --primary: 27 96% 60%; /* Orange: #FB923C - Main interactive color in dark mode */
+    --primary-foreground: 220 47% 11%; /* Darkest Navy: #0F172A - Text on Orange buttons */
 
     --secondary: 215 30% 20%; /* Slightly lighter Navy than card */
     --secondary-foreground: 215 14% 65%; /* Medium Gray: #9CA3AF */
@@ -87,7 +87,7 @@ body {
     --muted: 215 30% 14%; /* Darker than card, but not black */
     --muted-foreground: 215 14% 65%; /* Medium Gray: #9CA3AF */
 
-    --accent: 27 94% 53%; /* Brighter Orange: #F97316 */
+    --accent: 27 94% 53%; /* Brighter Orange: #F97316 - For secondary accents */
     --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
     --destructive: 0 70% 60%; /* Adjusted Red for dark */
@@ -99,27 +99,27 @@ body {
 
     --chart-1: 27 96% 60%; /* Primary Orange */
     --chart-2: 27 94% 53%; /* Accent Brighter Orange */
-    --chart-3: 159 70% 50%; /* Green for dark theme */
+    --chart-3: 159 70% 50%; /* Green for dark theme: #10B981 lightened */
     --chart-4: 0 70% 60%;   /* Red */
     --chart-5: 270 45% 65%; /* Purple */
 
     /* Sidebar Colors (Dark) */
-    --sidebar-background: 220 47% 9%;
+    --sidebar-background: 220 47% 9%; /* Even darker navy for sidebar */
     --sidebar-foreground: 220 13% 91%;
-    --sidebar-primary: 27 96% 60%;
+    --sidebar-primary: 27 96% 60%; /* Orange */
     --sidebar-primary-foreground: 220 47% 11%;
-    --sidebar-accent: 215 30% 15%;
+    --sidebar-accent: 215 30% 15%; /* Darker navy for active/hover */
     --sidebar-accent-foreground: 220 13% 91%;
     --sidebar-border: 215 30% 14%;
     --sidebar-ring: 27 94% 53%;
     
-    /* CTA Gradient Colors */
-    --cta-gradient-from: hsl(var(--accent)); 
-    --cta-gradient-to: hsl(35, 95%, 65%); 
-    --cta-foreground: hsl(var(--primary-foreground)); /* Light text on dark gradient for dark theme */
+    /* CTA Gradient Colors (Orange/Yellow) */
+    --cta-gradient-from: hsl(27, 94%, 53%); /* Brighter Orange: #F97316 */
+    --cta-gradient-to: hsl(35, 95%, 65%); /* Lighter, yellower orange */
+    --cta-foreground: 220 47% 11%; /* Darkest Navy on orange gradient */
 
-    /* Progress Bar Color */
-    --progress-indicator: hsl(159, 70%, 50%); /* Lighter Green for dark theme */
+    /* Progress Bar Color (Green) */
+    --progress-indicator: 159 70% 50%; /* Lighter Green for dark theme */
   }
 }
 
