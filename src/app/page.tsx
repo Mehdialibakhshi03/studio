@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2 } from 'lucide-react';
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User } from 'lucide-react'; // Added User icon
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   groupPurchases,
   categories,
-  stores,
+  stores as allStores, // Renamed to avoid conflict with component
   heroSlides,
   testimonials,
   sellerTestimonials,
@@ -33,7 +33,7 @@ import {
   isEndingSoon,
   getCategoryNameBySlug
 } from '@/lib/data'; // Import from centralized data file
-export { groupPurchases, stores }; // Re-export if needed by other pages like product detail
+export { groupPurchases, stores as storesData } from '@/lib/data'; // Re-export if needed by other pages like product detail
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('همه');
@@ -79,9 +79,17 @@ export default function HomePage() {
 
 
   const filteredItems = activeCategory === 'همه'
-    ? groupPurchases // Use groupPurchases directly, as it's already imported
+    ? groupPurchases
     : groupPurchases.filter(item => item.category === categories.find(cat => cat.name === activeCategory)?.slug);
 
+  const priceComparisonData = {
+      productName: 'گوشی هوشمند مدل X',
+      prices: [
+        { label: 'خرید تنها', price: 25000000, members: 1 },
+        { label: 'با گروه ۴ نفره', price: 22000000, members: 4 },
+        { label: 'با گروه ۱۰ نفره', price: 19000000, members: 10 },
+      ],
+    };
 
   return (
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
@@ -102,7 +110,7 @@ export default function HomePage() {
               <CarouselItem key={slide.id}>
                 <div className="relative w-full h-[300px] md:h-[400px]">
                   <Image
-                    src={slide.image}
+                    src={slide.image as string}
                     alt={slide.alt}
                     layout="fill"
                     objectFit="cover"
@@ -182,7 +190,6 @@ export default function HomePage() {
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
-             {/* Navigation for this carousel can be added if needed */}
           </div>
 
           <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
@@ -205,7 +212,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.slice(0, 6).map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
@@ -287,6 +294,47 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* Price Comparison Section */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
+        <h2 className="text-3xl font-bold text-center mb-4 text-foreground">تفاوت قیمت رو احساس کن!</h2>
+        <p className="text-xl text-center text-muted-foreground mb-10">
+          هرچی بیشتر، ارزون‌تر! خرید گروهی به صرفه‌تره.
+        </p>
+        <Card className="bg-card shadow-xl border border-border">
+          <CardHeader className="pb-4 pt-6">
+            <CardTitle className="text-2xl text-center text-primary">{priceComparisonData.productName}</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              {priceComparisonData.prices.map((tier, index) => (
+                <div key={index} className={`p-6 rounded-lg border transition-all duration-300 hover:shadow-lg ${index === priceComparisonData.prices.length - 1 ? 'bg-primary/10 border-primary shadow-lg transform scale-105' : 'bg-secondary/30 border-border'}`}>
+                  <div className="flex items-center justify-center mb-4">
+                    {tier.members === 1 ? <User className="w-10 h-10 text-primary" /> : <Users className="w-10 h-10 text-primary" />}
+                  </div>
+                  <h4 className="text-lg font-semibold mb-2 text-foreground">{tier.label}</h4>
+                  <p className="text-3xl font-bold text-primary mb-2">
+                    {formatNumber(tier.price)} <span className="text-base font-normal">تومان</span>
+                  </p>
+                  {index > 0 && tier.price < priceComparisonData.prices[0].price && (
+                    <Badge variant="destructive" className="text-sm">
+                      {Math.round(((priceComparisonData.prices[0].price - tier.price) / priceComparisonData.prices[0].price) * 100)}٪ ارزان‌تر!
+                    </Badge>
+                  )}
+                   {index === 0 && (
+                     <p className="text-sm text-muted-foreground h-6">قیمت استاندارد</p> // Placeholder for alignment
+                   )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+          <CardFooter className="pt-4 pb-6">
+            <p className="text-center text-lg font-semibold text-accent w-full">
+              ✨ با خرید گروهی، هوشمندانه پس‌انداز کنید! ✨
+            </p>
+          </CardFooter>
+        </Card>
       </section>
 
       {/* Seller CTA Section */}
@@ -501,7 +549,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
           <div className="space-y-16">
-            {stores.map((store) => (
+            {allStores.map((store) => (
               <Card key={store.id} className="bg-card border border-border shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-secondary/50 border-b border-border">
                   <Avatar className="w-20 h-20 border-4 border-background shadow-lg">
@@ -529,7 +577,7 @@ export default function HomePage() {
                     opts={{
                       align: "start",
                       direction: "rtl",
-                      loop: store.products.length > 3,
+                      loop: store.products.length > 3, // Adjusted to check actual product count for loop
                     }}
                     className="w-full relative"
                   >
@@ -774,3 +822,4 @@ export default function HomePage() {
     </div>
   );
 }
+
