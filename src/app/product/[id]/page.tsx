@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon } from 'lucide-react';
+import { Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -68,7 +68,6 @@ export default function ProductDetailPage() {
   const { toast } = useToast();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const [selectedVariations, setSelectedVariations] = useState<{ [key: string]: string }>({});
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
@@ -143,15 +142,12 @@ export default function ProductDetailPage() {
   };
 
   const handleJoinClick = () => {
-    console.log(`Joining group buy for ${product.title} with quantity ${quantity} and variations:`, selectedVariations);
+    console.log(`Joining group buy for ${product.title} with variations:`, selectedVariations);
     toast({
       title: "با موفقیت اضافه شد!",
-      description: `${quantity} عدد از محصول ${product.title} به گروه شما اضافه شد.`,
+      description: `محصول ${product.title} به گروه شما اضافه شد.`,
     });
   };
-
-  const incrementQuantity = () => setQuantity(prev => prev + 1);
-  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
 
    const galleryImages = [
     product.image as string,
@@ -481,16 +477,6 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-t border-border pt-6">
-               <div className="flex items-center border border-input rounded-md h-12 shadow-sm">
-                 <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-full w-12 rounded-l-md rounded-r-none border-l rtl:border-r rtl:rounded-r-md rtl:rounded-l-none border-input text-muted-foreground hover:bg-secondary">
-                   <ChevronRight className="h-5 w-5" />
-                 </Button>
-                 <span className="px-4 font-semibold text-lg w-16 text-center flex items-center justify-center h-full">{formatNumber(quantity)}</span>
-                 <Button variant="ghost" size="icon" onClick={incrementQuantity} className="h-full w-12 rounded-r-md rounded-l-none border-r rtl:border-l rtl:rounded-l-md rtl:rounded-r-none border-input text-muted-foreground hover:bg-secondary">
-                   <ChevronLeft className="h-5 w-5" />
-                 </Button>
-               </div>
-
               <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-[1.02] duration-300 h-12 shadow-md" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
                  <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                  {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه'}
@@ -589,10 +575,9 @@ export default function ProductDetailPage() {
 
         <div className="mt-16 md:mt-20">
            <Tabs defaultValue="description" className="w-full" dir="rtl">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-secondary/50 dark:bg-secondary/30 rounded-lg p-1 shadow-sm">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 mb-8 bg-secondary/50 dark:bg-secondary/30 rounded-lg p-1 shadow-sm">
               <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">توضیحات</TabsTrigger>
               <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">مشخصات فنی</TabsTrigger>
-              <TabsTrigger value="reviews" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">نظرات کاربران ({formatNumber((product.recentMembers?.length ?? 0) + 5)})</TabsTrigger>
               <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">ارسال و بازگشت</TabsTrigger>
             </TabsList>
 
@@ -657,58 +642,6 @@ export default function ProductDetailPage() {
                    </div>
                </div>
             </TabsContent>
-
-            <TabsContent value="reviews" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                <h3 className="text-xl font-semibold mb-4 md:mb-0 text-card-foreground">نظرات کاربران ({formatNumber((product.recentMembers?.length ?? 0) + 5)})</h3>
-                <Button> <MessageSquare className="w-4 h-4 ml-2 rtl:mr-2"/> ثبت نظر جدید</Button>
-              </div>
-              <div className="space-y-8">
-                <div className="flex gap-4 border-b border-border/70 pb-6">
-                   <Avatar className="mt-1">
-                     <AvatarImage src="https://placehold.co/40x40.png?text=AR" alt="کاربر ۱" data-ai-hint="user avatar" />
-                     <AvatarFallback>ع ر</AvatarFallback>
-                   </Avatar>
-                   <div className="flex-grow">
-                       <div className="flex justify-between items-center mb-1.5">
-                           <span className="font-semibold text-card-foreground">علی رضایی</span>
-                           <span className="text-xs text-muted-foreground">۲ روز پیش</span>
-                       </div>
-                       <div className="flex gap-0.5 mb-3">
-                           {[...Array(5)].map((_, i) => (
-                               <StarIcon key={i} className={`w-4 h-4 ${i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
-                           ))}
-                       </div>
-                       <p className="text-sm text-muted-foreground leading-relaxed mb-3">کیفیت محصول عالی بود و قیمت گروهی هم خیلی مناسب بود. سریع به دستم رسید. ممنون از خریدگروهی.</p>
-                       <div className="flex gap-3">
-                             <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <MessageSquare className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> پاسخ
-                            </Button>
-                       </div>
-                   </div>
-                </div>
-                <div className="flex gap-4 border-b border-border/70 pb-6">
-                   <Avatar className="mt-1">
-                     <AvatarImage src="https://placehold.co/40x40.png?text=MA" alt="کاربر ۲" data-ai-hint="user avatar" />
-                     <AvatarFallback>م ا</AvatarFallback>
-                   </Avatar>
-                   <div className="flex-grow">
-                       <div className="flex justify-between items-center mb-1.5">
-                           <span className="font-semibold text-card-foreground">مریم احمدی</span>
-                           <span className="text-xs text-muted-foreground">۵ روز پیش</span>
-                       </div>
-                       <div className="flex gap-0.5 mb-3">
-                           {[...Array(5)].map((_, i) => (
-                               <StarIcon key={i} className={`w-4 h-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
-                           ))}
-                       </div>
-                       <p className="text-sm text-muted-foreground leading-relaxed mb-3">بسته بندی خوب بود و محصول سالم رسید. قیمت واقعا به صرفه بود. پیشنهاد می‌کنم.</p>
-                   </div>
-                </div>
-                 <div className="text-center text-muted-foreground py-4">نظرات بیشتری بارگذاری خواهد شد...</div>
-              </div>
-            </TabsContent>
-
              <TabsContent value="shipping" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
                <h3 className="text-xl font-semibold mb-6 text-card-foreground">اطلاعات ارسال و بازگشت کالا</h3>
                <div className="space-y-6 text-muted-foreground text-sm">
