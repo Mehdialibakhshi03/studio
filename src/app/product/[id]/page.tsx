@@ -1,10 +1,10 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare } from 'lucide-react';
+import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare, ShieldCheck } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -58,7 +58,7 @@ const getRelatedProducts = (currentProductId: number, categorySlug?: string) => 
 type PageParams = { id: string };
 
 export default function ProductDetailPage() {
-  const params = useParams<PageParams>();
+  const params = use(useParams<PageParams>());
   const productId = parseInt(params.id, 10);
   const product = getProductById(productId);
   const store = getStoreByProductId(productId);
@@ -143,6 +143,7 @@ export default function ProductDetailPage() {
     toast({
       title: "با موفقیت اضافه شد!",
       description: `محصول ${product.title} به گروه شما اضافه شد.`,
+      variant: "default",
     });
   };
 
@@ -235,6 +236,7 @@ export default function ProductDetailPage() {
 
       <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+          {/* Image Gallery Column */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg border border-border">
               {selectedImage && (
@@ -283,33 +285,34 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
+          {/* Product Info Column */}
           <div className="lg:col-span-3 flex flex-col space-y-6">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Badge variant="outline" className="bg-secondary/70 border-border/30 text-secondary-foreground">{dataGetCategoryNameBySlug(product.category)}</Badge>
+              <Badge variant="outline" className="bg-secondary/70 border-border/30 text-secondary-foreground py-1 px-3">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
-                <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
+                <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700 py-1 px-3">
                   <Image src="https://placehold.co/20x20.png" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
                   تولید ایران
                 </Badge>
               )}
               {product.isFeatured && (
-                <Badge variant="accent" className="shadow">
+                <Badge variant="accent" className="shadow py-1 px-3">
                   <StarIcon className="w-4 h-4 ml-1 rtl:mr-1 fill-current" />
                   پیشنهاد ویژه
                 </Badge>
               )}
                {showPurchasedRecently && purchasedCount > 0 && (
-                 <Badge variant="outline" className="text-destructive border-destructive/50 bg-destructive/10 dark:bg-destructive/20 animate-pulse">
+                 <Badge variant="outline" className="text-destructive border-destructive/50 bg-destructive/10 dark:bg-destructive/20 animate-pulse py-1 px-3">
                     🔥 {formatNumber(purchasedCount)} نفر در ساعت گذشته خریدند
                  </Badge>
                )}
             </div>
 
             {store && (
-                 <Card className="bg-card border border-border shadow-md rounded-xl overflow-hidden my-4">
-                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-card border-b border-border">
+                 <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden my-2">
+                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-card border-b border-border/70">
                      <Avatar className="w-16 h-16 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
                        <AvatarFallback className="text-xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
@@ -318,12 +321,12 @@ export default function ProductDetailPage() {
                        <p className="text-xs text-muted-foreground mb-0.5">فروشنده:</p>
                        <CardTitle className="text-lg font-semibold text-primary mb-1">{store.name}</CardTitle>
                        {store.offersInstallments && (
-                           <Badge variant="outline" className="mt-1 text-xs text-[hsl(var(--progress-indicator))] border-[hsl(var(--progress-indicator))]/50 bg-[hsl(var(--progress-indicator))]/10 dark:bg-[hsl(var(--progress-indicator))]/20 shadow-sm">
+                           <Badge variant="outline" className="mt-1 text-xs text-[hsl(var(--progress-indicator))] border-[hsl(var(--progress-indicator))]/50 bg-[hsl(var(--progress-indicator))]/10 dark:bg-[hsl(var(--progress-indicator))]/20 shadow-sm py-0.5 px-2">
                                امکان خرید اقساطی
                            </Badge>
                         )}
                      </div>
-                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/70 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary shadow-sm">
+                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/70 text-primary hover:bg-primary/5 hover:text-primary hover:border-primary shadow-sm py-2 px-4">
                        <Link href={`/store/${store.id}`}>
                            <Store className="mr-2 rtl:ml-2 h-4 w-4" /> مشاهده فروشگاه
                         </Link>
@@ -510,7 +513,7 @@ export default function ProductDetailPage() {
                 key={index}
                 className={cn(
                   "text-center p-6 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 group relative flex flex-col justify-between min-h-[280px] sm:min-h-[300px]",
-                  "bg-card border-border", // Default card style
+                  "bg-card border-border", 
                   currentTierIndex > index && product.members < product.requiredMembers && "opacity-70", 
                   currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10 bg-primary/5", 
                   product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-[hsl(var(--progress-indicator))] shadow-green-500/30 scale-105 z-10 bg-[hsl(var(--progress-indicator))]/10", 
@@ -534,7 +537,7 @@ export default function ProductDetailPage() {
                 <CardContent className="flex-grow flex flex-col justify-center items-center">
                   <p className={cn(
                       "text-3xl font-bold my-2",
-                      (currentTierIndex === index && product.members < product.requiredMembers) || (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "text-primary" : "text-card-foreground" // Use card-foreground for non-active tiers
+                       (currentTierIndex === index && product.members < product.requiredMembers) || (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "text-primary" : "text-card-foreground" 
                     )}
                   >
                     {formatNumber(Math.round(tier.price))} <span className="text-sm font-normal">تومان</span>
@@ -573,9 +576,9 @@ export default function ProductDetailPage() {
         <div className="mt-16 md:mt-20">
            <Tabs defaultValue="description" className="w-full" dir="rtl">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 mb-8 bg-secondary/50 dark:bg-secondary/30 rounded-lg p-1 shadow-sm">
-              <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">توضیحات</TabsTrigger>
-              <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">مشخصات فنی</TabsTrigger>
-              <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary">ارسال و بازگشت</TabsTrigger>
+              <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary py-2.5">توضیحات</TabsTrigger>
+              <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary py-2.5">مشخصات فنی</TabsTrigger>
+              <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-card data-[state=active]:text-primary py-2.5">ارسال و بازگشت</TabsTrigger>
             </TabsList>
 
             <TabsContent value="description" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm text-card-foreground">
@@ -691,10 +694,10 @@ export default function ProductDetailPage() {
                       <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-xl cursor-pointer bg-card rounded-lg">
                         <CardHeader className="p-0 relative aspect-[4/3]">
                           <Image src={relatedProduct.image as string} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint || 'related product'}/>
-                          <Badge variant="destructive" className="absolute top-3 left-3 rtl:right-3 rtl:left-auto">
+                          <Badge variant="destructive" className="absolute top-3 left-3 rtl:right-3 rtl:left-auto text-xs py-0.5 px-2">
                             {formatNumber(relatedProduct.discount)}٪ تخفیف
                           </Badge>
-                           <Badge variant="outline" className="absolute top-3 right-3 rtl:left-3 rtl:right-auto bg-background/80 text-secondary-foreground text-xs">
+                           <Badge variant="outline" className="absolute top-3 right-3 rtl:left-3 rtl:right-auto bg-background/80 text-secondary-foreground text-xs py-0.5 px-2">
                               {dataGetCategoryNameBySlug(relatedProduct.category)}
                            </Badge>
                         </CardHeader>
@@ -721,7 +724,7 @@ export default function ProductDetailPage() {
                           </div>
                         </CardContent>
                          <CardFooter className="p-3 pt-0">
-                           <Button size="sm" variant="outline" className="w-full text-xs transition-transform hover:scale-105 duration-300">مشاهده جزئیات</Button>
+                           <Button size="sm" variant="outline" className="w-full text-xs transition-transform hover:scale-105 duration-300 py-2">مشاهده جزئیات</Button>
                         </CardFooter>
                       </Card>
                      </Link>
