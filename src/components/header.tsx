@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X, User, Heart, ShoppingCart, Phone, LifeBuoy, Building, Percent, Newspaper, Flame, HelpCircle, Store as StoreIcon, ListChecks, PlusCircle } from 'lucide-react';
+import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X, User, Heart, ShoppingCart, Phone, LifeBuoy, Building, Percent, Newspaper, Flame, HelpCircle, Store as StoreIcon, ListChecks, PlusCircle, ShoppingBag } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -133,7 +133,7 @@ const Header = () => {
                            <Link href={link.href} className="text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-secondary block flex items-center gap-2">
                              {link.icon && <link.icon className="w-4 h-4"/>}
                              {link.ctaText || link.title}
-                             {link.special && <Flame className="w-4 h-4 text-destructive animate-pulse" />}
+                             {link.special && <Flame className="w-0 h-0 sm:w-4 sm:h-4 text-destructive animate-pulse inline-block ml-1"/>}
                            </Link>
                          </SheetClose>
                      ))}
@@ -165,7 +165,7 @@ const Header = () => {
               </Sheet>
 
             <Link href="/" className="flex items-center space-x-2 rtl:space-x-reverse text-xl sm:text-2xl font-bold text-primary shrink-0">
-               <ShoppingBasket className="h-7 w-7 sm:h-8 sm:w-8 transition-transform hover:rotate-[-12deg] duration-300 text-primary" />
+               <ShoppingBasket className="h-7 w-7 sm:h-8 sm:h-8 transition-transform hover:rotate-[-12deg] duration-300 text-primary" />
                <span className="hidden sm:inline">خرید<span className="text-accent">گروهی</span></span>
             </Link>
           </div>
