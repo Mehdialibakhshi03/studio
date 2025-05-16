@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User } from 'lucide-react'; // Added User icon
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,10 +20,11 @@ import CountdownTimer from '@/components/countdown-timer';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider"; // Import Slider
 import {
   groupPurchases,
   categories,
-  stores as allStores, // Renamed to avoid conflict with component
+  stores as allStores,
   heroSlides,
   testimonials,
   sellerTestimonials,
@@ -32,8 +33,8 @@ import {
   formatNumber,
   isEndingSoon,
   getCategoryNameBySlug
-} from '@/lib/data'; // Import from centralized data file
-export { groupPurchases, stores as storesData } from '@/lib/data'; // Re-export if needed by other pages like product detail
+} from '@/lib/data';
+export { groupPurchases, stores as storesData } from '@/lib/data';
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('همه');
@@ -42,6 +43,16 @@ export default function HomePage() {
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const autoplayPlugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
 
+  // State for interactive price comparison
+  const [groupMembers, setGroupMembers] = useState<number[]>([1]);
+  const [interactiveProductOriginalPrice] = useState(25000000);
+  const [interactiveProductData, setInteractiveProductData] = useState({
+    productName: 'گوشی هوشمند مدل ویژه X',
+    image: 'https://placehold.co/300x300.png',
+    aiHint: 'smartphone modern',
+    currentPrice: interactiveProductOriginalPrice,
+    discountPercent: 0,
+  });
 
   const handleJoinClick = (title: string) => {
     console.log(`User wants to join the group buy for: ${title}`);
@@ -58,8 +69,6 @@ export default function HomePage() {
         description: "لینک را برای دوستانتان ارسال کنید و اعتبار هدیه بگیرید.",
         variant: "default",
       });
-      // In a real app, generate and copy the referral link
-      // navigator.clipboard.writeText('your-referral-link.com/ref=123');
     };
 
 
@@ -77,19 +86,31 @@ export default function HomePage() {
     heroApi.on("reInit", () => setCurrentHeroSlide(heroApi.selectedScrollSnap()));
   }, [heroApi]);
 
+  useEffect(() => {
+    const members = groupMembers[0];
+    let newPrice = interactiveProductOriginalPrice;
+    let discount = 0;
+    const maxDiscount = 0.30; // 30%
+    const maxMembersForCurve = 50;
+
+    if (members > 1) {
+      const discountFactor = Math.min(1, (members - 1) / (maxMembersForCurve - 1));
+      discount = maxDiscount * discountFactor;
+      newPrice = interactiveProductOriginalPrice * (1 - discount);
+    }
+
+    setInteractiveProductData(prev => ({
+      ...prev,
+      currentPrice: Math.round(newPrice),
+      discountPercent: Math.round(discount * 100),
+    }));
+  }, [groupMembers, interactiveProductOriginalPrice]);
+
 
   const filteredItems = activeCategory === 'همه'
     ? groupPurchases
     : groupPurchases.filter(item => item.category === categories.find(cat => cat.name === activeCategory)?.slug);
 
-  const priceComparisonData = {
-      productName: 'گوشی هوشمند مدل X',
-      prices: [
-        { label: 'خرید تنها', price: 25000000, members: 1 },
-        { label: 'با گروه ۴ نفره', price: 22000000, members: 4 },
-        { label: 'با گروه ۱۰ نفره', price: 19000000, members: 10 },
-      ],
-    };
 
   return (
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
@@ -108,7 +129,7 @@ export default function HomePage() {
           <CarouselContent>
             {heroSlides.map((slide) => (
               <CarouselItem key={slide.id}>
-                <div className="relative w-full h-[300px] md:h-[400px]">
+                <div className="relative w-full h-[350px] md:h-[450px] lg:h-[500px]">
                   <Image
                     src={slide.image as string}
                     alt={slide.alt}
@@ -118,14 +139,14 @@ export default function HomePage() {
                     data-ai-hint={slide.aiHint}
                     priority={slide.id === 1}
                   />
-                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-gradient-to-t from-black/60 to-transparent p-8">
-                    <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">{slide.title}</h1>
-                    <p className="text-lg md:text-xl mb-6 md:mb-8 drop-shadow-md animate-fade-in animation-delay-200">{slide.description}</p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-gradient-to-t from-black/70 via-black/40 to-transparent p-6 md:p-8">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 drop-shadow-xl animate-fade-in">{slide.title}</h1>
+                    <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-2xl drop-shadow-lg animate-fade-in animation-delay-200">{slide.description}</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
                       {slide.ctas ? (
                         slide.ctas.map((cta, index) => (
                           <Link href={cta.link} key={index} legacyBehavior>
-                            <Button as="a" size="lg" variant={cta.variant} className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400 w-full sm:w-auto">
+                            <Button as="a" size="lg" variant={cta.variant} className="text-base md:text-lg transition-transform hover:scale-105 duration-300 shadow-lg animate-fade-in animation-delay-400 w-full sm:w-auto px-6 py-3">
                               {cta.icon && <cta.icon className="ml-2 rtl:mr-2 h-5 w-5" />}
                               {cta.text}
                             </Button>
@@ -133,7 +154,7 @@ export default function HomePage() {
                         ))
                       ) : slide.link ? (
                         <Link href={slide.link} legacyBehavior>
-                          <Button as="a" size="lg" variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400">
+                          <Button as="a" size="lg" variant="default" className="text-base md:text-lg transition-transform hover:scale-105 duration-300 shadow-lg animate-fade-in animation-delay-400 px-6 py-3">
                             مشاهده بیشتر
                           </Button>
                         </Link>
@@ -153,8 +174,8 @@ export default function HomePage() {
                 key={index}
                 onClick={() => heroApi?.scrollTo(index)}
                 className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-300",
-                  index === currentHeroSlide ? "w-4 bg-primary" : "bg-white/50 hover:bg-white/80"
+                  "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                  index === currentHeroSlide ? "w-5 bg-primary" : "bg-white/60 hover:bg-white/90"
                 )}
                 aria-label={`برو به اسلاید ${index + 1}`}
               />
@@ -167,18 +188,18 @@ export default function HomePage() {
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-8">
         <div className="flex justify-center space-x-4 rtl:space-x-reverse overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
           {categories.map(category => (
-            <Link href={`/category/${category.slug}`} key={category.id} className="flex flex-col items-center space-y-2 group flex-shrink-0 w-24">
-              <div className="w-20 h-20 rounded-full border-2 border-primary/50 group-hover:border-primary transition-all duration-300 p-1 shadow-sm group-hover:shadow-md">
+            <Link href={`/category/${category.slug}`} key={category.id} className="flex flex-col items-center space-y-2 group flex-shrink-0 w-24 text-center">
+              <div className="w-20 h-20 rounded-full border-2 border-primary/30 group-hover:border-primary transition-all duration-300 p-1 shadow-sm group-hover:shadow-lg transform group-hover:scale-105">
                 <Image 
                   src={category.image} 
                   alt={category.name} 
                   width={72} 
                   height={72} 
-                  className="rounded-full object-cover w-full h-full"
+                  className="rounded-full object-cover w-full h-full bg-secondary"
                   data-ai-hint={category.aiHint}
                 />
               </div>
-              <span className="text-sm font-medium text-center text-foreground group-hover:text-primary transition-colors duration-300">{category.name}</span>
+              <span className="text-xs sm:text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300 block">{category.name}</span>
             </Link>
           ))}
         </div>
@@ -212,40 +233,43 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {filteredItems.slice(0, 6).map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
-                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
-                   <CardHeader className="p-0 relative aspect-[4/3]">
-                    <Image src={item.image as string} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                    <Badge variant="destructive" className="absolute top-3 right-3">
+                <Card className="bg-card rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 group cursor-pointer h-full flex flex-col">
+                   <CardHeader className="p-0 relative aspect-[16/10]">
+                    <Image src={item.image as string} width={400} height={250} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Badge variant="destructive" className="absolute top-3 right-3 text-sm px-2.5 py-1 shadow">
                       {item.discount}٪ تخفیف
                     </Badge>
-                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
+                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80 text-xs px-2 py-0.5">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
                     {item.isIranian && (
-                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
+                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80 text-xs px-2 py-0.5">
                         <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md">
+                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md text-xs px-2 py-0.5">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
                     )}
                    </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
-                    <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg h-14 overflow-hidden flex-grow">{item.title}</h3>
                     <div className="flex justify-between items-baseline mb-3">
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
-                      <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
+                      <div className="text-primary font-bold text-xl lg:text-2xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
                      {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
-                        <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
+                        <p className="text-xs font-semibold mb-1 text-muted-foreground flex items-center">
+                            <Package className="w-3.5 h-3.5 ml-1.5 rtl:mr-1.5"/>
+                            محتویات بسته:
+                        </p>
                         <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4">
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
@@ -272,12 +296,12 @@ export default function HomePage() {
                         ) : null}
                       </div>
 
-                      <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2" />
+                      <Progress value={item.requiredMembers > 0 ? (item.members / item.requiredMembers) * 100 : 0} className="h-2.5 rounded-full" />
                     </div>
                    </CardContent>
                    <CardFooter className="p-4 pt-0 mt-auto">
-                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
-                          <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full text-base py-2.5 flex items-center justify-center transition-transform hover:scale-105 duration-300 shadow-md">
+                          <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                           پیوستن به گروه
                         </Button>
                    </CardFooter>
@@ -288,7 +312,7 @@ export default function HomePage() {
 
           <div className="flex justify-center mt-12">
             <Link href="/deals">
-              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
+              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 text-base px-8 py-3">
                 مشاهده همه خریدهای گروهی
               </Button>
             </Link>
@@ -296,61 +320,84 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Price Comparison Section */}
+      {/* Interactive Price Comparison Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-4 text-foreground">تفاوت قیمت رو احساس کن!</h2>
         <p className="text-xl text-center text-muted-foreground mb-10">
           هرچی بیشتر، ارزون‌تر! خرید گروهی به صرفه‌تره.
         </p>
-        <Card className="bg-card shadow-xl border border-border">
-          <CardHeader className="pb-4 pt-6">
-            <CardTitle className="text-2xl text-center text-primary">{priceComparisonData.productName}</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              {priceComparisonData.prices.map((tier, index) => (
-                <div 
-                  key={index} 
-                  className={cn(
-                    "p-6 rounded-lg border transition-all duration-300 hover:shadow-lg hover:scale-105",
-                    index === priceComparisonData.prices.length - 1 
-                      ? 'bg-primary/10 border-primary shadow-lg transform scale-105' 
-                      : 'bg-secondary/30 border-border'
-                  )}
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    {tier.members === 1 ? <User className="w-10 h-10 text-primary" /> : <Users className="w-10 h-10 text-primary" />}
+        <Card className="bg-card shadow-xl border border-border overflow-hidden">
+          <div className="grid md:grid-cols-2 items-center">
+            <div className="p-6 md:p-8 lg:p-10 order-2 md:order-1">
+              <CardTitle className="text-2xl text-primary mb-1">{interactiveProductData.productName}</CardTitle>
+              <CardDescription className="text-muted-foreground mb-6">
+                با حرکت دادن اسلایدر، ببینید چطور با افزایش تعداد اعضای گروه، قیمت کمتر می‌شود.
+              </CardDescription>
+
+              <div className="space-y-5">
+                <div>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <span className="text-base text-muted-foreground">قیمت اصلی (تکی):</span>
+                    <span className="text-lg font-semibold text-muted-foreground line-through">{formatNumber(interactiveProductOriginalPrice)} <span className="text-xs">تومان</span></span>
                   </div>
-                  <h4 className="text-lg font-semibold mb-2 text-foreground">{tier.label}</h4>
-                  <p className="text-3xl font-bold text-primary mb-2">
-                    {formatNumber(tier.price)} <span className="text-base font-normal">تومان</span>
-                  </p>
-                  {index > 0 && tier.price < priceComparisonData.prices[0].price && (
-                    <Badge variant="destructive" className="text-sm">
-                      {Math.round(((priceComparisonData.prices[0].price - tier.price) / priceComparisonData.prices[0].price) * 100)}٪ ارزان‌تر!
-                    </Badge>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <span className="text-base text-primary font-medium">قیمت گروهی شما:</span>
+                    <span className="text-2xl font-bold text-primary">{formatNumber(interactiveProductData.currentPrice)} <span className="text-sm">تومان</span></span>
+                  </div>
+                  {interactiveProductData.discountPercent > 0 && (
+                    <div className="flex justify-between items-baseline text-green-600 dark:text-green-400">
+                      <span className="text-base font-medium">میزان تخفیف:</span>
+                      <span className="text-lg font-bold">{interactiveProductData.discountPercent}٪ (معادل {formatNumber(interactiveProductOriginalPrice - interactiveProductData.currentPrice)} تومان)</span>
+                    </div>
                   )}
-                   {index === 0 && (
-                     <p className="text-sm text-muted-foreground h-6">قیمت استاندارد</p>
-                   )}
                 </div>
-              ))}
+
+                <div className="space-y-3">
+                  <Label htmlFor="group-size-slider" className="flex items-center text-base font-medium text-foreground">
+                    <Users className="w-5 h-5 mr-2 rtl:ml-2 text-primary"/>
+                    تعداد اعضای گروه: <span className="font-bold text-primary mx-1">{groupMembers[0]}</span> نفر
+                  </Label>
+                  <Slider
+                    id="group-size-slider"
+                    min={1}
+                    max={50}
+                    step={1}
+                    value={groupMembers}
+                    onValueChange={setGroupMembers}
+                    className="my-4"
+                    aria-label="تعداد اعضای گروه"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>۱ نفر (خرید تکی)</span>
+                    <span>۵۰ نفر (حداکثر تخفیف)</span>
+                  </div>
+                </div>
+              </div>
+               <p className="text-center text-lg font-semibold text-accent mt-8">
+                ✨ با خرید گروهی، هوشمندانه پس‌انداز کنید! ✨
+              </p>
             </div>
-          </CardContent>
-          <CardFooter className="pt-4 pb-6">
-            <p className="text-center text-lg font-semibold text-accent w-full">
-              ✨ با خرید گروهی، هوشمندانه پس‌انداز کنید! ✨
-            </p>
-          </CardFooter>
+            <div className="relative aspect-[4/3] md:aspect-square order-1 md:order-2 min-h-[250px] md:min-h-0">
+              <Image
+                src={interactiveProductData.image}
+                alt={interactiveProductData.productName}
+                layout="fill"
+                objectFit="cover"
+                className="transition-transform duration-500 hover:scale-105"
+                data-ai-hint={interactiveProductData.aiHint}
+              />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-card md:via-transparent md:to-transparent opacity-60 md:opacity-100"></div>
+            </div>
+          </div>
         </Card>
       </section>
 
       {/* Seller CTA Section */}
-      <section className="relative bg-gradient-to-r from-primary/90 to-blue-800/90 dark:from-primary/70 dark:to-blue-900/70 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-primary to-blue-700 dark:from-primary/80 dark:to-blue-800/90 py-16 md:py-20 overflow-hidden">
           <div className="absolute inset-0 opacity-10">
               <Image
                   src="https://placehold.co/1600x600.png"
-                  alt="فروشنده خوشحال"
+                  alt="فروشنده خوشحال در حال کار با لپتاپ"
                   layout="fill"
                   objectFit="cover"
                   data-ai-hint="happy online seller business owner"
@@ -358,44 +405,47 @@ export default function HomePage() {
               />
           </div>
           <div className="container mx-auto px-4 lg:px-8 xl:px-16 relative z-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                  <div className="text-white">
-                      <h2 className="text-3xl md:text-4xl font-bold mb-6 drop-shadow-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                  <div className="text-white text-center md:text-right">
+                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 drop-shadow-lg">
                           ایجاد فروشگاه گروهی تو، تنها در ۳ دقیقه! 🚀
                       </h2>
-                      <p className="text-lg mb-8 text-blue-100 dark:text-blue-200 leading-relaxed drop-shadow-md">
-                          محصولات خود را به هزاران خریدار معرفی کنید و فروش خود را چند برابر کنید.
+                      <p className="text-lg md:text-xl mb-8 text-blue-100 dark:text-blue-200 leading-relaxed drop-shadow-md">
+                          محصولات خود را به هزاران خریدار معرفی کنید و فروش خود را چند برابر کنید. با ما، فروش بیشتر و سریع‌تر را تجربه کنید.
                       </p>
-                      <div className="space-y-4 mb-10">
-                          <div className="flex items-center gap-3 text-base">
-                              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                      <div className="grid grid-cols-2 gap-4 mb-10 text-base text-left rtl:text-right">
+                          <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                              <CheckCircle className="w-6 h-6 text-green-300 flex-shrink-0" />
                               <span>بدون هزینه راه‌اندازی اولیه</span>
                           </div>
-                          <div className="flex items-center gap-3 text-base">
-                              <CreditCard className="w-6 h-6 text-green-400 flex-shrink-0" />
-                              <span>اتصال سریع و آسان به درگاه پرداخت امن</span>
+                          <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                              <CreditCard className="w-6 h-6 text-green-300 flex-shrink-0" />
+                              <span>اتصال به درگاه پرداخت امن</span>
                           </div>
-                           <div className="flex items-center gap-3 text-base">
-                              <TrendingUp className="w-6 h-6 text-green-400 flex-shrink-0" />
+                           <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                              <TrendingUp className="w-6 h-6 text-green-300 flex-shrink-0" />
                               <span>دسترسی به جامعه بزرگ خریداران</span>
                           </div>
-                          <div className="flex items-center gap-3 text-base">
-                              <Rocket className="w-6 h-6 text-green-400 flex-shrink-0" />
+                          <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                              <Rocket className="w-6 h-6 text-green-300 flex-shrink-0" />
                               <span>رشد سریع کسب و کار شما</span>
                           </div>
                       </div>
                       <Button
                           size="lg"
                           variant="accent"
-                          className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-lg"
+                          className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-xl w-full sm:w-auto"
                       >
                          <Rocket className="w-5 h-5 ml-2 rtl:mr-2"/>
                           شروع ثبت‌نام فروشنده
                       </Button>
                   </div>
                   <div className="hidden md:flex justify-center items-center">
-                    <div className="bg-white/10 p-8 rounded-full backdrop-blur-md shadow-2xl">
-                         <Store className="w-32 h-32 text-white opacity-80" />
+                    <div className="relative group">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                       <div className="relative bg-white/10 p-8 md:p-10 lg:p-12 rounded-full backdrop-blur-md shadow-2xl border-2 border-white/20">
+                           <Store className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 text-white opacity-80 transform transition-transform duration-500 group-hover:scale-110" />
+                       </div>
                     </div>
                   </div>
               </div>
@@ -403,9 +453,9 @@ export default function HomePage() {
       </section>
 
      {/* Referral Banner */}
-      <section className="bg-accent py-12">
+      <section className="bg-accent/10 dark:bg-accent/5 py-12">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-background rounded-xl shadow-lg p-8 md:p-10 border border-border">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-card rounded-xl shadow-lg p-8 md:p-10 border border-border">
             <div className="flex items-center gap-6 text-center md:text-right">
                <div className="hidden md:block bg-accent/20 p-4 rounded-full">
                   <Users2 className="w-12 h-12 text-accent" />
@@ -413,14 +463,14 @@ export default function HomePage() {
                <div>
                   <h2 className="text-2xl md:text-3xl font-bold text-accent-foreground mb-2">دوستانت را دعوت کن، هدیه بگیر! 🎁</h2>
                   <p className="text-muted-foreground text-lg">
-                      با ارسال لینک اختصاصی به دوستانت، تا <span className="font-bold">۲۰٪ اعتبار هدیه</span> برای خریدهای بعدی خود و دوستانت دریافت کنید.
+                      با ارسال لینک اختصاصی به دوستانت، تا <span className="font-bold text-primary">۲۰٪ اعتبار هدیه</span> برای خریدهای بعدی خود و دوستانت دریافت کنید.
                   </p>
                </div>
             </div>
             <Button
               size="lg"
               variant="default"
-              className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-md mt-6 md:mt-0 w-full md:w-auto"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-md mt-6 md:mt-0 w-full md:w-auto"
               onClick={handleReferralClick}
             >
               <LinkIcon className="w-5 h-5 ml-2 rtl:mr-2" />
@@ -435,74 +485,75 @@ export default function HomePage() {
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
-                <Search className="h-10 w-10 text-primary" />
+          {[
+             { icon: Search, title: "۱. کالا را پیدا کنید", description: "کالای مورد نظر خود را از بین خریدهای گروهی فعال پیدا کنید یا درخواست جدید ثبت کنید.", delay: 0 },
+             { icon: Users, title: "۲. به گروه بپیوندید", description: "به گروه خرید کالا بپیوندید و دوستان خود را برای رسیدن به حد نصاب دعوت کنید.", delay: 200 },
+             { icon: Target, title: "۳. خرید نهایی و تحویل", description: "پس از رسیدن به حد نصاب، خرید نهایی شده و کالا با تخفیف ویژه برای شما ارسال می‌شود.", delay: 400 }
+          ].map((step, index) => (
+            <div 
+              key={index} 
+              className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 animate-fade-in-right"
+              style={{animationDelay: `${step.delay}ms`}}
+            >
+              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex items-center justify-center mb-6 shadow-inner ring-4 ring-primary/5">
+                  <div className="absolute inset-0 bg-primary/5 rounded-full animate-ping opacity-50"></div>
+                  <step.icon className="h-10 w-10 text-primary relative z-10" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-card-foreground">{step.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۱. کالا را پیدا کنید</h3>
-            <p className="text-muted-foreground text-sm">کالای مورد نظر خود را از بین خریدهای گروهی فعال پیدا کنید یا درخواست جدید ثبت کنید.</p>
-          </div>
-          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
-                <Users className="h-10 w-10 text-primary" />
-             </div>
-            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۲. به گروه بپیوندید</h3>
-            <p className="text-muted-foreground text-sm">به گروه خرید کالا بپیوندید و دوستان خود را برای رسیدن به حد نصاب دعوت کنید.</p>
-          </div>
-          <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 shadow-inner">
-                 <Target className="h-10 w-10 text-primary" />
-             </div>
-            <h3 className="text-xl font-semibold mb-2 text-card-foreground">۳. خرید نهایی و تحویل</h3>
-            <p className="text-muted-foreground text-sm">پس از رسیدن به حد نصاب، خرید نهایی شده و کالا با تخفیف ویژه برای شما ارسال می‌شود.</p>
-          </div>
+          ))}
         </div>
       </section>
 
      {/* درخواست‌های خرید گروهی */}
-      <section className="bg-secondary py-16">
+      <section className="bg-secondary/30 py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-secondary-foreground mb-4 sm:mb-0">درخواست‌های خرید گروهی</h2>
-            <Button variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md">
+            <Button variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md text-base px-6 py-2.5">
+                <PlusCircle className="w-5 h-5 ml-2 rtl:mr-2" />
                 ایجاد درخواست جدید
              </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {groupPurchases.slice(4, 7).map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
-                <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
-                  <CardHeader className="p-0 relative aspect-[4/3]">
-                     <Image src={item.image as string} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
-                    <Badge variant="destructive" className="absolute top-3 right-3">
+                <Card className="bg-card rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 group cursor-pointer h-full flex flex-col">
+                  <CardHeader className="p-0 relative aspect-[16/10]">
+                     <Image src={item.image as string} width={400} height={250} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Badge variant="destructive" className="absolute top-3 right-3 text-sm px-2.5 py-1 shadow">
                       {item.discount}٪ تخفیف
                     </Badge>
-                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
+                     <Badge variant="outline" className="absolute top-3 left-3 bg-background/80 text-xs px-2 py-0.5">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
                     {item.isIranian && (
-                      <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
+                      <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80 text-xs px-2 py-0.5">
                         <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
                     {item.isFeatured && (
-                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md">
+                      <Badge variant="accent" className="absolute bottom-3 right-3 flex items-center shadow-md text-xs px-2 py-0.5">
                         <Star className="w-3 h-3 ml-1 rtl:mr-1 fill-current" />
                         پیشنهاد ویژه
                       </Badge>
                     )}
                   </CardHeader>
                   <CardContent className="p-4 flex-grow flex flex-col">
-                    <h3 className="font-semibold text-card-foreground mb-2 text-base h-14 overflow-hidden flex-grow">{item.title}</h3>
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg h-14 overflow-hidden flex-grow">{item.title}</h3>
                     <div className="flex justify-between items-baseline mb-3">
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
-                      <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
+                      <div className="text-primary font-bold text-xl lg:text-2xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
                     {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
-                        <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
+                        <p className="text-xs font-semibold mb-1 text-muted-foreground flex items-center">
+                            <Package className="w-3.5 h-3.5 ml-1.5 rtl:mr-1.5"/>
+                            محتویات بسته:
+                        </p>
                         <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pr-4">
                           {item.packageContents.map((content, index) => (
                             <li key={index}>
@@ -529,12 +580,12 @@ export default function HomePage() {
                         ) : null}
                       </div>
 
-                      <Progress value={(item.members / item.requiredMembers) * 100} className="h-2" />
+                      <Progress value={(item.members / item.requiredMembers) * 100} className="h-2.5 rounded-full" />
                     </div>
                    </CardContent>
                    <CardFooter className="p-4 pt-0 mt-auto">
-                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300">
-                          <ShoppingCart className="h-4 w-4 ml-2 rtl:mr-2" />
+                        <Button onClick={(e) => { e.preventDefault(); handleJoinClick(item.title); }} variant="default" className="w-full text-base py-2.5 flex items-center justify-center transition-transform hover:scale-105 duration-300 shadow-md">
+                          <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
                           پیوستن به گروه
                         </Button>
                    </CardFooter>
@@ -544,7 +595,7 @@ export default function HomePage() {
           </div>
           <div className="flex justify-center mt-12">
             <Link href="/requests">
-              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
+              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 text-base px-8 py-3">
                 مشاهده همه درخواست‌ها
               </Button>
             </Link>
@@ -558,24 +609,26 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
           <div className="space-y-16">
             {allStores.map((store) => (
-              <Card key={store.id} className="bg-card border border-border shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-secondary/50 border-b border-border">
-                  <Avatar className="w-20 h-20 border-4 border-background shadow-lg">
+              <Card key={store.id} className="bg-card border border-border shadow-xl rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-secondary/40 border-b border-border">
+                  <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-background shadow-lg transition-transform duration-300 hover:scale-110">
                     <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                    <AvatarFallback className="text-2xl">{store.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="text-2xl sm:text-3xl">{store.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="text-center sm:text-right flex-grow">
-                    <CardTitle className="text-2xl font-bold text-card-foreground mb-1">{store.name}</CardTitle>
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-card-foreground mb-1.5">{store.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground mb-2">ارائه دهنده بهترین محصولات برای خرید گروهی</p>
                     {store.offersInstallments && (
-                      <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white">
+                      <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-2.5 py-1">
+                        <CreditCard className="w-3.5 h-3.5 ml-1.5 rtl:mr-1.5"/>
                         فروش اقساطی
                       </Badge>
                     )}
                   </div>
-                  <Link href={`/store/${store.id}`}>
-                    <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 mt-4 sm:mt-0 shadow-sm">
+                  <Link href={`/store/${store.id}`} className="mt-4 sm:mt-0">
+                    <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 shadow-sm text-base px-6 py-2.5">
                       مشاهده فروشگاه
-                      <Store className="mr-2 h-5 w-5" />
+                      <Store className="mr-2 rtl:ml-2 h-5 w-5" />
                     </Button>
                   </Link>
                 </CardHeader>
@@ -585,18 +638,18 @@ export default function HomePage() {
                     opts={{
                       align: "start",
                       direction: "rtl",
-                      loop: store.products.length > 3, // Adjusted to check actual product count for loop
+                      loop: store.products.length > 3, 
                     }}
                     className="w-full relative"
                   >
                     <CarouselContent className="-ml-4 rtl:-mr-4">
                       {store.products.map((product) => (
-                        <CarouselItem key={product.id} className="basis-full md:basis-1/3 pl-4 rtl:pr-4 mb-1">
+                        <CarouselItem key={product.id} className="basis-full md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4 rtl:pr-4 mb-1">
                           <Link href={`/product/${product.id}`} className="block h-full">
-                            <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50">
+                            <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50 rounded-lg">
                               <CardHeader className="p-0 relative aspect-[4/3]">
                                 <Image src={product.image as string} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
-                                <Badge variant="destructive" className="absolute top-2 right-2">
+                                <Badge variant="destructive" className="absolute top-2 right-2 text-xs px-2 py-0.5">
                                   {product.discount}٪ تخفیف
                                 </Badge>
                                 {product.isFeatured && (
@@ -612,7 +665,7 @@ export default function HomePage() {
                                   <span className="text-muted-foreground line-through">{formatNumber(product.originalPrice)}</span>
                                   <span className="text-primary font-bold">{formatNumber(product.groupPrice)} <span className="text-xs">تومان</span></span>
                                 </div>
-                                <Progress value={product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0} className="h-1.5 mt-auto" />
+                                <Progress value={product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0} className="h-1.5 mt-auto rounded-full" />
                                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                                    <span>{product.members}/{product.requiredMembers} نفر</span>
                                      {product.endDate && isEndingSoon(product.endDate) ? (
@@ -623,7 +676,7 @@ export default function HomePage() {
                                 </div>
                               </CardContent>
                               <CardFooter className="p-3 pt-0">
-                                <Button onClick={(e) => { e.preventDefault(); handleJoinClick(product.title); }} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300">پیوستن</Button>
+                                <Button onClick={(e) => { e.preventDefault(); handleJoinClick(product.title); }} size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300 py-2">پیوستن</Button>
                               </CardFooter>
                             </Card>
                           </Link>
@@ -641,22 +694,26 @@ export default function HomePage() {
       </section>
 
      {/* Benefits Section */}
-      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl">
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary/50 rounded-xl">
         <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", colorClass: "text-accent" },
-            { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", colorClass: "text-green-500" },
-            { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", colorClass: "text-primary" },
-            { icon: Handshake, title: "خرید مستقیم", description: "ارتباط مستقیم با فروشندگان عمده و تولیدکنندگان.", colorClass: "text-purple-500" }
+            { icon: Percent, title: "تخفیف‌های استثنایی", description: "با افزایش تعداد خریداران، از تخفیف‌های باورنکردنی بهره‌مند شوید.", colorClass: "text-accent", delay: 0 },
+            { icon: ShieldCheck, title: "تضمین اصالت کالا", description: "تمامی کالاها با تضمین اصالت و کیفیت از فروشندگان معتبر عرضه می‌شوند.", colorClass: "text-green-500", delay: 150 },
+            { icon: Package, title: "تنوع بی‌نظیر محصولات", description: "از کالاهای دیجیتال تا مواد غذایی و پوشاک، هر آنچه نیاز دارید را پیدا کنید.", colorClass: "text-primary", delay: 300 },
+            { icon: Handshake, title: "خرید مستقیم و بی‌واسطه", description: "ارتباط مستقیم با فروشندگان عمده و تولیدکنندگان برای بهترین قیمت.", colorClass: "text-purple-500", delay: 450 }
           ].map((benefit, index) => (
-            <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group">
-               <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
+            <div 
+                key={index} 
+                className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group animate-fade-in-right"
+                style={{animationDelay: `${benefit.delay}ms`}}
+            >
+               <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md ring-4 ring-transparent group-hover:ring-primary/20`}>
                  <div className={`absolute inset-0 ${benefit.colorClass.replace('text-', 'bg-')}/20 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
                  <benefit.icon className={`h-10 w-10 ${benefit.colorClass} relative z-10`} />
                </div>
                <h3 className="font-bold text-xl mb-3 text-card-foreground">{benefit.title}</h3>
-               <p className="text-muted-foreground text-sm">{benefit.description}</p>
+               <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
              </div>
           ))}
         </div>
@@ -668,26 +725,26 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">صدای مشتریان و فروشندگان ما</h2>
           <Tabs defaultValue="customers" className="w-full" dir="rtl">
             <TabsList className="grid w-full grid-cols-2 mb-8 bg-secondary rounded-lg p-1 shadow-sm max-w-md mx-auto">
-              <TabsTrigger value="customers" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4" />
+              <TabsTrigger value="customers" className="text-base data-[state=active]:shadow-md flex items-center gap-2 py-2">
+                <ShoppingBag className="w-5 h-5" />
                 خریداران
               </TabsTrigger>
-              <TabsTrigger value="sellers" className="text-base data-[state=active]:shadow-md flex items-center gap-2">
-                <Store className="w-4 h-4" />
+              <TabsTrigger value="sellers" className="text-base data-[state=active]:shadow-md flex items-center gap-2 py-2">
+                <Store className="w-5 h-5" />
                 فروشندگان
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="customers">
               <Carousel
-                opts={{ align: "start", direction: "rtl", loop: testimonials.length > 3 }}
+                opts={{ align: "start", direction: "rtl", loop: testimonials.length > 2 }}
                 className="w-full"
                 plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
               >
                 <CarouselContent className="-ml-4 rtl:-mr-4">
                   {testimonials.map((testimonial) => (
                     <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
-                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
+                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl">
                         <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
                           <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
                             <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
@@ -716,21 +773,21 @@ export default function HomePage() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
-                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+                <CarouselPrevious className="absolute left-[-16px] rtl:right-[-16px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex"/>
+                <CarouselNext className="absolute right-[-16px] rtl:left-[-16px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex"/>
               </Carousel>
             </TabsContent>
 
              <TabsContent value="sellers">
               <Carousel
-                opts={{ align: "start", direction: "rtl", loop: sellerTestimonials.length > 3 }}
+                opts={{ align: "start", direction: "rtl", loop: sellerTestimonials.length > 2 }}
                 className="w-full"
                 plugins={[Autoplay({ delay: 5500, stopOnInteraction: true })]}
               >
                 <CarouselContent className="-ml-4 rtl:-mr-4">
                   {sellerTestimonials.map((testimonial) => (
                     <CarouselItem key={testimonial.id} className="basis-full md:basis-1/2 lg:basis-1/3 pl-4 rtl:pr-4 mb-4">
-                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col">
+                      <Card className="h-full bg-card border border-border shadow-lg rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl">
                         <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
                           <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
                             <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
@@ -759,8 +816,8 @@ export default function HomePage() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                 <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
-                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+                <CarouselPrevious className="absolute left-[-16px] rtl:right-[-16px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
+                <CarouselNext className="absolute right-[-16px] rtl:left-[-16px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 hover:bg-background text-foreground border border-border rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30 hidden lg:flex" />
               </Carousel>
             </TabsContent>
           </Tabs>
@@ -773,11 +830,11 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <Tabs defaultValue="buyer" className="w-full" dir="rtl">
             <TabsList className="grid w-full grid-cols-2 mb-10 bg-secondary rounded-xl p-1.5 shadow-inner">
-              <TabsTrigger value="buyer" className="text-base data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300">
+              <TabsTrigger value="buyer" className="text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300 ease-in-out">
                 <ShoppingBag className="w-5 h-5" />
                 سوالات خریداران
               </TabsTrigger>
-              <TabsTrigger value="seller" className="text-base data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-md rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300">
+              <TabsTrigger value="seller" className="text-base data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg py-2.5 flex items-center justify-center gap-2 transition-all duration-300 ease-in-out">
                 <UserCheck className="w-5 h-5" />
                 سوالات فروشندگان
               </TabsTrigger>
@@ -787,14 +844,14 @@ export default function HomePage() {
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {buyerFaqs.map((faq, index) => (
                   <AccordionItem value={`buyer-item-${index}`} key={`buyer-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
-                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group">
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group transition-colors duration-200">
                       <div className="flex items-center gap-3 w-full">
                         <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-12"/>
                         <span className="text-foreground flex-grow text-right">{faq.question}</span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0">
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0 py-2">
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -807,14 +864,14 @@ export default function HomePage() {
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {sellerFaqs.map((faq, index) => (
                   <AccordionItem value={`seller-item-${index}`} key={`seller-${index}`} className={cn("border-b last:border-b-0 border-border/70", index === 0 && "border-t-0")}>
-                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group">
+                    <AccordionTrigger className="text-right text-base font-medium hover:no-underline px-6 py-4 data-[state=open]:bg-primary/5 group transition-colors duration-200">
                       <div className="flex items-center gap-3 w-full">
                           <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-12"/>
                          <span className="text-foreground flex-grow text-right">{faq.question}</span>
                       </div>
                       </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0">
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0 py-2">
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -828,14 +885,14 @@ export default function HomePage() {
 
       {/* Quick Signup Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
-        <Card className="bg-gradient-to-br from-primary to-blue-700 dark:from-primary/80 dark:to-blue-900 text-primary-foreground shadow-xl border-none overflow-hidden">
+        <Card className="bg-gradient-to-br from-primary to-blue-700 dark:from-primary/80 dark:to-blue-900 text-primary-foreground shadow-xl border-none overflow-hidden rounded-xl">
           <div className="grid md:grid-cols-2 items-center">
-            <div className="p-8 md:p-12">
+            <div className="p-8 md:p-10 lg:p-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-md">
                 تو فقط ثبت‌نام کن، ما بهت یه گروه تخفیفی خاص می‌دیم! 🎁
               </h2>
               <p className="text-lg text-blue-100 dark:text-blue-200 mb-8 leading-relaxed drop-shadow-sm">
-                به جامعه بزرگ خریداران گروهی بپیوندید و از تخفیف‌های باورنکردنی بهره‌مند شوید.
+                به جامعه بزرگ خریداران گروهی بپیوندید و از تخفیف‌های باورنکردنی بهره‌مند شوید. ثبت نام سریع و آسان!
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/login" legacyBehavior>
@@ -864,14 +921,14 @@ export default function HomePage() {
                 </Button>
               </div>
             </div>
-            <div className="hidden md:flex justify-center items-center p-8 relative h-full min-h-[300px]">
+            <div className="hidden md:flex justify-center items-center p-8 relative h-full min-h-[300px] md:min-h-[400px]">
               <Image
-                src="https://placehold.co/400x400.png"
-                alt="ثبت نام سریع"
-                width={350}
-                height={350}
-                className="rounded-full object-cover shadow-2xl transform transition-transform duration-500 hover:scale-105"
-                data-ai-hint="signup mobile people group"
+                src="https://placehold.co/450x450.png"
+                alt="ثبت نام سریع و آسان"
+                width={400}
+                height={400}
+                className="rounded-full object-cover shadow-2xl transform transition-transform duration-500 hover:scale-105 border-4 border-white/20"
+                data-ai-hint="signup mobile people group celebration"
               />
                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-primary/30 md:bg-gradient-to-l md:from-primary/40 md:to-transparent opacity-50"></div>
             </div>
