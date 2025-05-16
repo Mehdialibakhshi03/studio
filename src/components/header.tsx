@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X, User, Heart, ShoppingCart, Phone, LifeBuoy, Building, Percent, Newspaper, Flame, HelpCircle, Store as StoreIconOriginal, ListChecks, PlusCircle, ShoppingBag } from 'lucide-react'; // Renamed Store to StoreIconOriginal
+import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X, User, Heart, ShoppingCart, Percent, Newspaper, Flame, HelpCircle, Store as StoreIconOriginal, ListChecks, PlusCircle, ShoppingBag, LifeBuoy } from 'lucide-react'; // Removed Phone, Building
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -25,9 +25,9 @@ import {
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from '@/components/ui/badge';
-import { groupShoppingCategories, mainNavLinks as dataMainNavLinks, type MegaMenuCategory } from '@/lib/data'; // Import new mega menu categories
+import { groupShoppingCategories, mainNavLinks as dataMainNavLinks, type MegaMenuCategory } from '@/lib/data';
 
-const StoreIcon = StoreIconOriginal; // Alias for clarity if needed, or use StoreIconOriginal directly
+const StoreIcon = StoreIconOriginal;
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -71,37 +71,11 @@ const Header = () => {
     // Add actual search logic here, e.g., router.push(`/search?q=${searchQuery}`)
   };
 
-  // Using the imported mainNavLinks from data.ts
   const mainNavLinks = dataMainNavLinks;
-
 
   return (
     <header className="bg-background shadow-sm sticky top-0 z-50 border-b border-border/80">
-      {/* Top Bar */}
-      <div className="bg-secondary/50">
-        <div className="container mx-auto px-4 h-10 flex items-center justify-between text-xs text-secondary-foreground">
-          <div className="flex items-center gap-4">
-            <Link href="/contact-us" className="hover:text-primary transition-colors flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5"/>
-              <span>پشتیبانی: ۰۲۱-۱۲۳۴۵۶۷۸</span>
-            </Link>
-            <Link href="/faq" className="hover:text-primary transition-colors hidden sm:flex items-center gap-1">
-              <HelpCircle className="w-3.5 h-3.5"/>
-              <span>سوالات متداول</span>
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-             <Link href="/seller/login" className="hover:text-primary transition-colors flex items-center gap-1">
-                <StoreIcon className="w-3.5 h-3.5"/>
-                <span>پنل فروشندگان</span>
-            </Link>
-             <Link href="/track-order" className="hover:text-primary transition-colors hidden sm:flex items-center gap-1">
-               <Building className="w-3.5 h-3.5"/> {/* Using Building as a placeholder for tracking */}
-               <span>پیگیری سفارش</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Top Bar Removed */}
 
       {/* Main Header */}
       <div className="container mx-auto px-4 py-3">
@@ -165,6 +139,11 @@ const Header = () => {
                              <StoreIcon className="w-4 h-4"/> می‌خوای کالا بفروشی؟ بیا اینجا
                            </Link>
                       </SheetClose>
+                      <SheetClose asChild>
+                           <Link href="/seller/login" className="text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-secondary block flex items-center gap-2">
+                             <LogIn className="w-4 h-4"/> پنل فروشندگان
+                           </Link>
+                      </SheetClose>
                   </nav>
                    <div className="p-4 border-t mt-auto space-y-3">
                       <SheetClose asChild>
@@ -177,7 +156,7 @@ const Header = () => {
                       </SheetClose>
                        <SheetClose asChild>
                          <Link href="/login" className="w-full">
-                             <Button variant="cta" className="w-full justify-center"> {/* Changed to cta */}
+                             <Button variant="cta" className="w-full justify-center">
                                <LogIn className="ml-2 rtl:mr-2 h-4 w-4" />
                                ورود کاربر
                              </Button>
@@ -233,9 +212,6 @@ const Header = () => {
             </Button>
              <Button variant="ghost" size="icon" className="relative transition-transform hover:scale-110 duration-300 text-muted-foreground hover:text-primary h-9 w-9">
               <Heart className="h-5 w-5" />
-               {/* Example badge for wishlist
-               <Badge variant="destructive" className="absolute -top-1 -right-1 rtl:-left-1 rtl:-right-auto h-4 w-4 min-w-4 p-0 flex items-center justify-center text-[10px] rounded-full">1</Badge> 
-               */}
                <span className="sr-only">علاقه‌مندی‌ها</span>
             </Button>
           </div>
@@ -243,8 +219,8 @@ const Header = () => {
       </div>
 
        <nav className="border-t border-border/60 bg-background hidden lg:block">
-         <div className="container mx-auto px-4 h-12 flex items-center justify-between"> {/* Added justify-between */}
-            <NavigationMenu dir="rtl" className="justify-start"> {/* Removed w-full */}
+         <div className="container mx-auto px-4 h-12 flex items-center justify-between">
+            <NavigationMenu dir="rtl" className="justify-start">
               <NavigationMenuList className="gap-0.5">
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className={cn(navigationMenuTriggerStyle(), "h-10 text-sm bg-transparent shadow-none border-none hover:bg-accent/10 text-foreground hover:text-primary px-3 py-2")}>
@@ -274,20 +250,26 @@ const Header = () => {
                              {link.icon && <link.icon className={cn("h-4 w-4", link.isCTA ? "text-accent-foreground" : "text-muted-foreground group-hover:text-primary", link.special && "text-destructive")}/>}
                              {link.ctaText || link.title}
                              {link.special && <Flame className="w-0 h-0 sm:w-4 sm:h-4 text-destructive animate-pulse inline-block ml-1"/>}
-                             {/* Chevron removed for simple links, kept for trigger */}
-                             {/* {!link.icon && !link.special && !link.isCTA && <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180 rtl:mr-1 rtl:ml-0 group-hover:opacity-0 invisible"/>} */}
                           </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                  ))}
               </NavigationMenuList>
             </NavigationMenu>
-             <Link href="/seller/register" passHref>
-              <Button variant="outline" size="sm" className="text-xs h-9 border-primary/50 text-primary hover:bg-primary/10 hover:border-primary">
-                <StoreIcon className="ml-1.5 rtl:mr-1.5 h-4 w-4" />
-                فروشنده شو!
-              </Button>
-            </Link>
+             <div className="flex items-center gap-2">
+                <Link href="/seller/register" passHref>
+                    <Button variant="outline" size="sm" className="text-xs h-9 border-primary/50 text-primary hover:bg-primary/10 hover:border-primary">
+                    <StoreIcon className="ml-1.5 rtl:mr-1.5 h-4 w-4" />
+                    فروشنده شو!
+                    </Button>
+                </Link>
+                <Link href="/seller/login" passHref>
+                    <Button variant="ghost" size="sm" className="text-xs h-9 text-primary hover:bg-primary/10">
+                        <LogIn className="ml-1.5 rtl:mr-1.5 h-4 w-4" />
+                        پنل فروشندگان
+                    </Button>
+                </Link>
+             </div>
          </div>
        </nav>
     </header>
