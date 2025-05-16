@@ -26,79 +26,78 @@ const RandomActivityToast: React.FC = () => {
   const [currentToast, setCurrentToast] = useState<ToastMessage | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [position, setPosition] = useState<'bottom-left' | 'bottom-right'>('bottom-right');
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const displayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const scheduleNextToastTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const displayDurationTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const exitAnimationTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearAllTimers = () => {
+    if (scheduleNextToastTimerRef.current) clearTimeout(scheduleNextToastTimerRef.current);
+    if (displayDurationTimerRef.current) clearTimeout(displayDurationTimerRef.current);
+    if (exitAnimationTimerRef.current) clearTimeout(exitAnimationTimerRef.current);
+  };
 
   const showRandomToast = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (displayTimerRef.current) clearTimeout(displayTimerRef.current);
+    clearAllTimers(); 
 
     const randomIndex = Math.floor(Math.random() * sampleMessages.length);
     const randomPosition = Math.random() < 0.5 ? 'bottom-left' : 'bottom-right';
     
     const newToast: ToastMessage = {
       ...sampleMessages[randomIndex],
-      id: new Date().toISOString() + Math.random(), // Unique ID
+      id: new Date().toISOString() + Math.random().toString(),
     };
 
     setCurrentToast(newToast);
     setPosition(randomPosition);
-    
-    // Trigger entry animation
     setIsVisible(true);
 
-    // Hide toast after some time
-    displayTimerRef.current = setTimeout(() => {
-      setIsVisible(false); // Trigger exit animation
-      // Schedule next toast after this one is hidden and animation completes
-      // Add a small delay for exit animation to complete before scheduling next toast
-      setTimeout(() => {
-         scheduleNextToast();
-      }, 500); // Assuming exit animation is around 300-500ms
-    }, 5000); // Display for 5 seconds
+    displayDurationTimerRef.current = setTimeout(() => {
+      setIsVisible(false); 
+
+      exitAnimationTimerRef.current = setTimeout(() => {
+        setCurrentToast(null); 
+        scheduleNextToast();   
+      }, 500); 
+    }, 5000); 
   };
 
   const scheduleNextToast = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    const randomDelay = Math.random() * (15000 - 7000) + 7000; // Between 7-15 seconds
-    timerRef.current = setTimeout(showRandomToast, randomDelay);
+    clearAllTimers();
+    const randomDelay = Math.random() * (15000 - 7000) + 7000; 
+    scheduleNextToastTimerRef.current = setTimeout(showRandomToast, randomDelay);
   };
 
   useEffect(() => {
-    scheduleNextToast(); // Start the cycle
+    scheduleNextToast(); 
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (displayTimerRef.current) clearTimeout(displayTimerRef.current);
+      clearAllTimers(); 
     };
-  }, []);
+  }, []); 
 
-  if (!currentToast) { // Don't render if no toast or if isVisible is false (to allow animation out)
+  if (!currentToast) { 
     return null;
   }
 
   const IconComponent = currentToast.icon;
 
   const animationClasses = isVisible 
-    ? `animate-in fade-in-75 ${position === 'bottom-left' ? 'slide-in-from-left-8 slide-in-from-bottom-8' : 'slide-in-from-right-8 slide-in-from-bottom-8'}`
-    : `animate-out fade-out-75 ${position === 'bottom-left' ? 'slide-out-to-left-8 slide-out-to-bottom-8' : 'slide-out-to-bottom-8 slide-out-to-right-8'}`;
-
+    ? `animate-in fade-in-75 ${position === 'bottom-left' ? 'slide-in-from-left-12' : 'slide-in-from-right-12'}`
+    : `animate-out fade-out-75 ${position === 'bottom-left' ? 'slide-out-to-left-12' : 'slide-out-to-right-12'}`;
 
   return (
     <div
+      key={currentToast.id} 
       className={cn(
         "fixed p-4 rounded-lg shadow-xl text-sm font-medium text-foreground bg-card border border-border z-[200]",
-        "max-w-xs w-full sm:w-auto duration-300 ease-out", // Adjusted duration
+        "max-w-xs w-full sm:w-auto duration-500 ease-out", 
         position === 'bottom-left' ? 'bottom-4 left-4 rtl:right-4 rtl:left-auto' : 'bottom-4 right-4 rtl:left-4 rtl:right-auto',
-        animationClasses,
-        !isVisible && 'opacity-0' // Ensure it's fully hidden after animation
+        animationClasses
       )}
-      style={{ animationFillMode: isVisible ? 'forwards' : 'forwards' }} // Keep final state of animation
+      style={{ animationFillMode: 'forwards' }} 
       role="alert"
       dir="rtl"
-      // Conditionally render based on currentToast to allow exit animation to complete
-      // Or manage this with a key on the div if multiple toasts can queue
-      key={currentToast.id} 
     >
       <div className="flex items-center gap-3">
         <IconComponent 
@@ -116,4 +115,3 @@ const RandomActivityToast: React.FC = () => {
 };
 
 export default RandomActivityToast;
-
