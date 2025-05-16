@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle, Eye, PartyPopper, PiggyBank, UtensilsCrossed, Plane } from 'lucide-react';
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store as StoreIcon, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle, Eye, PartyPopper, PiggyBank, UtensilsCrossed, Plane } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -146,7 +146,7 @@ export default function HomePage() {
                       {slide.ctas ? (
                         slide.ctas.map((cta, index) => (
                           <Link href={cta.link} key={index} legacyBehavior>
-                            <Button as="a" size="lg" variant={index === 0 ? 'cta' : cta.variant} className="text-base md:text-lg transition-transform hover:scale-105 duration-300 shadow-xl animate-fade-in animation-delay-400 w-full sm:w-auto px-8 py-3.5">
+                            <Button as="a" size="lg" variant={index === 0 ? 'cta' : cta.variant as any} className="text-base md:text-lg transition-transform hover:scale-105 duration-300 shadow-xl animate-fade-in animation-delay-400 w-full sm:w-auto px-8 py-3.5">
                               {cta.icon && <cta.icon className="ml-2 rtl:mr-2 h-5 w-5" />}
                               {cta.text}
                             </Button>
@@ -342,7 +342,7 @@ export default function HomePage() {
                     <span className="text-2xl md:text-3xl font-bold text-primary">{formatNumber(interactiveProductData.currentPrice)} <span className="text-sm">تومان</span></span>
                   </div>
                   {interactiveProductData.discountPercent > 0 && (
-                    <div className="flex justify-between items-baseline text-green-600 dark:text-green-400">
+                    <div className="flex justify-between items-baseline text-[hsl(var(--progress-indicator))]">
                       <span className="text-base font-medium">میزان تخفیف:</span>
                       <span className="text-lg font-bold">{interactiveProductData.discountPercent}٪ (معادل {formatNumber(interactiveProductOriginalPrice - interactiveProductData.currentPrice)} تومان)</span>
                     </div>
@@ -440,7 +440,7 @@ export default function HomePage() {
                     <div className="relative group">
                       <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                        <div className="relative bg-white/10 p-8 md:p-10 lg:p-12 rounded-full backdrop-blur-md shadow-2xl border-2 border-white/20">
-                           <Store className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 text-white opacity-80 transform transition-transform duration-500 group-hover:scale-110" />
+                           <StoreIcon className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 text-white opacity-80 transform transition-transform duration-500 group-hover:scale-110" />
                        </div>
                     </div>
                   </div>
@@ -807,7 +807,7 @@ export default function HomePage() {
                 خریداران
               </TabsTrigger>
               <TabsTrigger value="sellers" className="text-base data-[state=active]:shadow-md flex items-center gap-2 py-2.5">
-                <Store className="w-5 h-5" />
+                <StoreIcon className="w-5 h-5" />
                 فروشندگان
               </TabsTrigger>
             </TabsList>
