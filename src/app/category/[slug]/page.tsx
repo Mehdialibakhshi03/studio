@@ -32,7 +32,7 @@ import type { StaticImageData } from 'next/image';
 type PageParams = { slug: string };
 
 export default function CategoryPage() {
-  const params = React.use(useParams<PageParams>());
+  const params = useParams<PageParams>(); // Removed React.use()
   const categorySlug = params.slug;
   const { toast } = useToast();
 
