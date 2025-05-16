@@ -3,7 +3,7 @@
 
 import type { StaticImageData } from 'next/image';
 import type { LucideIcon } from 'lucide-react';
-import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop, Users, Search, Target, Eye, CreditCard, TrendingUp, Rocket, Link as LinkIcon, Users2, CheckCircle, ShoppingBasket } from 'lucide-react'; // Added for header links
+import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop, Users, Search, Target, Eye, CreditCard, TrendingUp, Rocket, Link as LinkIcon, Users2, CheckCircle, ShoppingBasket, ShoppingCart } from 'lucide-react'; // Added ShoppingCart and other icons
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -579,3 +579,4 @@ export const followedProductRequests: FollowedProductRequest[] = [
     categorySlug: 'home-appliances' 
   },
 ];
+
