@@ -15,7 +15,8 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { ShoppingCart, Users, Clock, Star, Filter, ListRestart, Tag, Package as PackageIcon } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ShoppingCart, Users, Clock, Star, Filter, ListRestart, Package as PackageIcon, MapPin, AlertTriangle } from 'lucide-react';
 import CountdownTimer from '@/components/countdown-timer';
 import {
   allGroupProducts,
@@ -32,7 +33,7 @@ import type { StaticImageData } from 'next/image';
 type PageParams = { slug: string };
 
 export default function CategoryPage() {
-  const params = useParams<PageParams>(); // Removed React.use()
+  const params = useParams<PageParams>();
   const categorySlug = params.slug;
   const { toast } = useToast();
 
@@ -46,8 +47,13 @@ export default function CategoryPage() {
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('popularity');
+  const [selectedLocation, setSelectedLocation] = useState<string>('all');
+  const [onlyUrgent, setOnlyUrgent] = useState<boolean>(false);
+  const [maxDaysRemaining, setMaxDaysRemaining] = useState<string>('');
+
 
   const [availableSellers, setAvailableSellers] = useState<Store[]>([]);
+  const [availableLocations, setAvailableLocations] = useState<string[]>([]);
 
   useEffect(() => {
     const currentCategory = categories.find(cat => cat.slug === categorySlug);
@@ -57,12 +63,19 @@ export default function CategoryPage() {
       setProducts(categoryProducts);
 
       // Extract unique sellers for this category
-      const sellerIdsInCateogry = new Set<number>();
+      const sellerIdsInCategory = new Set<number>();
       categoryProducts.forEach(p => {
         const store = allStores.find(s => s.products.some(sp => sp.id === p.id));
-        if(store) sellerIdsInCateogry.add(store.id);
+        if(store) sellerIdsInCategory.add(store.id);
       });
-      setAvailableSellers(allStores.filter(s => sellerIdsInCateogry.has(s.id)));
+      setAvailableSellers(allStores.filter(s => sellerIdsInCategory.has(s.id)));
+
+      // Extract unique locations for this category
+      const locationsInCategory = new Set<string>();
+      categoryProducts.forEach(p => {
+        if (p.location) locationsInCategory.add(p.location);
+      });
+      setAvailableLocations(Array.from(locationsInCategory));
 
     } else {
       notFound();
@@ -85,6 +98,30 @@ export default function CategoryPage() {
         tempProducts = tempProducts.filter(p => sellerProductIds.has(p.id));
       }
     }
+    
+    // Filter by location
+    if (selectedLocation !== 'all') {
+        tempProducts = tempProducts.filter(p => p.location === selectedLocation);
+    }
+
+    // Filter by urgent (ending in 24h)
+    if (onlyUrgent) {
+        tempProducts = tempProducts.filter(p => isEndingSoon(p.endDate));
+    }
+
+    // Filter by max days remaining
+    if (maxDaysRemaining) {
+        const maxDays = parseInt(maxDaysRemaining, 10);
+        if (!isNaN(maxDays) && maxDays >= 0) {
+            tempProducts = tempProducts.filter(p => {
+                if (!p.endDate) return false; // Or true, depending on desired behavior for no end date
+                const timeDiff = p.endDate.getTime() - new Date().getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                return daysRemaining >=0 && daysRemaining <= maxDays;
+            });
+        }
+    }
+
 
     // Filter by price range
     if (minPrice) {
@@ -112,7 +149,7 @@ export default function CategoryPage() {
     }
 
     setFilteredProducts(tempProducts);
-  }, [products, searchTerm, selectedSeller, minPrice, maxPrice, sortBy]);
+  }, [products, searchTerm, selectedSeller, minPrice, maxPrice, sortBy, selectedLocation, onlyUrgent, maxDaysRemaining]);
 
   const handleJoinClick = (title: string) => {
     toast({
@@ -128,6 +165,9 @@ export default function CategoryPage() {
     setMinPrice('');
     setMaxPrice('');
     setSortBy('popularity');
+    setSelectedLocation('all');
+    setOnlyUrgent(false);
+    setMaxDaysRemaining('');
   };
 
 
@@ -141,7 +181,7 @@ export default function CategoryPage() {
 
         {/* Filters Section */}
         <Card className="mb-8 p-4 md:p-6 bg-card shadow-md border border-border">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-end">
             <div>
               <Label htmlFor="search-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">جستجو در عنوان</Label>
               <Input
@@ -152,6 +192,20 @@ export default function CategoryPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-10"
               />
+            </div>
+             <div>
+              <Label htmlFor="location-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">مکان</Label>
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger id="location-filter" className="h-10">
+                  <SelectValue placeholder="همه مکان‌ها" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">همه مکان‌ها</SelectItem>
+                  {availableLocations.map(loc => (
+                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="seller-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">فروشنده</Label>
@@ -177,7 +231,21 @@ export default function CategoryPage() {
                 <Input id="max-price" type="number" placeholder="مثلا: ۵,۰۰۰,۰۰۰" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="h-10" />
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+             <div>
+                <Label htmlFor="max-days-remaining" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر روز مانده</Label>
+                <Input id="max-days-remaining" type="number" placeholder="مثلا: ۳" value={maxDaysRemaining} onChange={(e) => setMaxDaysRemaining(e.target.value)} className="h-10" />
+            </div>
+            <div className="flex items-center pt-5"> {/* Adjusted padding for alignment */}
+                <Checkbox
+                    id="urgent-filter"
+                    checked={onlyUrgent}
+                    onCheckedChange={(checked) => setOnlyUrgent(checked as boolean)}
+                />
+                <Label htmlFor="urgent-filter" className="mr-2 text-sm font-medium text-muted-foreground">
+                    فقط گروه‌های فوری (کمتر از ۲۴ ساعت)
+                </Label>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2 lg:col-span-2 xl:col-span-1"> {/* Adjusted span for responsiveness */}
                 <div className="flex-grow">
                     <Label htmlFor="sort-by" className="mb-1.5 block text-sm font-medium text-muted-foreground">مرتب سازی</Label>
                     <Select value={sortBy} onValueChange={setSortBy}>
@@ -214,6 +282,12 @@ export default function CategoryPage() {
                      <Badge variant="outline" className="absolute top-3 left-3 bg-background/80">
                       {getCategoryNameBySlug(item.category)}
                     </Badge>
+                    {item.location && (
+                        <Badge variant="secondary" className="absolute bottom-3 left-3 flex items-center bg-background/80 text-xs">
+                           <MapPin className="w-3 h-3 ml-1 rtl:mr-1"/>
+                           {item.location}
+                        </Badge>
+                    )}
                     {item.isIranian && (
                        <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
                         <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
@@ -294,3 +368,4 @@ export default function CategoryPage() {
     </div>
   );
 }
+

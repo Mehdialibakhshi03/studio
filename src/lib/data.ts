@@ -50,6 +50,7 @@ export interface GroupPurchaseItem {
   recentMembers?: RecentMember[];
   isPackage?: boolean;
   packageContents?: PackageContent[];
+  location?: string; // New field for location
 }
 
 export const groupPurchases: GroupPurchaseItem[] = [
@@ -66,6 +67,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     category: 'digital',
     isFeatured: true,
     aiHint: 'smartphone samsung galaxy',
+    location: 'تهران، منطقه ۱',
     variations: [
         { type: 'رنگ', options: ['مشکی', 'نقره‌ای', 'بنفش', 'کرم'] },
         { type: 'حافظه', options: ['256GB', '512GB'] },
@@ -91,6 +93,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     category: 'food',
     isIranian: true,
     aiHint: 'sunflower oil bottle',
+    location: 'شیراز، مرکز شهر',
     isPackage: true,
     packageContents: [
       { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
@@ -115,6 +118,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     category: 'home-appliances',
     isIranian: true,
     aiHint: 'washing machine snowa',
+    location: 'اصفهان، شاهین شهر',
     variations: [
         { type: 'رنگ', options: ['سفید', 'نقره‌ای'] },
     ],
@@ -136,6 +140,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     endDate: getFutureDate(1),
     category: 'food',
     aiHint: 'lamb meat package',
+    location: 'تهران، منطقه ۵',
     isPackage: true,
     packageContents: [
       { name: 'گوشت ران گوسفندی', quantity: '۱ کیلوگرم' },
@@ -160,6 +165,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     endDate: getFutureDate(5),
     category: 'digital',
     aiHint: 'smartphone xiaomi poco',
+    location: 'کرج، گوهردشت',
      recentMembers: [
       { name: 'CV', avatar: 'https://placehold.co/40x40.png' },
       { name: 'BN', avatar: 'https://placehold.co/40x40.png' },
@@ -179,6 +185,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     isIranian: true,
     isFeatured: true,
     aiHint: 'saffron spice box',
+    location: 'مشهد، طرقبه',
     recentMembers: [
         { name: 'AS', avatar: 'https://placehold.co/40x40.png' },
         { name: 'DF', avatar: 'https://placehold.co/40x40.png' },
@@ -197,6 +204,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     endDate: getFutureDate(2),
     category: 'digital',
     aiHint: 'smart tv lg living room',
+    location: 'تهران، منطقه ۲',
     recentMembers: [
         { name: 'ZX', avatar: 'https://placehold.co/40x40.png' },
         { name: 'CV', avatar: 'https://placehold.co/40x40.png' },
@@ -216,6 +224,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     isIranian: true,
     isFeatured: true,
     aiHint: 'persian carpet detail',
+    location: 'کاشان',
     recentMembers: [
         { name: 'QW', avatar: 'https://placehold.co/40x40.png' },
     ],
@@ -233,6 +242,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
     category: 'food',
     isIranian: true,
     aiHint: 'gaz candy box',
+    location: 'اصفهان، مرکز شهر',
      recentMembers: [
       { name: 'PL', avatar: 'https://placehold.co/40x40.png' },
       { name: 'OK', avatar: 'https://placehold.co/40x40.png' },
@@ -279,10 +289,10 @@ export const stores: Store[] = [
     aiHint: "city mega store logo",
     offersInstallments: true,
     products: [
-      { ...groupPurchases.find(p => p.id === 2)!, id: 201, endDate: getFutureDate(1, 12) },
-      { ...groupPurchases.find(p => p.id === 4)!, id: 202, endDate: getFutureDate(2) },
-      { ...groupPurchases.find(p => p.id === 8)!, id: 203, endDate: getFutureDate(4, 5) },
-      { ...groupPurchases.find(p => p.id === 5)!, id: 204, endDate: getFutureDate(0, 10) },
+      { ...groupPurchases.find(p => p.id === 2)!, id: 201, endDate: getFutureDate(1, 12), location: 'شیراز، مرکز شهر' },
+      { ...groupPurchases.find(p => p.id === 4)!, id: 202, endDate: getFutureDate(2), location: 'تهران، منطقه ۵' },
+      { ...groupPurchases.find(p => p.id === 8)!, id: 203, endDate: getFutureDate(4, 5), location: 'اصفهان، مرکز شهر' },
+      { ...groupPurchases.find(p => p.id === 5)!, id: 204, endDate: getFutureDate(0, 10), location: 'مشهد، طرقبه' },
     ].filter(Boolean) as GroupPurchaseItem[], // Filter out undefined if find fails
   },
   {
@@ -292,9 +302,9 @@ export const stores: Store[] = [
     aiHint: "sun hypermarket logo",
     offersInstallments: false,
     products: [
-      { ...groupPurchases.find(p => p.id === 1)!, id: 301, endDate: getFutureDate(0, 2) },
-      { ...groupPurchases.find(p => p.id === 6)!, id: 302, endDate: getFutureDate(3) },
-      { ...groupPurchases.find(p => p.id === 9)!, id: 303, endDate: getFutureDate(1, 1) },
+      { ...groupPurchases.find(p => p.id === 1)!, id: 301, endDate: getFutureDate(0, 2), location: 'تهران، منطقه ۱' },
+      { ...groupPurchases.find(p => p.id === 6)!, id: 302, endDate: getFutureDate(3), location: 'تهران، منطقه ۲' },
+      { ...groupPurchases.find(p => p.id === 9)!, id: 303, endDate: getFutureDate(1, 1), location: 'کرج، گوهردشت' },
     ].filter(Boolean) as GroupPurchaseItem[],
   },
   {
@@ -304,10 +314,10 @@ export const stores: Store[] = [
     aiHint: "luxury home living logo",
     offersInstallments: true,
     products: [
-      { ...groupPurchases.find(p => p.id === 3)!, id: 401, endDate: getFutureDate(2, 18) },
-      { ...groupPurchases.find(p => p.id === 7)!, id: 402, endDate: getFutureDate(1) },
-      { ...groupPurchases.find(p => p.id === 5)!, id: 403, endDate: getFutureDate(0, 5) }, // Using item 5 again, ID 403
-      { ...groupPurchases.find(p => p.id === 8)!, id: 404, endDate: getFutureDate(4) }, // Using item 8 again, ID 404
+      { ...groupPurchases.find(p => p.id === 3)!, id: 401, endDate: getFutureDate(2, 18), location: 'اصفهان، شاهین شهر' },
+      { ...groupPurchases.find(p => p.id === 7)!, id: 402, endDate: getFutureDate(1), location: 'کاشان' },
+      { ...groupPurchases.find(p => p.id === 5)!, id: 403, endDate: getFutureDate(0, 5), location: 'مشهد، طرقبه' }, // Using item 5 again, ID 403
+      { ...groupPurchases.find(p => p.id === 8)!, id: 404, endDate: getFutureDate(4), location: 'اصفهان، مرکز شهر' }, // Using item 8 again, ID 404
     ].filter(Boolean) as GroupPurchaseItem[],
   },
 ];
