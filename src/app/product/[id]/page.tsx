@@ -1,11 +1,11 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react'; // Import React
-import { notFound } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation'; // Import useParams
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store } from 'lucide-react'; // Added more icons
-import { groupPurchases, stores } from '@/app/page'; // Import the sample data including stores
+import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store } from 'lucide-react';
+import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data'; // Import from centralized data file
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Button } from '@/components/ui/button';
@@ -23,30 +23,22 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Link from 'next/link';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import Radio Group
-import { Label } from "@/components/ui/label"; // Import Label
-import { cn } from "@/lib/utils"; // Import cn for conditional class names
-import { Separator } from '@/components/ui/separator'; // Import Separator
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip" // Import Tooltip components
-import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
+} from "@/components/ui/tooltip"
+import CountdownTimer from '@/components/countdown-timer';
+import type { GroupPurchaseItem } from '@/lib/data';
 
-// Helper function to find product by ID
-const getProductById = (id: number) => {
-  // Find in main groupPurchases
-  let product = groupPurchases.find(product => product.id === id);
-  if (product) return product;
-
-  // Find within store products if not found in main list
-  for (const store of stores) {
-      product = store.products.find(p => p.id === id);
-      if (product) return product;
-  }
-  return undefined; // Return undefined if not found anywhere
+// Helper function to find product by ID from allGroupProducts
+const getProductById = (id: number): GroupPurchaseItem | undefined => {
+  return allGroupProducts.find(product => product.id === id);
 };
 
 // Helper function to find the store that sells a specific product ID
@@ -59,42 +51,21 @@ const getStoreByProductId = (productId: number) => {
     return null;
 };
 
-
-// Helper function to format numbers with Persian commas
-const formatNumber = (num: number | undefined) => {
-  if (num === undefined || num === null) return '';
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
 // Sample related products (adjust logic if needed)
-const getRelatedProducts = (currentProductId: number, category?: string) => {
-  const allProducts = [...groupPurchases, ...stores.flatMap(s => s.products)];
-  const uniqueProducts = Array.from(new Map(allProducts.map(p => [p.id, p])).values()); // Ensure uniqueness
-
-  return uniqueProducts
-    .filter(p => p.id !== currentProductId && (category ? p.category === category : true))
-    .slice(0, 8); // Get up to 8 related products
+const getRelatedProducts = (currentProductId: number, categorySlug?: string) => {
+  return allGroupProducts
+    .filter(p => p.id !== currentProductId && (categorySlug ? p.category === categorySlug : true))
+    .slice(0, 8);
 };
 
+// Define the type for the params using React.use
+type PageParams = { id: string };
 
-// Check if the deal ends within 24 hours
-const isEndingSoon = (endDate: Date | undefined): boolean => {
-    if (!endDate) return false;
-    const now = new Date();
-    const timeDiff = endDate.getTime() - now.getTime();
-    const hoursRemaining = timeDiff / (1000 * 60 * 60);
-    return hoursRemaining > 0 && hoursRemaining <= 24;
-};
-
-
-// Define the type for the params promise
-type ParamsPromise = { id: string };
-
-export default function ProductDetailPage({ params }: { params: ParamsPromise }) {
-  const resolvedParams = React.use(params); // Unwrap the promise
-  const productId = parseInt(resolvedParams.id, 10); // Access id from resolved params
+export default function ProductDetailPage() {
+  const params = React.use(useParams<PageParams>()); // Correctly use useParams and React.use
+  const productId = parseInt(params.id, 10);
   const product = getProductById(productId);
-  const store = getStoreByProductId(productId); // Find the store selling this product
+  const store = getStoreByProductId(productId);
   const { toast } = useToast();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -102,76 +73,64 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
   const [selectedVariations, setSelectedVariations] = useState<{ [key: string]: string }>({});
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
-  const [viewers, setViewers] = useState(0); // State for simulated viewers
-  const [showPurchasedRecently, setShowPurchasedRecently] = useState(false); // State for Math.random based UI
-  const [purchasedCount, setPurchasedCount] = useState(0); // State for random number
+  const [viewers, setViewers] = useState(0);
+  const [showPurchasedRecently, setShowPurchasedRecently] = useState(false);
+  const [purchasedCount, setPurchasedCount] = useState(0);
 
-  // Simulate dynamic viewer count and random purchase count
   useEffect(() => {
-    // Run only on client after hydration
-    const randomViewers = Math.floor(Math.random() * 30) + 5; // 5 to 35 viewers
+    const randomViewers = Math.floor(Math.random() * 30) + 5;
     setViewers(randomViewers);
-
-    // Decide if "purchased recently" badge should be shown
-    const shouldShow = Math.random() > 0.6; // Slightly less frequent
+    const shouldShow = Math.random() > 0.6;
     setShowPurchasedRecently(shouldShow);
     if (shouldShow) {
-      setPurchasedCount(Math.floor(Math.random() * 10) + 3); // 3 to 12
+      setPurchasedCount(Math.floor(Math.random() * 10) + 3);
     }
-
     const interval = setInterval(() => {
-      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); // Fluctuate viewer count
-    }, 7000); // Update every 7 seconds
-
+      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2));
+    }, 7000);
     return () => clearInterval(interval);
-  }, []); // Empty dependency array ensures this runs once on mount
-
+  }, []);
 
   useEffect(() => {
     if (product) {
-      setSelectedImage(product.image);
-      // Set initial selected variations if they exist
+      setSelectedImage(product.image as string);
       if (product.variations) {
         const initialSelections: { [key: string]: string } = {};
         product.variations.forEach(variation => {
-          initialSelections[variation.type] = variation.options[0]; // Default to first option
+          initialSelections[variation.type] = variation.options[0];
         });
         setSelectedVariations(initialSelections);
       }
 
-       // Animate progress bar and determine status
       const targetProgress = product.requiredMembers > 0 ? (product.members / product.requiredMembers) * 100 : 0;
       let currentProgress = 0;
       const progressInterval = setInterval(() => {
-        currentProgress += 2; // Faster animation
+        currentProgress += 2;
         if (currentProgress >= targetProgress) {
           setProgressValue(targetProgress);
           clearInterval(progressInterval);
         } else {
           setProgressValue(currentProgress);
         }
-      }, 30); // Adjust speed as needed
+      }, 30);
 
-      // Determine group status based on members and time
       const now = new Date();
       if (product.members >= product.requiredMembers) {
           setGroupStatus('completed');
-      } else if (product.endDate && product.endDate < now) { // Check if endDate has passed
+      } else if (product.endDate && product.endDate < now) {
           setGroupStatus('failed');
-      } else if (targetProgress > 75) { // Higher threshold for 'filling'
+      } else if (targetProgress > 75) {
           setGroupStatus('filling');
       } else {
           setGroupStatus('active');
       }
 
-
       return () => clearInterval(progressInterval);
-
     }
   }, [product]);
 
   if (!product) {
-    notFound(); // Show 404 if product not found
+    notFound();
   }
 
   const handleVariationChange = (type: string, value: string) => {
@@ -182,20 +141,18 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
     console.log(`Joining group buy for ${product.title} with quantity ${quantity} and variations:`, selectedVariations);
     toast({
       title: "با موفقیت اضافه شد!",
-      description: `${quantity} عدد از محصول ${product.title} به سبد خرید شما اضافه شد.`,
+      description: `${quantity} عدد از محصول ${product.title} به گروه شما اضافه شد.`,
     });
-    // Add logic to actually add to cart/group
   };
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
 
-   // Using picsum for more variety
    const galleryImages = [
-    product.image,
-    `https://picsum.photos/seed/${product.id + 10}/500/500`,
-    `https://picsum.photos/seed/${product.id + 20}/500/500`,
-    `https://picsum.photos/seed/${product.id + 30}/500/500`,
+    product.image as string,
+    `https://placehold.co/500x500.png?text=${product.id + 10}`,
+    `https://placehold.co/500x500.png?text=${product.id + 20}`,
+    `https://placehold.co/500x500.png?text=${product.id + 30}`,
   ];
 
    const getStatusInfo = () => {
@@ -205,11 +162,11 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
       case 'failed':
         return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600" };
       case 'filling':
-        return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-600 animate-pulse" }; // Added pulse animation
+        return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-600 animate-pulse" };
       case 'active':
       default:
         const remaining = product.requiredMembers - product.members;
-        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!`, icon: Users2, color: "text-blue-600" }; // Changed icon and text
+        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!`, icon: Users2, color: "text-blue-600" };
     }
   };
 
@@ -221,9 +178,8 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header />
 
-      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12"> {/* Added lg/xl padding */}
+      <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          {/* Product Images (Left Column in RTL, spanning 2 cols) */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg border border-border">
               {selectedImage && (
@@ -233,14 +189,13 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                   fill
                   className="object-cover transition-transform duration-300 hover:scale-105"
                   data-ai-hint={product.aiHint || 'product image'}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw" // Adjusted sizes
-                  priority // Prioritize loading the main image
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                  priority
                 />
               )}
-              <Badge variant="destructive" className="absolute top-4 left-4 text-lg px-3 py-1 shadow-md"> {/* Adjusted position */}
+              <Badge variant="destructive" className="absolute top-4 left-4 text-lg px-3 py-1 shadow-md">
                 {product.discount}٪ تخفیف
               </Badge>
-                 {/* Social Proof: Viewers */}
                  {viewers > 0 && (
                     <div className="absolute bottom-4 left-4 bg-black/60 text-white px-2.5 py-1 rounded-md text-xs flex items-center gap-1.5 backdrop-blur-sm shadow">
                         <Eye className="w-3.5 h-3.5"/>
@@ -248,7 +203,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                     </div>
                  )}
             </div>
-            {/* Image Gallery Thumbnails */}
             <div className="grid grid-cols-4 gap-3">
               {galleryImages.map((img, index) => (
                 <button
@@ -266,23 +220,21 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                     fill
                     className="object-cover"
                     sizes="10vw"
-                    loading="lazy" // Lazy load thumbnails
+                    loading="lazy"
                   />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Product Details (Right Columns in RTL, spanning 3 cols) */}
           <div className="lg:col-span-3 flex flex-col space-y-6">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
-            {/* Badges and Rating */}
             <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="outline">{getCategoryNameBySlug(product.category)}</Badge>
+              <Badge variant="outline">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
-                  <Image src="https://picsum.photos/seed/iranflag/20/20" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
+                  <Image src="https://placehold.co/20x20.png" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
                   تولید ایران
                 </Badge>
               )}
@@ -294,9 +246,8 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
               )}
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                <span>۴.۵ (۱۲۰ رأی)</span> {/* Sample Rating */}
+                <span>۴.۵ (۱۲۰ رأی)</span>
               </div>
-               {/* Social Proof: Purchased Recently (Client-side rendered) */}
                {showPurchasedRecently && purchasedCount > 0 && (
                  <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50 dark:bg-green-900/30 animate-pulse">
                     🔥 {purchasedCount} نفر در ساعت گذشته خریدند
@@ -304,7 +255,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                )}
             </div>
 
-             {/* Seller Info Card */}
             {store && (
                  <Card className="bg-secondary/40 border-border shadow-sm">
                    <CardHeader className="flex flex-row items-center gap-4 p-4">
@@ -330,7 +280,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                  </Card>
              )}
 
-            {/* Package Contents */}
              {product.isPackage && product.packageContents && (
               <Card className="bg-secondary/50 border-border shadow-sm">
                 <CardHeader className="pb-2 pt-4">
@@ -351,7 +300,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
               </Card>
             )}
 
-             {/* Variations Selection */}
             {product.variations && product.variations.length > 0 && (
               <div className="space-y-5 border-t border-border pt-6">
                 {product.variations.map((variation) => (
@@ -361,15 +309,15 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                       dir="rtl"
                       value={selectedVariations[variation.type]}
                       onValueChange={(value) => handleVariationChange(variation.type, value)}
-                      className="flex flex-wrap gap-3" // Increased gap
+                      className="flex flex-wrap gap-3"
                     >
                       {variation.options.map((option) => (
                         <Label
                           key={option}
                           htmlFor={`${variation.type}-${option}`}
                           className={cn(
-                            "cursor-pointer rounded-md border border-input px-4 py-2 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:shadow-md", // Added shadow on check
-                            "bg-background hover:bg-accent/50 hover:border-primary/50" // Subtle hover
+                            "cursor-pointer rounded-md border border-input px-4 py-2 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
+                            "bg-background hover:bg-accent/50 hover:border-primary/50"
                           )}
                         >
                           <RadioGroupItem
@@ -386,7 +334,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
               </div>
             )}
 
-            {/* Price Section */}
             <div className="space-y-2 border-t border-border pt-6">
               <div className="flex items-baseline gap-4">
                 <span className="text-3xl font-bold text-primary">{formatNumber(product.groupPrice)} <span className="text-base font-normal">تومان</span></span>
@@ -399,7 +346,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                )}
             </div>
 
-            {/* Group Buy Progress */}
             <div className="space-y-4 border-t border-border pt-6">
               <h3 className="text-lg font-semibold text-foreground">وضعیت خرید گروهی</h3>
               <div className="flex justify-between text-sm text-muted-foreground items-center">
@@ -431,19 +377,17 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                       </div>
                   )}
               </div>
-               {/* Animated Progress Bar */}
               <Progress value={progressValue} className="h-2.5 [&>div]:transition-all [&>div]:duration-500 [&>div]:ease-out rounded-full" />
               <div className={`flex items-center justify-center gap-1.5 text-sm font-medium mt-2 ${statusInfo.color}`}>
                  <statusInfo.icon className="h-5 w-5" />
                  <span>{statusInfo.text}</span>
               </div>
 
-               {/* Recent Members - Enhanced */}
                 {product.recentMembers && product.recentMembers.length > 0 && (
                   <div className="mt-5 pt-4 border-t border-border/50">
                     <p className="text-sm font-medium text-muted-foreground mb-3">آخرین اعضا پیوسته به گروه:</p>
                     <div className="flex -space-x-2 rtl:space-x-reverse overflow-hidden">
-                      {product.recentMembers.slice(0, 7).map((member, index) => ( // Show up to 7
+                      {product.recentMembers.slice(0, 7).map((member, index) => (
                         <TooltipProvider key={index} delayDuration={100}>
                            <Tooltip>
                              <TooltipTrigger asChild>
@@ -477,9 +421,7 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                 )}
             </div>
 
-            {/* Actions (Quantity, Add to Cart, Wishlist, Share) */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-t border-border pt-6">
-              {/* Quantity Selector */}
                <div className="flex items-center border border-input rounded-md h-12 shadow-sm">
                  <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-full w-12 rounded-l-md rounded-r-none border-l border-input text-muted-foreground hover:bg-secondary">
                    <ChevronRight className="h-5 w-5" />
@@ -490,13 +432,11 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                  </Button>
                </div>
 
-              {/* Add to Cart/Join Group Button */}
               <Button size="lg" onClick={handleJoinClick} className="flex-grow w-full sm:w-auto transition-transform hover:scale-[1.02] duration-300 h-12 shadow-md" disabled={groupStatus === 'completed' || groupStatus === 'failed'}>
                  <ShoppingCart className="h-5 w-5 ml-2 rtl:mr-2" />
-                 {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه و افزودن به سبد'}
+                 {groupStatus === 'completed' || groupStatus === 'failed' ? 'گروه بسته شد' : 'پیوستن به گروه'}
                </Button>
 
-              {/* Wishlist and Share Buttons */}
               <div className="flex gap-2">
                  <TooltipProvider delayDuration={100}>
                      <Tooltip>
@@ -527,7 +467,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
           </div>
         </div>
 
-        {/* Product Tabs (Description, Reviews, Details, Shipping/Returns) */}
         <div className="mt-16 md:mt-20">
            <Tabs defaultValue="description" className="w-full" dir="rtl">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-secondary rounded-lg p-1 shadow-sm">
@@ -537,7 +476,6 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
               <TabsTrigger value="shipping" className="text-base data-[state=active]:shadow-md">ارسال و بازگشت</TabsTrigger>
             </TabsList>
 
-            {/* Description Tab */}
             <TabsContent value="description" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm text-foreground">
               <h3 className="text-xl font-semibold mb-5">معرفی محصول</h3>
               <article className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-muted-foreground leading-relaxed space-y-4">
@@ -559,13 +497,12 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
               </article>
             </TabsContent>
 
-             {/* Details Tab */}
             <TabsContent value="details" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
                <h3 className="text-xl font-semibold mb-6 text-foreground">مشخصات فنی</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">برند:</span>
-                       <span className="font-medium text-foreground">{product.title.split(' ')[0]}</span> {/* Example: Extract brand */}
+                       <span className="font-medium text-foreground">{product.title.split(' ')[0]}</span>
                    </div>
                    {product.variations?.find(v => v.type === 'رنگ') && (
                      <div className="flex justify-between border-b border-border/70 pb-2">
@@ -583,17 +520,16 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                    </div>
                      <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">ابعاد:</span>
-                       <span className="font-medium text-foreground text-left" dir="ltr">15 x 8 x 1 cm</span> {/* Sample data */}
+                       <span className="font-medium text-foreground text-left" dir="ltr">15 x 8 x 1 cm</span>
                    </div>
                     <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">وزن:</span>
-                       <span className="font-medium text-foreground">۱۸۰ گرم</span> {/* Sample data */}
+                       <span className="font-medium text-foreground">۱۸۰ گرم</span>
                    </div>
                     <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">کد محصول:</span>
                        <span className="font-medium text-foreground font-mono">KG-{product.id.toString().padStart(5, '0')}</span>
                    </div>
-                   {/* Add more specifications dynamically if available */}
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">سال عرضه:</span>
                        <span className="font-medium text-foreground">۲۰۲۴</span>
@@ -601,17 +537,15 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                </div>
             </TabsContent>
 
-             {/* Reviews Tab */}
             <TabsContent value="reviews" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
                 <h3 className="text-xl font-semibold mb-4 md:mb-0 text-foreground">نظرات کاربران ({product.recentMembers?.length ?? 0 + 5})</h3>
                 <Button> <MessageSquare className="w-4 h-4 ml-2"/> ثبت نظر جدید</Button>
               </div>
               <div className="space-y-8">
-                {/* Sample Review 1 */}
                 <div className="flex gap-4 border-b border-border/70 pb-6">
                    <Avatar className="mt-1">
-                     <AvatarImage src="https://picsum.photos/seed/userRev1/40/40" alt="کاربر ۱" />
+                     <AvatarImage src="https://placehold.co/40x40.png?text=AR" alt="کاربر ۱" />
                      <AvatarFallback>ع ر</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
@@ -635,10 +569,9 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                        </div>
                    </div>
                 </div>
-                 {/* Sample Review 2 */}
                 <div className="flex gap-4 border-b border-border/70 pb-6">
                    <Avatar className="mt-1">
-                     <AvatarImage src="https://picsum.photos/seed/userRev2/40/40" alt="کاربر ۲" />
+                     <AvatarImage src="https://placehold.co/40x40.png?text=MA" alt="کاربر ۲" />
                      <AvatarFallback>م ا</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
@@ -659,12 +592,10 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                        </div>
                    </div>
                 </div>
-                 {/* Placeholder for more reviews */}
                  <div className="text-center text-muted-foreground py-4">نظرات بیشتری بارگذاری خواهد شد...</div>
               </div>
             </TabsContent>
 
-            {/* Shipping & Returns Tab */}
              <TabsContent value="shipping" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
                <h3 className="text-xl font-semibold mb-6 text-foreground">اطلاعات ارسال و بازگشت کالا</h3>
                <div className="space-y-6 text-muted-foreground text-sm">
@@ -697,12 +628,9 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                    </div>
                </div>
              </TabsContent>
-
           </Tabs>
         </div>
 
-
-        {/* Related Products */}
         <div className="mt-16 md:mt-20">
           <h2 className="text-3xl font-bold mb-10 text-center text-foreground">محصولات مشابه و پیشنهادی</h2>
            <Carousel
@@ -719,11 +647,10 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
                      <Link href={`/product/${relatedProduct.id}`} className="block h-full">
                       <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-card">
                         <CardHeader className="p-0 relative aspect-[4/3]">
-                          <Image src={relatedProduct.image} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint}/>
+                          <Image src={relatedProduct.image as string} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint}/>
                           <Badge variant="destructive" className="absolute top-3 left-3">
                             {relatedProduct.discount}٪ تخفیف
                           </Badge>
-                           {/* Removed Add to Cart button from related product hover */}
                         </CardHeader>
                         <CardContent className="p-3 flex-grow flex flex-col">
                           <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{relatedProduct.title}</h5>
@@ -767,20 +694,4 @@ export default function ProductDetailPage({ params }: { params: ParamsPromise })
       <Footer />
     </div>
   );
-}
-
-
-// Helper function to get category name by slug
-const getCategoryNameBySlug = (slug: string | undefined) => {
-    const categories = [
-      { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital' },
-      { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food' },
-      { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances' },
-      { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion' },
-      { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health' },
-      { id: 6, name: 'خانه و دکوراسیون', icon: '🛋️', slug: 'home-decor' },
-      { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools' },
-      { id: 8, name: 'سایر', icon: '📦', slug: 'other' }
-    ];
-    return categories.find(cat => cat.slug === slug)?.name || slug || 'دسته بندی';
 }

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2 } from 'lucide-react'; // Import necessary icons, added LinkIcon, Users2
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,399 +10,37 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
-import Link from 'next/link'; // Import Link
-import Header from '@/components/header'; // Import Header component
-import Footer from '@/components/footer'; // Import Footer component
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"; // Import Carousel and types
-import Autoplay from "embla-carousel-autoplay"; // Import Autoplay plugin
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Import Avatar
-import CountdownTimer from '@/components/countdown-timer'; // Import CountdownTimer
-import { cn } from '@/lib/utils'; // Import cn for conditional classnames
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs
-
-// Helper function to create future dates for consistent testing
-const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    date.setHours(date.getHours() + hours);
-    date.setMinutes(date.getMinutes() + minutes);
-    return date;
-};
-
-// Define hero slides data
-const heroSlides = [
-    { id: 1, image: 'https://picsum.photos/seed/hero1navy/1200/400', alt: 'اسلاید اول', title: 'با هم بخرید و تخفیف بگیرید!', description: 'هرچه تعداد بیشتر، قیمت کمتر!', link: '#', aiHint: 'group shopping people illustration' },
-    { id: 2, image: 'https://picsum.photos/seed/hero2navy/1200/400', alt: 'اسلاید دوم', title: 'جشنواره کالاهای ایرانی', description: 'تخفیف‌های ویژه برای حمایت از تولید ملی', link: '#', aiHint: 'iranian products promotion sale' },
-    { id: 3, image: 'https://picsum.photos/seed/hero3navy/1200/400', alt: 'اسلاید سوم', title: 'لوازم دیجیتال با بهترین قیمت', description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی', link: '#', aiHint: 'digital gadgets sale offer' },
-];
-
-
-// تعریف داده‌های نمونه برای خریدهای گروهی - Updated with endDate
-const groupPurchases = [
-  {
-    id: 1,
-    title: 'گوشی سامسونگ Galaxy S24',
-    image: 'https://picsum.photos/seed/1navy/300/200',
-    originalPrice: 45000000,
-    groupPrice: 39500000,
-    discount: 12,
-    members: 18,
-    requiredMembers: 25,
-    endDate: getFutureDate(2, 6), // Ends in 2 days, 6 hours
-    category: 'digital',
-    isFeatured: true,
-    aiHint: 'smartphone samsung galaxy',
-    variations: [
-        { type: 'رنگ', options: ['مشکی', 'نقره‌ای', 'بنفش', 'کرم'] },
-        { type: 'حافظه', options: ['256GB', '512GB'] },
-    ],
-    recentMembers: [
-      { name: 'AR', avatar: 'https://picsum.photos/seed/user10navy/40/40' },
-      { name: 'ZM', avatar: 'https://picsum.photos/seed/user11navy/40/40' },
-      { name: 'HN', avatar: 'https://picsum.photos/seed/user12navy/40/40' },
-      { name: 'FK', avatar: 'https://picsum.photos/seed/user13navy/40/40' },
-      { name: 'MJ', avatar: 'https://picsum.photos/seed/user14navy/40/40' },
-    ],
-  },
-  {
-    id: 2,
-    title: 'روغن آفتابگردان لادن ۱ لیتری (بسته ۳ عددی)',
-    image: 'https://picsum.photos/seed/2navy/300/200',
-    originalPrice: 580000,
-    groupPrice: 435000,
-    discount: 25,
-    members: 42,
-    requiredMembers: 50,
-    endDate: getFutureDate(0, 12, 30), // Ends in 12 hours, 30 minutes
-    category: 'food',
-    isIranian: true,
-    aiHint: 'sunflower oil bottle',
-    isPackage: true,
-    packageContents: [
-      { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
-      { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
-      { name: 'روغن آفتابگردان لادن', quantity: '۱ لیتر' },
-    ],
-    recentMembers: [
-      { name: 'SA', avatar: 'https://picsum.photos/seed/user20navy/40/40' },
-      { name: 'BN', avatar: 'https://picsum.photos/seed/user21navy/40/40' },
-    ],
-  },
-  {
-    id: 3,
-    title: 'ماشین لباسشویی اسنوا ۸ کیلویی',
-    image: 'https://picsum.photos/seed/3navy/300/200',
-    originalPrice: 28500000,
-    groupPrice: 24225000,
-    discount: 15,
-    members: 8,
-    requiredMembers: 15,
-    endDate: getFutureDate(3), // Ends in 3 days
-    category: 'home-appliances',
-    isIranian: true,
-    aiHint: 'washing machine snowa',
-    variations: [
-        { type: 'رنگ', options: ['سفید', 'نقره‌ای'] },
-    ],
-    recentMembers: [
-      { name: 'GH', avatar: 'https://picsum.photos/seed/user30navy/40/40' },
-      { name: 'KP', avatar: 'https://picsum.photos/seed/user31navy/40/40' },
-      { name: 'LM', avatar: 'https://picsum.photos/seed/user32navy/40/40' },
-    ],
-  },
-  {
-    id: 4,
-    title: 'بسته گوشت گوسفندی تازه ۲ کیلویی',
-    image: 'https://picsum.photos/seed/4navy/300/200',
-    originalPrice: 1200000,
-    groupPrice: 984000,
-    discount: 18,
-    members: 34,
-    requiredMembers: 40,
-    endDate: getFutureDate(1), // Ends in 1 day
-    category: 'food',
-    aiHint: 'lamb meat package',
-    isPackage: true,
-    packageContents: [
-      { name: 'گوشت ران گوسفندی', quantity: '۱ کیلوگرم' },
-      { name: 'گوشت سردست گوسفندی', quantity: '۱ کیلوگرم' },
-    ],
-     recentMembers: [
-      { name: 'ER', avatar: 'https://picsum.photos/seed/user40navy/40/40' },
-      { name: 'TY', avatar: 'https://picsum.photos/seed/user41navy/40/40' },
-      { name: 'UI', avatar: 'https://picsum.photos/seed/user42navy/40/40' },
-      { name: 'OP', avatar: 'https://picsum.photos/seed/user43navy/40/40' },
-    ],
-  },
-    {
-    id: 9,
-    title: 'گوشی شیائومی Poco X6 Pro',
-    image: 'https://picsum.photos/seed/9navy/300/200',
-    originalPrice: 15500000,
-    groupPrice: 13800000,
-    discount: 11,
-    members: 7,
-    requiredMembers: 20,
-    endDate: getFutureDate(5), // Ends in 5 days
-    category: 'digital',
-    aiHint: 'smartphone xiaomi poco',
-     recentMembers: [
-      { name: 'CV', avatar: 'https://picsum.photos/seed/user90navy/40/40' },
-      { name: 'BN', avatar: 'https://picsum.photos/seed/user91navy/40/40' },
-    ],
-  },
-  {
-    id: 5,
-    title: 'زعفران درجه یک قائنات ۵ مثقالی',
-    image: 'https://picsum.photos/seed/5navy/300/200',
-    originalPrice: 1850000,
-    groupPrice: 1480000,
-    discount: 20,
-    members: 28,
-    requiredMembers: 35,
-    endDate: getFutureDate(4), // Ends in 4 days
-    category: 'food',
-    isIranian: true,
-    isFeatured: true,
-    aiHint: 'saffron spice box',
-    recentMembers: [
-        { name: 'AS', avatar: 'https://picsum.photos/seed/user50navy/40/40' },
-        { name: 'DF', avatar: 'https://picsum.photos/seed/user51navy/40/40' },
-        { name: 'GH', avatar: 'https://picsum.photos/seed/user52navy/40/40' },
-    ],
-  },
-  {
-    id: 6,
-    title: 'تلویزیون ال‌جی ۵۵ اینچ ۴K',
-    image: 'https://picsum.photos/seed/6navy/300/200',
-    originalPrice: 38500000,
-    groupPrice: 32725000,
-    discount: 15,
-    members: 12,
-    requiredMembers: 20,
-    endDate: getFutureDate(2), // Ends in 2 days
-    category: 'digital',
-    aiHint: 'smart tv lg living room',
-    recentMembers: [
-        { name: 'ZX', avatar: 'https://picsum.photos/seed/user60navy/40/40' },
-        { name: 'CV', avatar: 'https://picsum.photos/seed/user61navy/40/40' },
-    ],
-  },
-  {
-    id: 7,
-    title: 'فرش دستباف کاشان ۹ متری',
-    image: 'https://picsum.photos/seed/7navy/300/200',
-    originalPrice: 18500000,
-    groupPrice: 14800000,
-    discount: 20,
-    members: 5,
-    requiredMembers: 10,
-    endDate: getFutureDate(5), // Ends in 5 days
-    category: 'home-decor',
-    isIranian: true,
-    isFeatured: true,
-    aiHint: 'persian carpet detail',
-    recentMembers: [
-        { name: 'QW', avatar: 'https://picsum.photos/seed/user70navy/40/40' },
-    ],
-  },
-  {
-    id: 8,
-    title: 'گز اصفهان درجه یک (جعبه ۱ کیلویی)',
-    image: 'https://picsum.photos/seed/8navy/300/200',
-    originalPrice: 950000,
-    groupPrice: 760000,
-    discount: 20,
-    members: 45,
-    requiredMembers: 50,
-    endDate: getFutureDate(0, 23, 59), // Ends in just under 1 day
-    category: 'food',
-    isIranian: true,
-    aiHint: 'gaz candy box',
-     recentMembers: [
-      { name: 'PL', avatar: 'https://picsum.photos/seed/user80navy/40/40' },
-      { name: 'OK', avatar: 'https://picsum.photos/seed/user81navy/40/40' },
-      { name: 'IJ', avatar: 'https://picsum.photos/seed/user82navy/40/40' },
-      { name: 'UH', avatar: 'https://picsum.photos/seed/user83navy/40/40' },
-    ],
-  }
-];
-// Export for use in product detail page and other potential pages
-export { groupPurchases };
-
-// تعریف دسته‌بندی‌های محصولات - Added image property
-const categories = [
-  { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital', image: 'https://picsum.photos/seed/cat1navy/80/80', aiHint: 'mobile phone category' },
-  { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food', image: 'https://picsum.photos/seed/cat2navy/80/80', aiHint: 'grocery food category' },
-  { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances', image: 'https://picsum.photos/seed/cat3navy/80/80', aiHint: 'home appliance category' },
-  { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion', image: 'https://picsum.photos/seed/cat4navy/80/80', aiHint: 'fashion clothing category' },
-  { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health', image: 'https://picsum.photos/seed/cat5navy/80/80', aiHint: 'beauty health cosmetic' },
-  { id: 6, name: 'خانه و دکور', icon: '🛋️', slug: 'home-decor', image: 'https://picsum.photos/seed/cat6navy/80/80', aiHint: 'home decor furniture' },
-  { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools', image: 'https://picsum.photos/seed/cat7navy/80/80', aiHint: 'tools hardware category' },
-  { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://picsum.photos/seed/cat8navy/80/80', aiHint: 'miscellaneous package box' }
-];
-
-// داده‌های نمونه برای فروشگاه‌ها و محصولاتشان (برای اسلایدر)
-// IMPORTANT: Ensure product IDs here are unique and don't clash with groupPurchases IDs
-const stores = [
-  {
-    id: 101, // Store ID
-    name: "فروشگاه بزرگ شهر",
-    logo: "https://picsum.photos/seed/store1navy/100/100",
-    aiHint: "city mega store logo",
-    offersInstallments: true, // آیا قسطی می‌فروشد؟
-    products: [
-      { ...groupPurchases[1], id: 201, endDate: getFutureDate(1, 12) }, // Create NEW unique IDs and dates
-      { ...groupPurchases[3], id: 202, endDate: getFutureDate(2) },
-      { ...groupPurchases[7], id: 203, endDate: getFutureDate(4, 5) },
-      { ...groupPurchases[4], id: 204, endDate: getFutureDate(0, 10) },
-    ],
-  },
-  {
-    id: 102, // Store ID
-    name: "هایپر مارکت آفتاب",
-    logo: "https://picsum.photos/seed/store2navy/100/100",
-    aiHint: "sun hypermarket logo",
-    offersInstallments: false,
-    products: [
-      { ...groupPurchases[0], id: 301, endDate: getFutureDate(0, 2) },
-      { ...groupPurchases[5], id: 302, endDate: getFutureDate(3) },
-      { ...groupPurchases[8], id: 303, endDate: getFutureDate(1, 1) },
-    ],
-  },
-  {
-    id: 103, // Store ID
-    name: "خانه و زندگی لوکس",
-    logo: "https://picsum.photos/seed/store3navy/100/100",
-    aiHint: "luxury home living logo",
-    offersInstallments: true,
-    products: [
-      { ...groupPurchases[2], id: 401, endDate: getFutureDate(2, 18) },
-      { ...groupPurchases[6], id: 402, endDate: getFutureDate(1) },
-      { ...groupPurchases[4], id: 403, endDate: getFutureDate(0, 5) }, // Note: Use unique IDs
-      { ...groupPurchases[7], id: 404, endDate: getFutureDate(4) },
-    ],
-  },
-];
-export { stores }; // Export stores data
-
-
-// داده‌های نمونه برای نظرات مشتریان - Updated with groupBuyTitle and discountAchieved
-const testimonials = [
-  {
-    id: 1,
-    name: "سارا رضایی",
-    avatar: "https://picsum.photos/seed/testimonial1navy/80/80",
-    comment: "قیمت‌ها واقعا عالیه! با خرید گروهی تونستم گوشی جدیدم رو خیلی ارزون‌تر بخرم. ممنونم!",
-    rating: 5,
-    groupBuyTitle: 'گوشی سامسونگ Galaxy S24', // Added
-    discountAchieved: 12, // Added
-    aiHint: "happy customer female",
-  },
-  {
-    id: 2,
-    name: "علی محمدی",
-    avatar: "https://picsum.photos/seed/testimonial2navy/80/80",
-    comment: "اولین بار بود از خرید گروهی استفاده می‌کردم، تجربه خوبی بود. فقط کاش تنوع کالاها بیشتر بشه.",
-    rating: 4,
-    groupBuyTitle: 'روغن آفتابگردان لادن', // Added
-    discountAchieved: 25, // Added
-    aiHint: "satisfied customer male",
-  },
-  {
-    id: 3,
-    name: "مریم حسینی",
-    avatar: "https://picsum.photos/seed/testimonial3navy/80/80",
-    comment: "خیلی راحت و سریع بود. پشتیبانی هم خیلی خوب راهنمایی کردن. حتما دوباره از اینجا خرید می‌کنم.",
-    rating: 5,
-    groupBuyTitle: 'ماشین لباسشویی اسنوا', // Added
-    discountAchieved: 15, // Added
-    aiHint: "customer service interaction",
-  },
-    {
-    id: 4,
-    name: "رضا اکبری",
-    avatar: "https://picsum.photos/seed/testimonial4navy/80/80",
-    comment: "کیفیت محصولات ایرانی که خریدم واقعا خوب بود. خوشحالم که از تولید ملی حمایت کردم.",
-    rating: 4,
-    groupBuyTitle: 'زعفران درجه یک قائنات', // Added
-    discountAchieved: 20, // Added
-    aiHint: "customer holding product",
-  },
-];
-
-
-// داده‌های نمونه برای نظرات فروشندگان
-const sellerTestimonials = [
-  {
-    id: 101,
-    name: "فروشگاه لوازم خانگی ممتاز",
-    avatar: "https://picsum.photos/seed/seller1navy/80/80",
-    comment: "پلتفرم خریدگروهی به ما کمک کرد تا به مشتریان بیشتری دسترسی پیدا کنیم و فروش عمده‌مون رو افزایش بدیم. همکاری بسیار خوبی داشتیم.",
-    rating: 5,
-    productsSold: 500, // Example metric
-    aiHint: "store owner portrait",
-  },
-  {
-    id: 102,
-    name: "تولیدی پوشاک الوند",
-    avatar: "https://picsum.photos/seed/seller2navy/80/80",
-    comment: "ایده خرید گروهی برای فروش محصولات فصلی ما عالی بود. تونستیم حجم زیادی از کالا رو در زمان کوتاهی بفروشیم.",
-    rating: 4,
-    productsSold: 1200,
-    aiHint: "factory manager",
-  },
-  {
-    id: 103,
-    name: "شرکت پخش مواد غذایی سالم",
-    avatar: "https://picsum.photos/seed/seller3navy/80/80",
-    comment: "فرایند ثبت محصول و مدیریت خرید گروهی بسیار ساده بود. تیم پشتیبانی هم همیشه پاسخگو بودند.",
-    rating: 5,
-    productsSold: 800,
-    aiHint: "food distribution manager",
-  },
-];
-
-
-// FAQ Data
-const buyerFaqs = [
-  { question: "خرید گروهی چیست؟", answer: "خرید گروهی روشی برای خرید کالا با قیمت پایین‌تر است. با جمع شدن تعداد مشخصی خریدار، تخفیف عمده‌فروشی برای همه اعمال می‌شود." },
-  { question: "چگونه می‌توانم در خرید گروهی شرکت کنم؟", answer: "کالای مورد نظر خود را پیدا کرده و دکمه 'پیوستن به گروه' را بزنید. پس از رسیدن به حد نصاب، خرید نهایی می‌شود." },
-  { question: "اگر گروه به حد نصاب نرسد چه می‌شود؟", answer: "در صورت عدم تکمیل ظرفیت گروه تا زمان مشخص شده، هزینه پرداخت شده (در صورت پیش‌پرداخت) به شما بازگردانده می‌شود یا می‌توانید به گروه دیگری بپیوندید." },
-  { question: "زمان تحویل کالا چقدر است؟", answer: "زمان تحویل پس از نهایی شدن خرید گروهی و پرداخت وجه، معمولا بین ۳ تا ۷ روز کاری است و به نوع کالا و آدرس شما بستگی دارد." },
-];
-
-const sellerFaqs = [
-  { question: "چگونه می‌توانم محصولاتم را برای خرید گروهی عرضه کنم؟", answer: "ابتدا باید به عنوان فروشنده در سایت ثبت نام کنید. سپس می‌توانید محصولات خود را با تعیین قیمت گروهی و حداقل تعداد مورد نیاز برای فروش، ثبت کنید." },
-  { question: "تسویه حساب با فروشندگان چگونه انجام می‌شود؟", answer: "پس از تکمیل موفقیت‌آمیز خرید گروهی و تحویل کالا به خریداران، وجه مربوطه پس از کسر کارمزد پلتفرم، به حساب شما واریز خواهد شد." },
-  { question: "کارمزد پلتفرم چقدر است؟", answer: "کارمزد بر اساس نوع کالا و توافق اولیه تعیین می‌شود. برای اطلاع دقیق از درصد کارمزد، لطفا به بخش قوانین و مقررات فروشندگان مراجعه کنید." },
-];
-
-
-// تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
-const formatNumber = (num:number | undefined) => {
-  if (num === undefined || num === null) return '';
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-// Check if the deal ends within 24 hours
-const isEndingSoon = (endDate: Date | undefined): boolean => {
-    if (!endDate) return false;
-    const now = new Date();
-    const timeDiff = endDate.getTime() - now.getTime();
-    const hoursRemaining = timeDiff / (1000 * 60 * 60);
-    return hoursRemaining > 0 && hoursRemaining <= 24;
-};
-
+import Link from 'next/link';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import CountdownTimer from '@/components/countdown-timer';
+import { cn } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  groupPurchases,
+  categories,
+  stores,
+  heroSlides,
+  testimonials,
+  sellerTestimonials,
+  buyerFaqs,
+  sellerFaqs,
+  formatNumber,
+  isEndingSoon,
+  getCategoryNameBySlug
+} from '@/lib/data'; // Import from centralized data file
+export { groupPurchases, stores }; // Re-export if needed by other pages like product detail
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('همه');
-  const [featuredItems, setFeaturedItems] = useState(groupPurchases);
-  const { toast } = useToast(); // Initialize useToast
-  const [heroApi, setHeroApi] = useState<CarouselApi>(); // State for hero carousel API
-  const [currentHeroSlide, setCurrentHeroSlide] = useState(0); // State for current hero slide index
-  const autoplayPlugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true })); // Autoplay plugin ref
+  const { toast } = useToast();
+  const [heroApi, setHeroApi] = useState<CarouselApi>();
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const autoplayPlugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
 
 
   const handleJoinClick = (title: string) => {
@@ -426,14 +64,12 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    setFeaturedItems(groupPurchases);
     document.documentElement.style.scrollBehavior = 'smooth';
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
     };
   }, []);
 
-  // Update current slide index when hero carousel changes
   useEffect(() => {
     if (!heroApi) return;
     setCurrentHeroSlide(heroApi.selectedScrollSnap());
@@ -443,17 +79,13 @@ export default function HomePage() {
 
 
   const filteredItems = activeCategory === 'همه'
-    ? featuredItems
-    : featuredItems.filter(item => item.category === categories.find(cat => cat.name === activeCategory)?.slug);
+    ? groupPurchases // Use groupPurchases directly, as it's already imported
+    : groupPurchases.filter(item => item.category === categories.find(cat => cat.name === activeCategory)?.slug);
 
-
-  const getCategoryNameBySlug = (slug: string | undefined) => {
-    return categories.find(cat => cat.slug === slug)?.name || slug;
-  }
 
   return (
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
-      <Header /> {/* Use Header component */}
+      <Header />
 
       {/* Hero Slider */}
       <section className="relative w-full mb-12">
@@ -476,7 +108,7 @@ export default function HomePage() {
                     objectFit="cover"
                     className="brightness-75"
                     data-ai-hint={slide.aiHint}
-                    priority={slide.id === 1} // Prioritize first slide image
+                    priority={slide.id === 1}
                   />
                   <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-gradient-to-t from-black/60 to-transparent p-8">
                     <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">{slide.title}</h1>
@@ -494,7 +126,6 @@ export default function HomePage() {
           <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background text-foreground border-none rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30" />
           <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background text-foreground border-none rounded-full w-10 h-10 shadow-md transition-opacity opacity-70 hover:opacity-100 disabled:opacity-30" />
 
-         {/* Pagination Dots */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex space-x-2 rtl:space-x-reverse">
             {heroSlides.map((_, index) => (
               <button
@@ -510,23 +141,38 @@ export default function HomePage() {
           </div>
         </Carousel>
       </section>
+      
+      {/* Category Circles Section */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-8">
+        <div className="flex justify-center space-x-4 rtl:space-x-reverse overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
+          {categories.map(category => (
+            <Link href={`/category/${category.slug}`} key={category.id} className="flex flex-col items-center space-y-2 group flex-shrink-0 w-24">
+              <div className="w-20 h-20 rounded-full border-2 border-primary/50 group-hover:border-primary transition-all duration-300 p-1 shadow-sm group-hover:shadow-md">
+                <Image 
+                  src={category.image} 
+                  alt={category.name} 
+                  width={72} 
+                  height={72} 
+                  className="rounded-full object-cover w-full h-full"
+                  data-ai-hint={category.aiHint}
+                />
+              </div>
+              <span className="text-sm font-medium text-center text-foreground group-hover:text-primary transition-colors duration-300">{category.name}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
 
        {/* خریدهای گروهی فعال */}
         <section className="bg-secondary/50 py-16">
-        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-4 sm:mb-0">خریدهای گروهی فعال</h2>
-            <div className="flex">
-               <Button variant="ghost" size="icon" className="mr-2 rtl:ml-2 transition-transform hover:scale-110 duration-300">
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="transition-transform hover:scale-110 duration-300">
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-            </div>
+             {/* Navigation for this carousel can be added if needed */}
           </div>
 
-          <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4"> {/* Negative margin trick for full-width scroll */}
+          <div className="flex space-x-4 rtl:space-x-reverse mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-muted scrollbar-track-secondary -mx-4 px-4">
             <Button
               variant={activeCategory === 'همه' ? 'default' : 'outline'}
               onClick={() => setActiveCategory('همه')}
@@ -551,7 +197,7 @@ export default function HomePage() {
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                    <CardHeader className="p-0 relative aspect-[4/3]">
-                    <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                    <Image src={item.image as string} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
                     <Badge variant="destructive" className="absolute top-3 right-3">
                       {item.discount}٪ تخفیف
                     </Badge>
@@ -560,7 +206,7 @@ export default function HomePage() {
                     </Badge>
                     {item.isIranian && (
                        <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
-                        <Image src="https://picsum.photos/seed/iranflagnavy/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
@@ -621,19 +267,20 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-center mt-12">
-            <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
-              مشاهده همه خریدهای گروهی
-            </Button>
+            <Link href="/deals">
+              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
+                مشاهده همه خریدهای گروهی
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
-
 
       {/* Seller CTA Section */}
       <section className="relative bg-gradient-to-r from-primary/90 to-blue-800/90 dark:from-primary/70 dark:to-blue-900/70 py-20 overflow-hidden">
           <div className="absolute inset-0 opacity-10">
               <Image
-                  src="https://picsum.photos/seed/happy-seller/1600/600" // Placeholder for seller image
+                  src="https://placehold.co/1600x600.png"
                   alt="فروشنده خوشحال"
                   layout="fill"
                   objectFit="cover"
@@ -670,7 +317,7 @@ export default function HomePage() {
                       </div>
                       <Button
                           size="lg"
-                          variant="accent" // Use accent color for CTA
+                          variant="accent"
                           className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-lg"
                       >
                          <Rocket className="w-5 h-5 ml-2 rtl:mr-2"/>
@@ -678,7 +325,6 @@ export default function HomePage() {
                       </Button>
                   </div>
                   <div className="hidden md:flex justify-center items-center">
-                    {/* Optional: Add a visual element here, maybe a simplified graphic */}
                     <div className="bg-white/10 p-8 rounded-full backdrop-blur-md shadow-2xl">
                          <Store className="w-32 h-32 text-white opacity-80" />
                     </div>
@@ -686,7 +332,6 @@ export default function HomePage() {
               </div>
           </div>
       </section>
-
 
      {/* Referral Banner */}
       <section className="bg-accent py-12">
@@ -705,7 +350,7 @@ export default function HomePage() {
             </div>
             <Button
               size="lg"
-              variant="default" // Use default (primary) color for contrast
+              variant="default"
               className="px-8 py-3 text-lg font-semibold transition-transform hover:scale-105 duration-300 shadow-md mt-6 md:mt-0 w-full md:w-auto"
               onClick={handleReferralClick}
             >
@@ -718,7 +363,7 @@ export default function HomePage() {
 
 
       {/* How It Works Section */}
-      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16"> {/* Added lg/xl padding */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center text-center bg-card p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
@@ -745,10 +390,9 @@ export default function HomePage() {
         </div>
       </section>
 
-
      {/* درخواست‌های خرید گروهی */}
       <section className="bg-secondary py-16">
-        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-secondary-foreground mb-4 sm:mb-0">درخواست‌های خرید گروهی</h2>
             <Button variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md">
@@ -757,11 +401,11 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {groupPurchases.slice(4, 7).map(item => ( // Slice 3 items
+            {groupPurchases.slice(4, 7).map(item => (
               <Link href={`/product/${item.id}`} key={item.id}>
                 <Card className="bg-card rounded-lg shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer h-full flex flex-col">
                   <CardHeader className="p-0 relative aspect-[4/3]">
-                     <Image src={item.image} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
+                     <Image src={item.image as string} width={300} height={225} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.aiHint} />
                     <Badge variant="destructive" className="absolute top-3 right-3">
                       {item.discount}٪ تخفیف
                     </Badge>
@@ -770,7 +414,7 @@ export default function HomePage() {
                     </Badge>
                     {item.isIranian && (
                       <Badge variant="secondary" className="absolute top-11 right-3 flex items-center bg-background/80">
-                        <Image src="https://picsum.photos/seed/iranflagnavy/20/20" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
+                        <Image src="https://placehold.co/20x20.png" width={20} height={20} alt="پرچم ایران" className="w-3 h-3 rounded-full ml-1 rtl:mr-1" data-ai-hint="iran flag" />
                         تولید ایران
                       </Badge>
                     )}
@@ -787,7 +431,6 @@ export default function HomePage() {
                       <div className="text-muted-foreground line-through text-sm">{formatNumber(item.originalPrice)} <span className="text-xs">تومان</span></div>
                       <div className="text-primary font-bold text-xl">{formatNumber(item.groupPrice)} <span className="text-xs">تومان</span></div>
                     </div>
-                     {/* Package Contents Display */}
                     {item.isPackage && item.packageContents && (
                       <div className="my-3 border-t border-border pt-3">
                         <p className="text-xs font-semibold mb-1 text-muted-foreground">محتویات بسته:</p>
@@ -807,7 +450,6 @@ export default function HomePage() {
                           <Users className="h-4 w-4 ml-1 rtl:mr-1" />
                           <span>{item.members} / {item.requiredMembers} نفر</span>
                         </div>
-                        {/* Display Countdown or Remaining Time */}
                         {item.endDate && isEndingSoon(item.endDate) ? (
                             <CountdownTimer endDate={item.endDate} />
                         ) : item.endDate ? (
@@ -832,16 +474,18 @@ export default function HomePage() {
             ))}
           </div>
           <div className="flex justify-center mt-12">
-            <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
-              مشاهده همه درخواست‌ها
-            </Button>
+            <Link href="/requests">
+              <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300">
+                مشاهده همه درخواست‌ها
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
        <section className="bg-background py-16">
-        <div className="container mx-auto px-4 lg:px-8 xl:px-16"> {/* Added lg/xl padding */}
+        <div className="container mx-auto px-4 lg:px-8 xl:px-16">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">ویترین فروشگاه‌ها</h2>
           <div className="space-y-16">
             {stores.map((store) => (
@@ -859,10 +503,12 @@ export default function HomePage() {
                       </Badge>
                     )}
                   </div>
-                  <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 mt-4 sm:mt-0 shadow-sm">
-                    مشاهده فروشگاه
-                    <Store className="mr-2 h-5 w-5" />
-                  </Button>
+                  <Link href={`/store/${store.id}`}>
+                    <Button variant="outline" size="lg" className="transition-transform hover:scale-105 duration-300 mt-4 sm:mt-0 shadow-sm">
+                      مشاهده فروشگاه
+                      <Store className="mr-2 h-5 w-5" />
+                    </Button>
+                  </Link>
                 </CardHeader>
                 <CardContent className="p-6">
                   <h4 className="text-lg font-semibold mb-6 text-muted-foreground">محصولات منتخب برای خرید گروهی:</h4>
@@ -870,7 +516,7 @@ export default function HomePage() {
                     opts={{
                       align: "start",
                       direction: "rtl",
-                      loop: store.products.length > 3, // Enable loop if enough items for 3 columns
+                      loop: store.products.length > 3,
                     }}
                     className="w-full relative"
                   >
@@ -880,7 +526,7 @@ export default function HomePage() {
                           <Link href={`/product/${product.id}`} className="block h-full">
                             <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-background/50">
                               <CardHeader className="p-0 relative aspect-[4/3]">
-                                <Image src={product.image} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
+                                <Image src={product.image as string} width={300} height={225} alt={product.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={product.aiHint}/>
                                 <Badge variant="destructive" className="absolute top-2 right-2">
                                   {product.discount}٪ تخفیف
                                 </Badge>
@@ -915,7 +561,6 @@ export default function HomePage() {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                     {/* Carousel Arrows - Enhanced Styling */}
                     <CarouselPrevious className="absolute right-[-12px] rtl:left-[-12px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
                     <CarouselNext className="absolute left-[-12px] rtl:right-[-12px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
                   </Carousel>
@@ -926,20 +571,18 @@ export default function HomePage() {
         </div>
       </section>
 
-
      {/* Benefits Section */}
-      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl"> {/* Added lg/xl padding */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16 bg-secondary rounded-xl">
         <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">چرا خرید گروهی؟</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             { icon: Percent, title: "تخفیف‌های ویژه", description: "با افزایش تعداد خریداران، تخفیف‌های بیشتری دریافت کنید.", colorClass: "text-accent" },
-            { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", colorClass: "text-green-500" }, // Using explicit green for checkmark
+            { icon: ShieldCheck, title: "تضمین اصالت", description: "تمامی کالاها دارای تضمین اصالت و کیفیت هستند.", colorClass: "text-green-500" },
             { icon: Package, title: "تنوع بی‌نظیر", description: "از کالاهای دیجیتال تا مواد غذایی، هر آنچه نیاز دارید را پیدا کنید.", colorClass: "text-primary" },
-            { icon: Handshake, title: "خرید مستقیم", description: "ارتباط مستقیم با فروشندگان عمده و تولیدکنندگان.", colorClass: "text-purple-500" } // Added new benefit
+            { icon: Handshake, title: "خرید مستقیم", description: "ارتباط مستقیم با فروشندگان عمده و تولیدکنندگان.", colorClass: "text-purple-500" }
           ].map((benefit, index) => (
             <div key={index} className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group">
                <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md`}>
-                 {/* Subtle animated ping effect */}
                  <div className={`absolute inset-0 ${benefit.colorClass.replace('text-', 'bg-')}/20 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
                  <benefit.icon className={`h-10 w-10 ${benefit.colorClass} relative z-10`} />
                </div>
@@ -966,7 +609,6 @@ export default function HomePage() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Customer Testimonials Tab */}
             <TabsContent value="customers">
               <Carousel
                 opts={{ align: "start", direction: "rtl", loop: testimonials.length > 3 }}
@@ -983,7 +625,6 @@ export default function HomePage() {
                             <AvatarFallback className="text-2xl">{testimonial.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
-                          {/* Display Group Buy Info and Discount */}
                           <div className="text-xs text-muted-foreground mb-3">
                             خرید گروهی: <span className="font-medium text-primary">{testimonial.groupBuyTitle}</span> با <span className="font-medium text-destructive">{testimonial.discountAchieved}%</span> تخفیف
                           </div>
@@ -1011,12 +652,11 @@ export default function HomePage() {
               </Carousel>
             </TabsContent>
 
-             {/* Seller Testimonials Tab */}
              <TabsContent value="sellers">
               <Carousel
                 opts={{ align: "start", direction: "rtl", loop: sellerTestimonials.length > 3 }}
                 className="w-full"
-                plugins={[Autoplay({ delay: 5500, stopOnInteraction: true })]} // Slightly different delay
+                plugins={[Autoplay({ delay: 5500, stopOnInteraction: true })]}
               >
                 <CarouselContent className="-ml-4 rtl:-mr-4">
                   {sellerTestimonials.map((testimonial) => (
@@ -1025,7 +665,7 @@ export default function HomePage() {
                         <CardContent className="p-6 flex-grow flex flex-col items-center text-center">
                           <Avatar className="w-20 h-20 mb-4 border-4 border-secondary shadow-lg">
                             <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
-                            <AvatarFallback className="text-xl">{testimonial.name.substring(0, 2)}</AvatarFallback> {/* Show 2 letters for sellers */}
+                            <AvatarFallback className="text-xl">{testimonial.name.substring(0, 2)}</AvatarFallback>
                           </Avatar>
                           <h4 className="font-semibold text-lg mb-1 text-card-foreground">{testimonial.name}</h4>
                           <div className="text-xs text-muted-foreground mb-3">
@@ -1058,7 +698,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* بخش سوالات پرتکرار (FAQ) - Enhanced Styling */}
+      {/* بخش سوالات پرتکرار (FAQ) */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">سوالات پرتکرار</h2>
         <div className="max-w-4xl mx-auto">
@@ -1074,7 +714,6 @@ export default function HomePage() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Buyer FAQs */}
             <TabsContent value="buyer" className="space-y-4">
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {buyerFaqs.map((faq, index) => (
@@ -1086,7 +725,7 @@ export default function HomePage() {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0"> {/* Indent content with border */}
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0">
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -1095,7 +734,6 @@ export default function HomePage() {
               </Accordion>
             </TabsContent>
 
-            {/* Seller FAQs */}
             <TabsContent value="seller" className="space-y-4">
               <Accordion type="single" collapsible className="w-full bg-card rounded-xl border border-border shadow-lg overflow-hidden">
                 {sellerFaqs.map((faq, index) => (
@@ -1107,7 +745,7 @@ export default function HomePage() {
                       </div>
                       </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed px-6 pb-5 pt-0">
-                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0"> {/* Indent content with border */}
+                       <div className="pl-8 rtl:pr-8 border-r-2 border-primary/30 mr-2.5 rtl:ml-2.5 rtl:mr-0 rtl:border-l-2 rtl:border-r-0">
                          {faq.answer}
                        </div>
                     </AccordionContent>
@@ -1119,7 +757,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Footer /> {/* Use Footer component */}
+      <Footer />
     </div>
   );
 }
