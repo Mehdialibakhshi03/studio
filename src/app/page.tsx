@@ -309,7 +309,15 @@ export default function HomePage() {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               {priceComparisonData.prices.map((tier, index) => (
-                <div key={index} className={`p-6 rounded-lg border transition-all duration-300 hover:shadow-lg ${index === priceComparisonData.prices.length - 1 ? 'bg-primary/10 border-primary shadow-lg transform scale-105' : 'bg-secondary/30 border-border'}`}>
+                <div 
+                  key={index} 
+                  className={cn(
+                    "p-6 rounded-lg border transition-all duration-300 hover:shadow-lg hover:scale-105",
+                    index === priceComparisonData.prices.length - 1 
+                      ? 'bg-primary/10 border-primary shadow-lg transform scale-105' 
+                      : 'bg-secondary/30 border-border'
+                  )}
+                >
                   <div className="flex items-center justify-center mb-4">
                     {tier.members === 1 ? <User className="w-10 h-10 text-primary" /> : <Users className="w-10 h-10 text-primary" />}
                   </div>
@@ -323,7 +331,7 @@ export default function HomePage() {
                     </Badge>
                   )}
                    {index === 0 && (
-                     <p className="text-sm text-muted-foreground h-6">قیمت استاندارد</p> // Placeholder for alignment
+                     <p className="text-sm text-muted-foreground h-6">قیمت استاندارد</p>
                    )}
                 </div>
               ))}
@@ -822,4 +830,3 @@ export default function HomePage() {
     </div>
   );
 }
-
