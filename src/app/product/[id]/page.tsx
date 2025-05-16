@@ -2,10 +2,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { notFound, useParams } from 'next/navigation'; // Import useParams
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon } from 'lucide-react';
-import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data'; // Import from centralized data file
+import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Button } from '@/components/ui/button';
@@ -58,11 +58,10 @@ const getRelatedProducts = (currentProductId: number, categorySlug?: string) => 
     .slice(0, 8);
 };
 
-// Define the type for the params using React.use
 type PageParams = { id: string };
 
 export default function ProductDetailPage() {
-  const params = useParams<PageParams>(); 
+  const params = useParams<PageParams>();
   const productId = parseInt(params.id, 10);
   const product = getProductById(productId);
   const store = getStoreByProductId(productId);
@@ -74,30 +73,26 @@ export default function ProductDetailPage() {
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
   
-  // States for simulated live activity
   const [viewers, setViewers] = useState(0);
   const [showPurchasedRecently, setShowPurchasedRecently] = useState(false);
   const [purchasedCount, setPurchasedCount] = useState(0);
 
   useEffect(() => {
-    // Simulate initial viewers
-    const randomViewers = Math.floor(Math.random() * 30) + 5; // 5 to 34 viewers
+    const randomViewers = Math.floor(Math.random() * 30) + 5; 
     setViewers(randomViewers);
 
-    // Simulate if "purchased recently" badge should show
-    const shouldShow = Math.random() > 0.6; // 40% chance to show
+    const shouldShow = Math.random() > 0.6; 
     setShowPurchasedRecently(shouldShow);
     if (shouldShow) {
-      setPurchasedCount(Math.floor(Math.random() * 10) + 3); // 3 to 12 purchases
+      setPurchasedCount(Math.floor(Math.random() * 10) + 3); 
     }
 
-    // Simulate viewers count changing over time
     const interval = setInterval(() => {
-      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); // Change by -2 to +2, min 3
-    }, 7000); // Update every 7 seconds
+      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); 
+    }, 7000); 
 
     return () => clearInterval(interval);
-  }, []); // Run only once on mount
+  }, []); 
 
   useEffect(() => {
     if (product) {
@@ -105,7 +100,7 @@ export default function ProductDetailPage() {
       if (product.variations) {
         const initialSelections: { [key: string]: string } = {};
         product.variations.forEach(variation => {
-          if (variation.options.length > 0) { // Ensure options exist
+          if (variation.options.length > 0) { 
             initialSelections[variation.type] = variation.options[0];
           }
         });
@@ -183,7 +178,6 @@ export default function ProductDetailPage() {
   const statusInfo = getStatusInfo();
   const relatedProducts = getRelatedProducts(product.id, product.category);
 
-  // Discount Tiers Logic
   const originalPrice = product.originalPrice;
   const finalGroupPrice = product.groupPrice;
   const finalDiscountPercent = product.discount;
@@ -192,7 +186,6 @@ export default function ProductDetailPage() {
 
   let discountTiersDisplayData = [];
 
-  // Tier 1: Single buyer
   discountTiersDisplayData.push({
     members: 1,
     label: "خرید تکی شما",
@@ -201,10 +194,9 @@ export default function ProductDetailPage() {
     price: originalPrice,
   });
 
-  // Intermediate Tier (if applicable)
   const midMembersThreshold = Math.floor(requiredMembers / 2);
   if (requiredMembers > 2 && midMembersThreshold > 1 && midMembersThreshold < requiredMembers) {
-    const midDiscountPercent = Math.max(0, Math.floor(finalDiscountPercent * 0.5)); // Example: 50% of final discount
+    const midDiscountPercent = Math.max(0, Math.floor(finalDiscountPercent * 0.5));
     discountTiersDisplayData.push({
       members: midMembersThreshold,
       label: `با ${formatNumber(midMembersThreshold)} نفر`,
@@ -214,7 +206,6 @@ export default function ProductDetailPage() {
     });
   }
 
-  // Final Tier: Full Group
   discountTiersDisplayData.push({
     members: requiredMembers,
     label: `با ${formatNumber(requiredMembers)} نفر (تکمیل گروه)`,
@@ -223,7 +214,6 @@ export default function ProductDetailPage() {
     price: finalGroupPrice,
   });
 
-  // Deduplicate and ensure sorted by members
   discountTiersDisplayData = discountTiersDisplayData
     .reduce((acc, current) => {
       if (!acc.find(t => t.members === current.members)) {
@@ -236,7 +226,6 @@ export default function ProductDetailPage() {
     }, [] as typeof discountTiersDisplayData)
     .sort((a, b) => a.members - b.members);
 
-  // Determine current tier for highlighting
   let currentTierIndex = -1;
   for (let i = discountTiersDisplayData.length - 1; i >= 0; i--) {
     if (currentMembers >= discountTiersDisplayData[i].members) {
@@ -244,7 +233,7 @@ export default function ProductDetailPage() {
       break;
     }
   }
-   if (currentMembers === 0 && discountTiersDisplayData.length > 0) currentTierIndex = 0; // Highlight first if 0 members
+   if (currentMembers === 0 && discountTiersDisplayData.length > 0) currentTierIndex = 0;
 
 
   return (
@@ -266,11 +255,11 @@ export default function ProductDetailPage() {
                   priority
                 />
               )}
-              <Badge variant="destructive" className="absolute top-4 left-4 text-lg px-3 py-1 shadow-md">
+              <Badge variant="destructive" className="absolute top-4 left-4 rtl:right-4 rtl:left-auto text-lg px-3 py-1 shadow-md">
                 {product.discount}٪ تخفیف
               </Badge>
                  {viewers > 0 && (
-                    <div className="absolute bottom-4 left-4 bg-black/60 text-white px-2.5 py-1 rounded-md text-xs flex items-center gap-1.5 backdrop-blur-sm shadow">
+                    <div className="absolute bottom-4 left-4 rtl:right-4 rtl:left-auto bg-black/60 text-white px-2.5 py-1 rounded-md text-xs flex items-center gap-1.5 backdrop-blur-sm shadow">
                         <Eye className="w-3.5 h-3.5"/>
                         {formatNumber(viewers)} نفر در حال مشاهده
                     </div>
@@ -305,7 +294,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Badge variant="outline" className="bg-secondary/70 border-secondary-foreground/20">{dataGetCategoryNameBySlug(product.category)}</Badge>
+              <Badge variant="outline" className="bg-secondary/70 border-border/30">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
                   <Image src="https://placehold.co/20x20.png" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
@@ -326,22 +315,22 @@ export default function ProductDetailPage() {
             </div>
 
             {store && (
-                 <Card className="bg-card border border-border shadow-lg rounded-xl overflow-hidden my-4">
-                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-5 bg-secondary/40 dark:bg-secondary/20 border-b border-border">
-                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-background shadow-lg transition-transform duration-300 hover:scale-110">
+                 <Card className="bg-card border border-border shadow-md rounded-xl overflow-hidden my-4">
+                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-card border-b border-border">
+                     <Avatar className="w-12 h-12 sm:w-14 sm:h-14 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                       <AvatarFallback className="text-xl sm:text-2xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
+                       <AvatarFallback className="text-lg sm:text-xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
                      </Avatar>
                      <div className="flex-grow text-center sm:text-right">
                        <p className="text-xs text-muted-foreground mb-0.5">فروشنده:</p>
-                       <CardTitle className="text-xl font-bold text-primary mb-1">{store.name}</CardTitle>
+                       <CardTitle className="text-lg font-semibold text-primary mb-1">{store.name}</CardTitle>
                        {store.offersInstallments && (
-                           <Badge variant="outline" className="mt-1.5 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40 shadow-sm">
+                           <Badge variant="outline" className="mt-1 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40 shadow-sm">
                                امکان خرید اقساطی
                            </Badge>
                         )}
                      </div>
-                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/70 text-primary hover:bg-primary/10 hover:border-primary shadow-sm">
+                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/70 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary shadow-sm">
                        <Link href={`/store/${store.id}`}>
                            <Store className="mr-2 rtl:ml-2 h-4 w-4" /> مشاهده فروشگاه
                         </Link>
@@ -359,7 +348,7 @@ export default function ProductDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0 pb-4 px-5">
-                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 pr-4">
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 pr-4 rtl:pl-4 rtl:pr-0">
                     {product.packageContents.map((content, index) => (
                       <li key={index}>
                         {content.name} ({content.quantity})
@@ -539,11 +528,11 @@ export default function ProductDetailPage() {
                 key={index}
                 className={cn(
                   "text-center p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 group relative flex flex-col justify-between min-h-[280px] sm:min-h-[300px]",
-                  currentTierIndex > index && product.members < product.requiredMembers && "opacity-60", // Achieved but not current
-                  currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10", // Current active tier
-                  product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-green-500 shadow-green-500/30 scale-105 z-10", // Group completed
-                  index === discountTiersDisplayData.length - 1 && !(product.members >= product.requiredMembers) && "bg-secondary/30 dark:bg-secondary/20", // Default style for final tier if not completed
-                  index === discountTiersDisplayData.length - 1 && (product.members >= product.requiredMembers) && "bg-green-500/10 dark:bg-green-500/20" // Style for completed final tier
+                  currentTierIndex > index && product.members < product.requiredMembers && "opacity-60", 
+                  currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10", 
+                  product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-green-500 shadow-green-500/30 scale-105 z-10", 
+                  index === discountTiersDisplayData.length - 1 && !(product.members >= product.requiredMembers) && "bg-secondary/30 dark:bg-secondary/20", 
+                  index === discountTiersDisplayData.length - 1 && (product.members >= product.requiredMembers) && "bg-green-500/10 dark:bg-green-500/20" 
                 )}
               >
                 <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-background p-1 rounded-full border border-border shadow-md z-20">
@@ -618,7 +607,7 @@ export default function ProductDetailPage() {
                 </p>
                <Separator className="my-6"/>
                <h4 className="text-lg font-semibold mb-3 !text-card-foreground">ویژگی‌های کلیدی:</h4>
-               <ul className="list-disc space-y-2 pr-5">
+               <ul className="list-disc space-y-2 pr-5 rtl:pl-5 rtl:pr-0">
                     <li>پردازنده قدرتمند برای اجرای روان برنامه‌ها (در صورت مرتبط بودن)</li>
                     <li>صفحه نمایش باکیفیت با رنگ‌های زنده (در صورت مرتبط بودن)</li>
                     <li>دوربین حرفه‌ای با قابلیت عکاسی در نور کم (در صورت مرتبط بودن)</li>
@@ -761,7 +750,7 @@ export default function ProductDetailPage() {
               opts={{
                 align: "start",
                 direction: "rtl",
-                loop: relatedProducts.length > 4, // Ensure enough items for loop
+                loop: relatedProducts.length > 4, 
               }}
               className="w-full relative"
             >
@@ -811,7 +800,7 @@ export default function ProductDetailPage() {
                     <p className="text-center text-muted-foreground col-span-full py-8 w-full">محصول مشابهی یافت نشد.</p>
                  )}
               </CarouselContent>
-              {relatedProducts.length > 4 && ( // Show controls only if looping or more items than visible
+              {relatedProducts.length > 4 && ( 
                 <>
                     <CarouselPrevious className="absolute right-[-12px] rtl:left-[-12px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/90 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
                     <CarouselNext className="absolute left-[-12px] rtl:right-[-12px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/90 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
