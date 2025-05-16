@@ -1,6 +1,8 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"; // Import Toaster
+import RandomActivityToast from '@/components/random-activity-toast'; // Import the new component
 
 export const metadata: Metadata = {
   title: 'KharidGroupi - خرید گروهی',
@@ -13,10 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl">{/* Set lang to Persian and direction to right-to-left */}
-      <body className="antialiased"> {/* Removed bg-background */}
+    <html lang="fa" dir="rtl">
+      <body className="antialiased">
         {children}
-        <Toaster /> {/* Add Toaster for notifications */}
+        <Toaster />
+        <RandomActivityToast /> {/* Add the RandomActivityToast component here */}
       </body>
     </html>
   );
