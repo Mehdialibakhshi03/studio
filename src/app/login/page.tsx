@@ -9,10 +9,9 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone, KeyRound, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import AuthLayout from '@/components/auth-layout';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast'; // Ensure this is correctly imported as useToast
 
 const loginSchema = z.object({
   phoneNumber: z.string().regex(/^09\d{9}$/, 'شماره موبایل معتبر (مانند 09123456789) وارد کنید'),
@@ -71,8 +70,8 @@ export default function LoginPage() {
     <AuthLayout 
       title={step === 'phoneNumber' ? "ورود با شماره موبایل" : "ورود با کد تایید"}
       illustrationUrl="https://placehold.co/1200x800.png"
-      illustrationAlt="ورود به حساب کاربری"
-      illustrationAiHint="secure login user interface"
+      illustrationAlt={step === 'phoneNumber' ? "ورود به حساب کاربری" : "تایید کد یکبار مصرف"}
+      illustrationAiHint={step === 'phoneNumber' ? "secure login user interface" : "otp verification mobile security"}
     >
       {step === 'phoneNumber' && (
         <Form {...phoneForm}>
@@ -124,12 +123,15 @@ export default function LoginPage() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
+                      type="text" // Changed to text for better control over input, browsers might handle "number" differently
                       dir="ltr"
                       maxLength={6}
                       placeholder="● ● ● ● ● ●"
                       {...field}
-                      className="text-2xl tracking-[0.5em] text-center font-mono py-3 px-4"
+                      className="text-2xl tracking-[0.5em] text-center font-mono py-3 px-4" // Increased tracking for digit separation illusion
+                      autoComplete="one-time-code" // Helps with OTP autofill
+                      inputMode="numeric" // Suggests numeric keyboard on mobile
+                      pattern="\d{6}" // Basic pattern validation
                     />
                   </FormControl>
                   <FormMessage />
@@ -147,7 +149,22 @@ export default function LoginPage() {
                 </Button>
              </div>
             <div className="text-center text-sm">
-              <Button variant="link" size="sm" type="button" onClick={() => handlePhoneNumberSubmit({phoneNumber: submittedPhoneNumber})} className="text-primary hover:text-accent">
+              <Button 
+                variant="link" 
+                size="sm" 
+                type="button" 
+                onClick={() => {
+                  // Simulate OTP resend
+                  toast({
+                    title: 'کد تایید مجددا ارسال شد',
+                    description: `کد جدیدی به شماره ${submittedPhoneNumber} ارسال گردید.`,
+                    variant: 'default',
+                  });
+                  // In a real app, you would call handlePhoneNumberSubmit or a dedicated resend function
+                  // handlePhoneNumberSubmit({phoneNumber: submittedPhoneNumber})
+                }} 
+                className="text-primary hover:text-accent"
+              >
                 ارسال مجدد کد
               </Button>
             </div>
@@ -157,10 +174,13 @@ export default function LoginPage() {
 
       <div className="mt-8 text-center">
         <p className="text-sm text-muted-foreground">
-          هنوز حساب کاربری ندارید؟{' '}
-          <Link href="/register" className="font-medium text-primary hover:text-accent hover:underline transition-colors">
-            ثبت نام کنید
-            <UserPlus className="inline-block mr-1 rtl:ml-1 h-4 w-4 relative -top-0.5" />
+          {step === 'phoneNumber' ? 'هنوز حساب کاربری ندارید؟' : 'بازگشت به صفحه اصلی؟'}{' '}
+          <Link 
+            href={step === 'phoneNumber' ? "/register" : "/"} 
+            className="font-medium text-primary hover:text-accent hover:underline transition-colors"
+          >
+            {step === 'phoneNumber' ? 'ثبت نام کنید' : 'صفحه اصلی'}
+            {step === 'phoneNumber' && <UserPlus className="inline-block mr-1 rtl:ml-1 h-4 w-4 relative -top-0.5" />}
           </Link>
         </p>
       </div>
