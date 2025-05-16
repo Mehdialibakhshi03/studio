@@ -112,12 +112,25 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white bg-gradient-to-t from-black/60 to-transparent p-8">
                     <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">{slide.title}</h1>
-                    <p className="text-lg md:text-xl mb-8 drop-shadow-md animate-fade-in animation-delay-200">{slide.description}</p>
-                    <Link href={slide.link}>
-                      <Button size="lg" variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400">
-                        مشاهده بیشتر
-                      </Button>
-                    </Link>
+                    <p className="text-lg md:text-xl mb-6 md:mb-8 drop-shadow-md animate-fade-in animation-delay-200">{slide.description}</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                      {slide.ctas ? (
+                        slide.ctas.map((cta, index) => (
+                          <Link href={cta.link} key={index} legacyBehavior>
+                            <Button as="a" size="lg" variant={cta.variant} className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400 w-full sm:w-auto">
+                              {cta.icon && <cta.icon className="ml-2 rtl:mr-2 h-5 w-5" />}
+                              {cta.text}
+                            </Button>
+                          </Link>
+                        ))
+                      ) : slide.link ? (
+                        <Link href={slide.link} legacyBehavior>
+                          <Button as="a" size="lg" variant="default" className="transition-transform hover:scale-105 duration-300 shadow-md animate-fade-in animation-delay-400">
+                            مشاهده بیشتر
+                          </Button>
+                        </Link>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </CarouselItem>

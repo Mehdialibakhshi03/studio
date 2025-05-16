@@ -2,6 +2,7 @@
 'use client'; // Add use client if any client-side specific code is used, or if components importing this are client components
 
 import type { StaticImageData } from 'next/image';
+import type { LucideIcon } from 'lucide-react';
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -12,11 +13,56 @@ export const getFutureDate = (days: number, hours: number = 0, minutes: number =
     return date;
 };
 
+interface CtaButton {
+  text: string;
+  link: string;
+  variant: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive' | 'accent';
+  icon?: LucideIcon; // Optional icon from lucide-react
+}
+
 // Define hero slides data
-export const heroSlides = [
-    { id: 1, image: 'https://placehold.co/1200x400.png', alt: 'اسلاید اول', title: 'با هم بخرید و تخفیف بگیرید!', description: 'هرچه تعداد بیشتر، قیمت کمتر!', link: '#', aiHint: 'group shopping people illustration' },
-    { id: 2, image: 'https://placehold.co/1200x400.png', alt: 'اسلاید دوم', title: 'جشنواره کالاهای ایرانی', description: 'تخفیف‌های ویژه برای حمایت از تولید ملی', link: '#', aiHint: 'iranian products promotion sale' },
-    { id: 3, image: 'https://placehold.co/1200x400.png', alt: 'اسلاید سوم', title: 'لوازم دیجیتال با بهترین قیمت', description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی', link: '#', aiHint: 'digital gadgets sale offer' },
+export interface HeroSlide {
+  id: number;
+  image: string | StaticImageData;
+  alt: string;
+  title: string;
+  description: string;
+  link?: string; // For slides with a single, generic CTA
+  ctas?: CtaButton[]; // For slides with specific multiple CTAs
+  aiHint?: string;
+}
+
+export const heroSlides: HeroSlide[] = [
+    {
+      id: 1,
+      image: 'https://placehold.co/1200x400.png',
+      alt: 'خرید گروهی هوشمندانه',
+      title: 'قیمت‌ها بالا می‌رن، ما با هم پایین میاریم‌شون.',
+      description: 'بیا گروهی بخریم',
+      aiHint: 'community shopping saving money',
+      ctas: [
+        { text: 'اولین خرید گروهی من', link: '/deals', variant: 'default' },
+        { text: 'ساخت گروه', link: '/create-request', variant: 'outline' }
+      ]
+    },
+    {
+      id: 2,
+      image: 'https://placehold.co/1200x400.png',
+      alt: 'جشنواره کالاهای ایرانی',
+      title: 'جشنواره کالاهای ایرانی',
+      description: 'تخفیف‌های ویژه برای حمایت از تولید ملی',
+      link: '/category/iranian-products', // Example link
+      aiHint: 'iranian products promotion sale'
+    },
+    {
+      id: 3,
+      image: 'https://placehold.co/1200x400.png',
+      alt: 'لوازم دیجیتال با بهترین قیمت',
+      title: 'لوازم دیجیتال با بهترین قیمت',
+      description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی',
+      link: '/category/digital', // Example link
+      aiHint: 'digital gadgets sale offer'
+    },
 ];
 
 // تعریف داده‌های نمونه برای خریدهای گروهی
@@ -256,7 +302,7 @@ export const groupPurchases: GroupPurchaseItem[] = [
 export interface Category {
   id: number;
   name: string;
-  icon: string;
+  icon: string; // Consider using LucideIcon type here if icons are components
   slug: string;
   image: string;
   aiHint: string;
