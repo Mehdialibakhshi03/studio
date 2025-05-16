@@ -11,99 +11,99 @@ body {
 
 @layer base {
   :root {
-    /* Light Theme - Navy Blue & Gold */
-    --background: 210 20% 98%; /* Very Light Blue-Gray */
-    --foreground: 220 40% 10%; /* Dark Navy */
+    /* Light Theme - Navy Blue & Orange/Gold */
+    --background: 220 13% 91%; /* Soft Gray: #E5E7EB */
+    --foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 220 40% 10%; /* Dark Navy */
+    --card: 0 0% 100%; /* White: #FFFFFF */
+    --card-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 220 40% 10%; /* Dark Navy */
+    --popover: 0 0% 100%; /* White: #FFFFFF */
+    --popover-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --primary: 220 40% 30%; /* Classic Navy Blue */
-    --primary-foreground: 0 0% 98%; /* Near White */
+    --primary: 215 30% 17%; /* Dark Navy: #1E293B */
+    --primary-foreground: 0 0% 100%; /* White: #FFFFFF */
 
-    --secondary: 215 20% 90%; /* Light Blue-Gray */
-    --secondary-foreground: 220 25% 30%; /* Darker Blue-Gray */
+    --secondary: 220 13% 93%; /* Lighter Gray, slightly different from background */
+    --secondary-foreground: 215 30% 25%; /* Dark Navy, slightly lighter for secondary text */
 
-    --muted: 215 20% 85%; /* Medium Blue-Gray */
-    --muted-foreground: 215 15% 45%; /* Darker Medium Blue-Gray */
+    --muted: 215 14% 85%; /* Medium-Light Gray for muted elements */
+    --muted-foreground: 215 14% 45%; /* Darker Medium Gray for muted text */
 
-    --accent: 45 80% 60%; /* Gold/Yellow */
-    --accent-foreground: 220 40% 10%; /* Dark Navy on Accent */
+    --accent: 27 96% 60%; /* Orange: #FB923C */
+    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --destructive: 0 75% 55%; /* Clear Red (slightly desaturated) */
-    --destructive-foreground: 0 0% 98%; /* White on destructive */
+    --destructive: 0 75% 55%; /* Clear Red (current) */
+    --destructive-foreground: 0 0% 98%; /* White on destructive (current) */
 
-    --border: 215 20% 80%; /* Slightly darker border */
-    --input: 215 20% 90%; /* Input background matching secondary */
-    --ring: 45 80% 60%; /* Accent Gold for focus rings */
+    --border: 220 13% 85%; /* Light Gray Border */
+    --input: 0 0% 100%; /* White input background */
+    --ring: 27 96% 60%; /* Orange: #FB923C for focus rings */
 
-    --chart-1: 220 40% 30%; /* Primary Navy */
-    --chart-2: 45 80% 60%;  /* Accent Gold */
+    --chart-1: 215 30% 17%; /* Primary Navy */
+    --chart-2: 27 96% 60%;  /* Accent Orange */
     --chart-3: 190 70% 50%; /* Cyan/Teal */
     --chart-4: 0 75% 55%;   /* Red */
     --chart-5: 270 50% 60%; /* Purple */
 
     --radius: 0.5rem;
 
-    /* Sidebar Colors (Light - Navy adjustments) */
-    --sidebar-background: 215 25% 95%; /* Slightly darker light blue-gray */
-    --sidebar-foreground: 220 40% 10%; /* Dark Navy */
-    --sidebar-primary: 220 40% 25%; /* Darker Navy for sidebar primary */
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 215 20% 88%; /* Slightly darker than main secondary */
-    --sidebar-accent-foreground: 220 25% 30%;
-    --sidebar-border: 215 20% 78%; /* Slightly darker border */
-    --sidebar-ring: 45 80% 60%;
+    /* Sidebar Colors (Light - Navy/Orange adjustments) */
+    --sidebar-background: 220 13% 94%; /* Very light gray */
+    --sidebar-foreground: 220 47% 11%; /* Darkest Navy */
+    --sidebar-primary: 215 30% 17%; /* Main primary Navy */
+    --sidebar-primary-foreground: 0 0% 100%; /* White */
+    --sidebar-accent: 220 13% 88%; /* Light gray for selected items */
+    --sidebar-accent-foreground: 215 30% 17%; /* Dark Navy */
+    --sidebar-border: 215 14% 75%; /* Medium-Light Gray border */
+    --sidebar-ring: 27 96% 60%; /* Main accent Orange */
   }
 
   .dark {
-    /* Dark Theme - Navy Blue & Gold */
-    --background: 220 30% 10%; /* Very Dark Navy Blue */
-    --foreground: 210 20% 95%; /* Light Gray/Off-White */
+    /* Dark Theme - Navy Blue & Orange */
+    --background: 220 47% 11%; /* Darkest Navy: #0F172A */
+    --foreground: 220 13% 91%; /* Lightest Gray: #E5E7EB */
 
-    --card: 220 30% 15%; /* Slightly Lighter Dark Navy */
-    --card-foreground: 210 20% 95%; /* Light Gray/Off-White */
+    --card: 215 30% 17%; /* Dark Navy: #1E293B */
+    --card-foreground: 220 13% 91%; /* Lightest Gray: #E5E7EB */
 
-    --popover: 220 30% 12%; /* Slightly darker than card */
-    --popover-foreground: 210 20% 95%; /* Light Gray/Off-White */
+    --popover: 215 30% 17%; /* Dark Navy: #1E293B */
+    --popover-foreground: 220 13% 91%; /* Lightest Gray: #E5E7EB */
 
-    --primary: 220 50% 55%; /* Brighter Navy for Dark Mode */
-    --primary-foreground: 210 20% 98%; /* Light text on primary */
+    --primary: 27 96% 60%; /* Orange: #FB923C */
+    --primary-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --secondary: 220 20% 25%; /* Medium-Dark Blue-Gray */
-    --secondary-foreground: 210 20% 90%; /* Lighter Gray */
+    --secondary: 215 30% 20%; /* Slightly lighter Navy than card */
+    --secondary-foreground: 215 14% 65%; /* Medium Gray: #9CA3AF */
 
-    --muted: 220 20% 30%; /* Darker Medium Blue-Gray */
-    --muted-foreground: 210 15% 65%; /* Lighter Muted Gray */
+    --muted: 215 30% 14%; /* Darker than card, but not black */
+    --muted-foreground: 215 14% 65%; /* Medium Gray: #9CA3AF */
 
-    --accent: 45 85% 65%; /* Slightly Brighter Gold/Yellow for Dark */
-    --accent-foreground: 220 40% 10%; /* Dark Navy on Accent */
+    --accent: 27 94% 53%; /* Brighter Orange: #F97316 */
+    --accent-foreground: 220 47% 11%; /* Darkest Navy: #0F172A */
 
-    --destructive: 0 70% 60%; /* Adjusted Red for dark */
-    --destructive-foreground: 0 0% 98%; /* White on destructive */
+    --destructive: 0 70% 60%; /* Adjusted Red for dark (current) */
+    --destructive-foreground: 0 0% 98%; /* White on destructive (current) */
 
-    --border: 220 20% 25%; /* Same as secondary */
-    --input: 220 20% 25%; /* Same as secondary */
-    --ring: 45 85% 65%; /* Accent Gold for focus rings */
+    --border: 215 30% 25%; /* Dark Navy Border */
+    --input: 215 30% 20%; /* Same as secondary */
+    --ring: 27 94% 53%; /* Brighter Orange: #F97316 for focus rings */
 
-    --chart-1: 220 50% 55%;
-    --chart-2: 45 85% 65%;
-    --chart-3: 190 65% 60%;
-    --chart-4: 0 70% 60%;
-    --chart-5: 270 45% 65%;
+    --chart-1: 27 96% 60%; /* Primary Orange */
+    --chart-2: 27 94% 53%; /* Accent Brighter Orange */
+    --chart-3: 190 65% 60%; /* Cyan/Teal */
+    --chart-4: 0 70% 60%;   /* Red */
+    --chart-5: 270 45% 65%; /* Purple */
 
-    /* Sidebar Colors (Dark - Navy adjustments) */
-    --sidebar-background: 220 30% 13%; /* Slightly lighter than main dark bg */
-    --sidebar-foreground: 210 20% 95%;
-    --sidebar-primary: 220 50% 55%;
-    --sidebar-primary-foreground: 210 20% 98%;
-    --sidebar-accent: 220 20% 28%; /* Slightly lighter than main dark secondary */
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 220 20% 25%; /* Same as main dark border */
-    --sidebar-ring: 45 85% 65%;
+    /* Sidebar Colors (Dark - Navy/Orange adjustments) */
+    --sidebar-background: 220 47% 9%; /* Slightly darker than main dark BG */
+    --sidebar-foreground: 220 13% 91%; /* Lightest Gray */
+    --sidebar-primary: 27 96% 60%; /* Main dark primary Orange */
+    --sidebar-primary-foreground: 220 47% 11%; /* Darkest Navy */
+    --sidebar-accent: 215 30% 15%; /* Dark navy for selected items */
+    --sidebar-accent-foreground: 220 13% 91%; /* Lightest Gray */
+    --sidebar-border: 215 30% 14%; /* Dark navy border */
+    --sidebar-ring: 27 94% 53%; /* Main dark accent Brighter Orange */
   }
 }
 
