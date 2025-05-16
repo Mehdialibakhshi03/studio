@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation'; // Import useParams
 import Image from 'next/image';
-import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store } from 'lucide-react';
+import { Star, Users, Clock, ShoppingCart, ChevronLeft, ChevronRight, Share2, Heart, MessageSquare, Info, ShieldCheck, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data'; // Import from centralized data file
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -105,7 +105,9 @@ export default function ProductDetailPage() {
       if (product.variations) {
         const initialSelections: { [key: string]: string } = {};
         product.variations.forEach(variation => {
-          initialSelections[variation.type] = variation.options[0];
+          if (variation.options.length > 0) { // Ensure options exist
+            initialSelections[variation.type] = variation.options[0];
+          }
         });
         setSelectedVariations(initialSelections);
       }
@@ -166,20 +168,83 @@ export default function ProductDetailPage() {
    const getStatusInfo = () => {
     switch (groupStatus) {
       case 'completed':
-        return { text: "ظرفیت تکمیل شد! خرید نهایی شد.", icon: CheckCircle, color: "text-green-600" };
+        return { text: "ظرفیت تکمیل شد! خرید نهایی شد.", icon: CheckCircle, color: "text-green-600 dark:text-green-400" };
       case 'failed':
-        return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600" };
+        return { text: "مهلت خرید به پایان رسید و ظرفیت تکمیل نشد.", icon: XCircle, color: "text-red-600 dark:text-red-400" };
       case 'filling':
-        return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-600 animate-pulse" };
+        return { text: "در حال تکمیل ظرفیت... به زودی تکمیل می‌شود!", icon: AlertCircle, color: "text-yellow-500 dark:text-yellow-400 animate-pulse" };
       case 'active':
       default:
         const remaining = product.requiredMembers - product.members;
-        return { text: `${remaining} نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!`, icon: Users2, color: "text-blue-600" };
+        return { text: `${remaining > 0 ? formatNumber(remaining) + ' نفر دیگر تا تکمیل ظرفیت و تخفیف ویژه!' : 'در آستانه تکمیل ظرفیت!'}`, icon: Users2, color: "text-blue-600 dark:text-blue-400" };
     }
   };
 
   const statusInfo = getStatusInfo();
   const relatedProducts = getRelatedProducts(product.id, product.category);
+
+  // Discount Tiers Logic
+  const originalPrice = product.originalPrice;
+  const finalGroupPrice = product.groupPrice;
+  const finalDiscountPercent = product.discount;
+  const requiredMembers = product.requiredMembers;
+  const currentMembers = product.members;
+
+  let discountTiersDisplayData = [];
+
+  // Tier 1: Single buyer
+  discountTiersDisplayData.push({
+    members: 1,
+    label: "خرید تکی شما",
+    discountPercent: 0,
+    icon: User,
+    price: originalPrice,
+  });
+
+  // Intermediate Tier (if applicable)
+  const midMembersThreshold = Math.floor(requiredMembers / 2);
+  if (requiredMembers > 2 && midMembersThreshold > 1 && midMembersThreshold < requiredMembers) {
+    const midDiscountPercent = Math.max(0, Math.floor(finalDiscountPercent * 0.5)); // Example: 50% of final discount
+    discountTiersDisplayData.push({
+      members: midMembersThreshold,
+      label: `با ${formatNumber(midMembersThreshold)} نفر`,
+      discountPercent: midDiscountPercent,
+      icon: Users,
+      price: originalPrice * (1 - midDiscountPercent / 100),
+    });
+  }
+
+  // Final Tier: Full Group
+  discountTiersDisplayData.push({
+    members: requiredMembers,
+    label: `با ${formatNumber(requiredMembers)} نفر (تکمیل گروه)`,
+    discountPercent: finalDiscountPercent,
+    icon: UserCheck,
+    price: finalGroupPrice,
+  });
+
+  // Deduplicate and ensure sorted by members
+  discountTiersDisplayData = discountTiersDisplayData
+    .reduce((acc, current) => {
+      if (!acc.find(t => t.members === current.members)) {
+        acc.push(current);
+      } else if (current.members === requiredMembers) { 
+        acc = acc.filter(t => t.members !== requiredMembers);
+        acc.push(current);
+      }
+      return acc;
+    }, [] as typeof discountTiersDisplayData)
+    .sort((a, b) => a.members - b.members);
+
+  // Determine current tier for highlighting
+  let currentTierIndex = -1;
+  for (let i = discountTiersDisplayData.length - 1; i >= 0; i--) {
+    if (currentMembers >= discountTiersDisplayData[i].members) {
+      currentTierIndex = i;
+      break;
+    }
+  }
+   if (currentMembers === 0 && discountTiersDisplayData.length > 0) currentTierIndex = 0; // Highlight first if 0 members
 
 
   return (
@@ -207,7 +272,7 @@ export default function ProductDetailPage() {
                  {viewers > 0 && (
                     <div className="absolute bottom-4 left-4 bg-black/60 text-white px-2.5 py-1 rounded-md text-xs flex items-center gap-1.5 backdrop-blur-sm shadow">
                         <Eye className="w-3.5 h-3.5"/>
-                        {viewers} نفر در حال مشاهده
+                        {formatNumber(viewers)} نفر در حال مشاهده
                     </div>
                  )}
             </div>
@@ -227,6 +292,7 @@ export default function ProductDetailPage() {
                     alt={`تصویر ${index + 1} از ${product.title}`}
                     fill
                     className="object-cover"
+                    data-ai-hint={`product gallery image ${index +1}`}
                     sizes="10vw"
                     loading="lazy"
                   />
@@ -239,7 +305,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Badge variant="outline">{dataGetCategoryNameBySlug(product.category)}</Badge>
+              <Badge variant="outline" className="bg-secondary/70 border-secondary-foreground/20">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
                   <Image src="https://placehold.co/20x20.png" width={16} height={16} alt="پرچم ایران" className="w-4 h-4 rounded-full" data-ai-hint="iran flag" />
@@ -247,7 +313,7 @@ export default function ProductDetailPage() {
                 </Badge>
               )}
               {product.isFeatured && (
-                <Badge variant="accent" className="shadow"> {/* Changed from default to accent */}
+                <Badge variant="accent" className="shadow">
                   <Star className="w-4 h-4 ml-1 rtl:mr-1 fill-current" />
                   پیشنهاد ویژه
                 </Badge>
@@ -258,30 +324,30 @@ export default function ProductDetailPage() {
               </div>
                {showPurchasedRecently && purchasedCount > 0 && (
                  <Badge variant="outline" className="text-destructive border-destructive/50 bg-destructive/10 dark:bg-destructive/20 animate-pulse">
-                    🔥 {purchasedCount} نفر در ساعت گذشته خریدند
+                    🔥 {formatNumber(purchasedCount)} نفر در ساعت گذشته خریدند
                  </Badge>
                )}
             </div>
 
             {store && (
-                 <Card className="bg-secondary/40 border-border shadow-sm">
-                   <CardHeader className="flex flex-row items-center gap-4 p-4">
-                     <Avatar className="w-14 h-14 border-2 border-background">
+                 <Card className="bg-secondary/30 dark:bg-secondary/20 border-border shadow-sm">
+                   <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4">
+                     <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-background shadow-md">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
-                       <AvatarFallback className="text-lg">{store.name.charAt(0)}</AvatarFallback>
+                       <AvatarFallback className="text-xl sm:text-2xl">{store.name.charAt(0)}</AvatarFallback>
                      </Avatar>
-                     <div className="flex-grow">
+                     <div className="flex-grow text-center sm:text-right">
                        <p className="text-xs text-muted-foreground mb-0.5">فروشنده:</p>
-                       <CardTitle className="text-base font-semibold">{store.name}</CardTitle>
+                       <CardTitle className="text-lg font-semibold text-card-foreground">{store.name}</CardTitle>
                        {store.offersInstallments && (
-                           <Badge variant="outline" className="mt-1 text-green-600 border-green-300 bg-green-50 dark:bg-green-900/30 text-xs">
+                           <Badge variant="outline" className="mt-1.5 text-xs text-green-700 dark:text-green-300 border-green-400 bg-green-100 dark:bg-green-900/40">
                                امکان خرید اقساطی
                            </Badge>
                         )}
                      </div>
-                     <Button variant="link" size="sm" asChild className="self-start mt-1">
+                     <Button variant="outline" size="sm" asChild className="mt-3 sm:mt-0 sm:self-center transition-transform hover:scale-105 duration-300 border-primary/50 text-primary hover:bg-primary/10">
                        <Link href={`/store/${store.id}`}>
-                           <Store className="mr-2 h-4 w-4" /> مشاهده فروشگاه
+                           <Store className="mr-2 rtl:ml-2 h-4 w-4" /> مشاهده فروشگاه
                         </Link>
                      </Button>
                    </CardHeader>
@@ -289,14 +355,14 @@ export default function ProductDetailPage() {
              )}
 
              {product.isPackage && product.packageContents && (
-              <Card className="bg-secondary/50 border-border shadow-sm">
-                <CardHeader className="pb-2 pt-4">
-                  <CardTitle className="text-base flex items-center gap-2">
+              <Card className="bg-secondary/30 dark:bg-secondary/20 border-border shadow-sm">
+                <CardHeader className="pb-2 pt-4 px-5">
+                  <CardTitle className="text-base flex items-center gap-2 text-card-foreground">
                     <Package className="w-5 h-5 text-primary" />
                     محتویات بسته
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 pb-4">
+                <CardContent className="pt-0 pb-4 px-5">
                   <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 pr-4">
                     {product.packageContents.map((content, index) => (
                       <li key={index}>
@@ -312,7 +378,7 @@ export default function ProductDetailPage() {
               <div className="space-y-5 border-t border-border pt-6">
                 {product.variations.map((variation) => (
                   <div key={variation.type}>
-                    <Label className="text-base font-semibold mb-3 block">{variation.type}: <span className="text-primary font-bold">{selectedVariations[variation.type]}</span></Label>
+                    <Label className="text-base font-semibold mb-3 block text-foreground">{variation.type}: <span className="text-primary font-bold">{selectedVariations[variation.type]}</span></Label>
                     <RadioGroup
                       dir="rtl"
                       value={selectedVariations[variation.type]}
@@ -324,8 +390,8 @@ export default function ProductDetailPage() {
                           key={option}
                           htmlFor={`${variation.type}-${option}`}
                           className={cn(
-                            "cursor-pointer rounded-md border border-input px-4 py-2 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
-                            "bg-background hover:bg-accent/50 hover:border-primary/50"
+                            "cursor-pointer rounded-md border border-input px-4 py-2.5 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-background has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
+                            "bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-primary/50"
                           )}
                         >
                           <RadioGroupItem
@@ -348,8 +414,8 @@ export default function ProductDetailPage() {
                 <span className="text-lg text-muted-foreground line-through">{formatNumber(product.originalPrice)} <span className="text-sm">تومان</span></span>
               </div>
                {product.originalPrice && product.groupPrice && (
-                <p className="text-green-600 font-semibold text-sm">
-                   شما {formatNumber(product.originalPrice - product.groupPrice)} تومان سود می‌کنید! ({product.discount}٪ تخفیف گروهی)
+                <p className="text-green-600 dark:text-green-400 font-semibold text-sm">
+                   شما {formatNumber(product.originalPrice - product.groupPrice)} تومان سود می‌کنید! ({formatNumber(product.discount)}٪ تخفیف گروهی)
                 </p>
                )}
             </div>
@@ -362,21 +428,21 @@ export default function ProductDetailPage() {
                         <TooltipTrigger asChild>
                            <div className="flex items-center gap-1.5 cursor-default">
                                <Users className="h-4 w-4" />
-                               <span>{product.members} / {product.requiredMembers} نفر عضو</span>
+                               <span>{formatNumber(product.members)} / {formatNumber(product.requiredMembers)} نفر عضو</span>
                            </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                           <p>{product.requiredMembers - product.members} نفر تا تکمیل ظرفیت</p>
+                           <p>{formatNumber(product.requiredMembers - product.members)} نفر تا تکمیل ظرفیت</p>
                         </TooltipContent>
                     </Tooltip>
                  </TooltipProvider>
 
                  {product.endDate && isEndingSoon(product.endDate) ? (
-                      <CountdownTimer endDate={product.endDate} className="font-semibold" />
+                      <CountdownTimer endDate={product.endDate} className="font-semibold text-sm" />
                   ) : product.endDate ? (
                       <div className="flex items-center gap-1">
                          <Clock className="h-4 w-4" />
-                         <span>{`بیش از ${Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} روز باقی مانده`}</span>
+                         <span>{`بیش از ${formatNumber(Math.ceil((product.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} روز مانده`}</span>
                       </div>
                   ) : (
                       <div className="flex items-center gap-1">
@@ -415,11 +481,11 @@ export default function ProductDetailPage() {
                             <Tooltip>
                                <TooltipTrigger asChild>
                                    <Avatar className="w-9 h-9 border-2 border-background bg-muted cursor-default shadow-sm">
-                                     <AvatarFallback>+{product.members - 7}</AvatarFallback>
+                                     <AvatarFallback>+{formatNumber(product.members - 7)}</AvatarFallback>
                                    </Avatar>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  <p>{product.members - 7}+ عضو دیگر</p>
+                                  <p>{formatNumber(product.members - 7)}+ عضو دیگر</p>
                                 </TooltipContent>
                             </Tooltip>
                          </TooltipProvider>
@@ -431,11 +497,11 @@ export default function ProductDetailPage() {
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-t border-border pt-6">
                <div className="flex items-center border border-input rounded-md h-12 shadow-sm">
-                 <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-full w-12 rounded-l-md rounded-r-none border-l border-input text-muted-foreground hover:bg-secondary">
+                 <Button variant="ghost" size="icon" onClick={decrementQuantity} className="h-full w-12 rounded-l-md rounded-r-none border-l rtl:border-r rtl:rounded-r-md rtl:rounded-l-none border-input text-muted-foreground hover:bg-secondary">
                    <ChevronRight className="h-5 w-5" />
                  </Button>
-                 <span className="px-4 font-semibold text-lg w-16 text-center flex items-center justify-center h-full">{quantity}</span>
-                 <Button variant="ghost" size="icon" onClick={incrementQuantity} className="h-full w-12 rounded-r-md rounded-l-none border-r border-input text-muted-foreground hover:bg-secondary">
+                 <span className="px-4 font-semibold text-lg w-16 text-center flex items-center justify-center h-full">{formatNumber(quantity)}</span>
+                 <Button variant="ghost" size="icon" onClick={incrementQuantity} className="h-full w-12 rounded-r-md rounded-l-none border-r rtl:border-l rtl:rounded-l-md rtl:rounded-r-none border-input text-muted-foreground hover:bg-secondary">
                    <ChevronLeft className="h-5 w-5" />
                  </Button>
                </div>
@@ -475,38 +541,112 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
+        {/* Discount Tiers Section */}
+        <div className="mt-16 md:mt-20">
+          <h3 className="text-2xl font-bold mb-4 text-center text-foreground">
+            تخفیف پلکانی: هرچه بیشتر، ارزان‌تر!
+          </h3>
+          <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
+            ببینید چگونه با افزایش تعداد اعضای گروه، قیمت محصول کاهش پیدا می‌کند و شما سود بیشتری می‌کنید.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"> 
+            {discountTiersDisplayData.map((tier, index) => (
+              <Card
+                key={index}
+                className={cn(
+                  "text-center p-6 rounded-xl shadow-lg border border-border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 group relative flex flex-col justify-between min-h-[280px] sm:min-h-[300px]",
+                  currentTierIndex > index && product.members < product.requiredMembers && "opacity-60", // Achieved but not current
+                  currentTierIndex === index && product.members < product.requiredMembers && "!opacity-100 border-2 border-primary shadow-primary/20 scale-105 z-10", // Current active tier
+                  product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && "!opacity-100 border-2 border-green-500 shadow-green-500/30 scale-105 z-10", // Group completed
+                  index === discountTiersDisplayData.length - 1 && !(product.members >= product.requiredMembers) && "bg-secondary/30 dark:bg-secondary/20", // Default style for final tier if not completed
+                  index === discountTiersDisplayData.length - 1 && (product.members >= product.requiredMembers) && "bg-green-500/10 dark:bg-green-500/20" // Style for completed final tier
+                )}
+              >
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-background p-1 rounded-full border border-border shadow-md z-20">
+                  <div className={cn(
+                    "w-12 h-12 rounded-full flex items-center justify-center text-white",
+                     (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "bg-green-500" : 
+                     (currentTierIndex === index && product.members < product.requiredMembers ) ? "bg-primary animate-pulse" :
+                     "bg-muted-foreground"
+                  )}>
+                    <tier.icon className="w-7 h-7" />
+                  </div>
+                </div>
+                <CardHeader className="pt-10 pb-2">
+                  <CardTitle className="text-lg font-semibold text-card-foreground">{tier.label}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col justify-center items-center">
+                  <p className={cn(
+                      "text-3xl font-bold my-2",
+                      (currentTierIndex === index && product.members < product.requiredMembers) || (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) ? "text-primary" : "text-muted-foreground"
+                    )}
+                  >
+                    {formatNumber(Math.round(tier.price))} <span className="text-sm font-normal">تومان</span>
+                  </p>
+                  {tier.discountPercent > 0 && (
+                    <Badge variant={ (product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1) || (currentTierIndex === index && product.members < product.requiredMembers) ? "destructive" : "secondary"} className="text-base px-3 py-1">
+                      {formatNumber(tier.discountPercent)}٪ تخفیف
+                    </Badge>
+                  )}
+                  {tier.discountPercent === 0 && (
+                     <Badge variant="outline" className="text-sm px-3 py-1">قیمت پایه</Badge>
+                  )}
+                </CardContent>
+                { (currentTierIndex === index && product.members < product.requiredMembers ) && (
+                   <div className="absolute bottom-2 right-2 left-2 text-center">
+                      <Badge variant="default" className="bg-primary/90 text-primary-foreground text-xs px-2 py-1 shadow">
+                        گروه شما در این مرحله است!
+                      </Badge>
+                   </div>
+                )}
+                { product.members >= product.requiredMembers && index === discountTiersDisplayData.length -1 && (
+                     <div className="absolute bottom-2 right-2 left-2 text-center">
+                        <Badge variant="default" className="bg-green-600 text-white text-xs px-2 py-1 shadow">
+                           گروه شما تکمیل شده!
+                        </Badge>
+                     </div>
+                )}
+              </Card>
+            ))}
+          </div>
+           <p className="text-center text-muted-foreground mt-8 text-xs">
+            * قیمت‌ها و درصد تخفیف‌ها برای سطوح میانی به صورت تخمینی و برای نمایش محاسبه شده‌اند. قیمت نهایی گروهی با تکمیل ظرفیت اعمال می‌شود.
+          </p>
+        </div>
+
         <div className="mt-16 md:mt-20">
            <Tabs defaultValue="description" className="w-full" dir="rtl">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-secondary rounded-lg p-1 shadow-sm">
-              <TabsTrigger value="description" className="text-base data-[state=active]:shadow-md">توضیحات</TabsTrigger>
-              <TabsTrigger value="details" className="text-base data-[state=active]:shadow-md">مشخصات فنی</TabsTrigger>
-              <TabsTrigger value="reviews" className="text-base data-[state=active]:shadow-md">نظرات کاربران ({product.recentMembers?.length ?? 0 + 5})</TabsTrigger>
-              <TabsTrigger value="shipping" className="text-base data-[state=active]:shadow-md">ارسال و بازگشت</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-secondary/50 dark:bg-secondary/30 rounded-lg p-1 shadow-sm">
+              <TabsTrigger value="description" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">توضیحات</TabsTrigger>
+              <TabsTrigger value="details" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">مشخصات فنی</TabsTrigger>
+              <TabsTrigger value="reviews" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">نظرات کاربران ({formatNumber((product.recentMembers?.length ?? 0) + 5)})</TabsTrigger>
+              <TabsTrigger value="shipping" className="text-sm sm:text-base data-[state=active]:shadow-md data-[state=active]:bg-background">ارسال و بازگشت</TabsTrigger>
             </TabsList>
 
             <TabsContent value="description" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm text-foreground">
-              <h3 className="text-xl font-semibold mb-5">معرفی محصول</h3>
+              <h3 className="text-xl font-semibold mb-5 text-card-foreground">معرفی محصول</h3>
               <article className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+                  این یک محصول نمونه با کیفیت بالا است که برای خریدهای گروهی ارائه شده است. با پیوستن به گروه خرید، می‌توانید این محصول را با قیمت بسیار مناسب‌تری تهیه کنید. ما همواره در تلاشیم تا بهترین محصولات را با بهترین شرایط برای شما فراهم آوریم.
                 </p>
                  <p>
-                  کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                  توضیحات بیشتر در مورد ویژگی‌ها، کاربردها و مزایای این محصول در اینجا قرار می‌گیرد. هدف ما ارائه اطلاعات کامل و شفاف به شما عزیزان است تا با اطمینان کامل خرید خود را انجام دهید. مشارکت شما در گروه‌های خرید به ما کمک می‌کند تا تخفیف‌های بهتری از تامین‌کنندگان دریافت کنیم.
                 </p>
                <Separator className="my-6"/>
-               <h4 className="text-lg font-semibold mb-3 !text-foreground">ویژگی‌های کلیدی:</h4>
+               <h4 className="text-lg font-semibold mb-3 !text-card-foreground">ویژگی‌های کلیدی:</h4>
                <ul className="list-disc space-y-2 pr-5">
-                    <li>پردازنده قدرتمند برای اجرای روان برنامه‌ها</li>
-                    <li>صفحه نمایش باکیفیت با رنگ‌های زنده</li>
-                    <li>دوربین حرفه‌ای با قابلیت عکاسی در نور کم</li>
-                    <li>باتری با طول عمر بالا برای استفاده طولانی مدت</li>
+                    <li>پردازنده قدرتمند برای اجرای روان برنامه‌ها (در صورت مرتبط بودن)</li>
+                    <li>صفحه نمایش باکیفیت با رنگ‌های زنده (در صورت مرتبط بودن)</li>
+                    <li>دوربین حرفه‌ای با قابلیت عکاسی در نور کم (در صورت مرتبط بودن)</li>
+                    <li>باتری با طول عمر بالا برای استفاده طولانی مدت (در صورت مرتبط بودن)</li>
                     <li>طراحی زیبا و مدرن با مواد اولیه باکیفیت</li>
+                    <li>مناسب برای استفاده روزمره و حرفه‌ای</li>
                </ul>
               </article>
             </TabsContent>
 
             <TabsContent value="details" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
-               <h3 className="text-xl font-semibold mb-6 text-foreground">مشخصات فنی</h3>
+               <h3 className="text-xl font-semibold mb-6 text-card-foreground">مشخصات فنی</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
                    <div className="flex justify-between border-b border-border/70 pb-2">
                        <span className="text-muted-foreground">برند:</span>
@@ -547,18 +687,18 @@ export default function ProductDetailPage() {
 
             <TabsContent value="reviews" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                <h3 className="text-xl font-semibold mb-4 md:mb-0 text-foreground">نظرات کاربران ({product.recentMembers?.length ?? 0 + 5})</h3>
-                <Button> <MessageSquare className="w-4 h-4 ml-2"/> ثبت نظر جدید</Button>
+                <h3 className="text-xl font-semibold mb-4 md:mb-0 text-card-foreground">نظرات کاربران ({formatNumber((product.recentMembers?.length ?? 0) + 5)})</h3>
+                <Button> <MessageSquare className="w-4 h-4 ml-2 rtl:mr-2"/> ثبت نظر جدید</Button>
               </div>
               <div className="space-y-8">
                 <div className="flex gap-4 border-b border-border/70 pb-6">
                    <Avatar className="mt-1">
-                     <AvatarImage src="https://placehold.co/40x40.png?text=AR" alt="کاربر ۱" />
+                     <AvatarImage src="https://placehold.co/40x40.png?text=AR" alt="کاربر ۱" data-ai-hint="user avatar" />
                      <AvatarFallback>ع ر</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
                        <div className="flex justify-between items-center mb-1.5">
-                           <span className="font-semibold text-foreground">علی رضایی</span>
+                           <span className="font-semibold text-card-foreground">علی رضایی</span>
                            <span className="text-xs text-muted-foreground">۲ روز پیش</span>
                        </div>
                        <div className="flex gap-0.5 mb-3">
@@ -569,22 +709,22 @@ export default function ProductDetailPage() {
                        <p className="text-sm text-muted-foreground leading-relaxed mb-3">کیفیت محصول عالی بود و قیمت گروهی هم خیلی مناسب بود. سریع به دستم رسید. ممنون از خریدگروهی.</p>
                        <div className="flex gap-3">
                             <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <Heart className="w-3.5 h-3.5 ml-1" /> مفید بود (۵)
+                                <Heart className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> مفید بود (۵)
                             </Button>
                              <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <MessageSquare className="w-3.5 h-3.5 ml-1" /> پاسخ
+                                <MessageSquare className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> پاسخ
                             </Button>
                        </div>
                    </div>
                 </div>
                 <div className="flex gap-4 border-b border-border/70 pb-6">
                    <Avatar className="mt-1">
-                     <AvatarImage src="https://placehold.co/40x40.png?text=MA" alt="کاربر ۲" />
+                     <AvatarImage src="https://placehold.co/40x40.png?text=MA" alt="کاربر ۲" data-ai-hint="user avatar" />
                      <AvatarFallback>م ا</AvatarFallback>
                    </Avatar>
                    <div className="flex-grow">
                        <div className="flex justify-between items-center mb-1.5">
-                           <span className="font-semibold text-foreground">مریم احمدی</span>
+                           <span className="font-semibold text-card-foreground">مریم احمدی</span>
                            <span className="text-xs text-muted-foreground">۵ روز پیش</span>
                        </div>
                        <div className="flex gap-0.5 mb-3">
@@ -595,7 +735,7 @@ export default function ProductDetailPage() {
                        <p className="text-sm text-muted-foreground leading-relaxed mb-3">بسته بندی خوب بود و محصول سالم رسید. قیمت واقعا به صرفه بود. پیشنهاد می‌کنم.</p>
                         <div className="flex gap-3">
                             <Button variant="ghost" size="sm" className="text-xs h-7 px-2 text-muted-foreground hover:bg-secondary hover:text-primary">
-                                <Heart className="w-3.5 h-3.5 ml-1" /> مفید بود (۱۲)
+                                <Heart className="w-3.5 h-3.5 ml-1 rtl:mr-1" /> مفید بود (۱۲)
                             </Button>
                        </div>
                    </div>
@@ -605,14 +745,14 @@ export default function ProductDetailPage() {
             </TabsContent>
 
              <TabsContent value="shipping" className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
-               <h3 className="text-xl font-semibold mb-6 text-foreground">اطلاعات ارسال و بازگشت کالا</h3>
+               <h3 className="text-xl font-semibold mb-6 text-card-foreground">اطلاعات ارسال و بازگشت کالا</h3>
                <div className="space-y-6 text-muted-foreground text-sm">
                    <div className="flex items-start gap-4">
                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1">
                          <ShippingIcon className="w-5 h-5 text-primary"/>
                        </div>
                        <div>
-                           <h4 className="font-semibold text-foreground mb-1">نحوه ارسال</h4>
+                           <h4 className="font-semibold text-card-foreground mb-1">نحوه ارسال</h4>
                            <p>ارسال برای تهران توسط پیک ویژه (۱ تا ۲ روز کاری) و برای سایر شهرها توسط پست پیشتاز (۳ تا ۵ روز کاری) انجام می‌شود. هزینه ارسال بر اساس وزن مرسوله و مقصد، در مرحله نهایی خرید محاسبه و نمایش داده می‌شود.</p>
                        </div>
                    </div>
@@ -621,7 +761,7 @@ export default function ProductDetailPage() {
                             <RefreshCw className="w-5 h-5 text-primary"/>
                         </div>
                        <div>
-                           <h4 className="font-semibold text-foreground mb-1">شرایط بازگشت کالا</h4>
+                           <h4 className="font-semibold text-card-foreground mb-1">شرایط بازگشت کالا</h4>
                            <p>شما می‌توانید تا ۷ روز کاری پس از دریافت سفارش، در صورت عدم استفاده و باز نشدن پلمپ کالا (در صورت وجود)، با هماهنگی واحد پشتیبانی، نسبت به بازگشت کالا اقدام نمایید. لطفاً شرایط کامل و موارد استثنا را در صفحه <Link href="/returns-policy" className="text-primary hover:underline font-medium">قوانین بازگشت</Link> مطالعه فرمایید.</p>
                        </div>
                    </div>
@@ -630,7 +770,7 @@ export default function ProductDetailPage() {
                             <ShieldCheck className="w-5 h-5 text-primary"/>
                        </div>
                        <div>
-                           <h4 className="font-semibold text-foreground mb-1">تضمین سلامت فیزیکی</h4>
+                           <h4 className="font-semibold text-card-foreground mb-1">تضمین سلامت فیزیکی</h4>
                            <p>تمامی کالاها پیش از ارسال از نظر سلامت ظاهری بررسی شده و با بسته‌بندی ایمن ارسال می‌گردند. در صورت مشاهده هرگونه آسیب‌دیدگی فیزیکی در زمان تحویل بسته از مامور ارسال، لطفاً از دریافت آن خودداری نموده و بلافاصله مراتب را به واحد پشتیبانی اطلاع دهید.</p>
                        </div>
                    </div>
@@ -645,20 +785,23 @@ export default function ProductDetailPage() {
               opts={{
                 align: "start",
                 direction: "rtl",
-                loop: relatedProducts.length > 4,
+                loop: relatedProducts.length > 4, // Ensure enough items for loop
               }}
               className="w-full relative"
             >
               <CarouselContent className="-ml-4 rtl:-mr-4">
-                {relatedProducts.map((relatedProduct) => (
-                  <CarouselItem key={relatedProduct.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4 mb-1">
+                {relatedProducts.length > 0 ? relatedProducts.map((relatedProduct) => (
+                  <CarouselItem key={relatedProduct.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4 rtl:pr-4 rtl:pl-0 mb-1">
                      <Link href={`/product/${relatedProduct.id}`} className="block h-full">
-                      <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-lg cursor-pointer bg-card">
+                      <Card className="overflow-hidden h-full flex flex-col border group transition-all duration-300 hover:border-primary hover:shadow-xl cursor-pointer bg-card rounded-lg">
                         <CardHeader className="p-0 relative aspect-[4/3]">
-                          <Image src={relatedProduct.image as string} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint}/>
-                          <Badge variant="destructive" className="absolute top-3 left-3">
-                            {relatedProduct.discount}٪ تخفیف
+                          <Image src={relatedProduct.image as string} width={300} height={225} alt={relatedProduct.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-ai-hint={relatedProduct.aiHint || 'related product'}/>
+                          <Badge variant="destructive" className="absolute top-3 left-3 rtl:right-3 rtl:left-auto">
+                            {formatNumber(relatedProduct.discount)}٪ تخفیف
                           </Badge>
+                           <Badge variant="outline" className="absolute top-3 right-3 rtl:left-3 rtl:right-auto bg-background/80 text-xs">
+                              {dataGetCategoryNameBySlug(relatedProduct.category)}
+                           </Badge>
                         </CardHeader>
                         <CardContent className="p-3 flex-grow flex flex-col">
                           <h5 className="font-semibold text-sm mb-1 h-10 overflow-hidden flex-grow text-card-foreground">{relatedProduct.title}</h5>
@@ -672,29 +815,32 @@ export default function ProductDetailPage() {
                               <Progress value={(relatedProduct.members / relatedProduct.requiredMembers) * 100} className="h-1.5 mt-auto rounded-full" />
                            )}
                            <div className="flex justify-between text-xs text-muted-foreground mt-1.5">
-                            <span>{relatedProduct.members}/{relatedProduct.requiredMembers}</span>
+                            <span>{formatNumber(relatedProduct.members)}/{formatNumber(relatedProduct.requiredMembers)}</span>
                              {relatedProduct.endDate && isEndingSoon(relatedProduct.endDate) ? (
                                   <CountdownTimer endDate={relatedProduct.endDate} size="xs" />
                               ) : relatedProduct.endDate ? (
-                                  <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {`بیش از ${Math.ceil((relatedProduct.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} ر`}</span>
+                                  <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {`بیش از ${formatNumber(Math.ceil((relatedProduct.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} ر`}</span>
                               ) : (
                                    <span>زمان نامشخص</span>
                               )}
                           </div>
                         </CardContent>
                          <CardFooter className="p-3 pt-0">
-                           <Button size="sm" variant="outline" className="w-full text-xs">مشاهده جزئیات</Button>
+                           <Button size="sm" variant="outline" className="w-full text-xs transition-transform hover:scale-105 duration-300">مشاهده جزئیات</Button>
                         </CardFooter>
                       </Card>
                      </Link>
                   </CarouselItem>
-                ))}
-                 {relatedProducts.length === 0 && (
-                    <p className="text-center text-muted-foreground col-span-full py-8">محصول مشابهی یافت نشد.</p>
+                )) : (
+                    <p className="text-center text-muted-foreground col-span-full py-8 w-full">محصول مشابهی یافت نشد.</p>
                  )}
               </CarouselContent>
-              <CarouselPrevious className="absolute right-[-12px] rtl:left-[-12px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
-              <CarouselNext className="absolute left-[-12px] rtl:right-[-12px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/80 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
+              {relatedProducts.length > 4 && ( // Show controls only if looping or more items than visible
+                <>
+                    <CarouselPrevious className="absolute right-[-12px] rtl:left-[-12px] rtl:right-auto top-1/2 -translate-y-1/2 z-10 bg-background/90 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
+                    <CarouselNext className="absolute left-[-12px] rtl:right-[-12px] rtl:left-auto top-1/2 -translate-y-1/2 z-10 bg-background/90 border hover:bg-background transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed h-9 w-9 shadow-md"/>
+                </>
+              )}
             </Carousel>
         </div>
       </main>
@@ -703,3 +849,4 @@ export default function ProductDetailPage() {
     </div>
   );
 }
+
