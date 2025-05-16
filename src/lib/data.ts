@@ -3,6 +3,7 @@
 
 import type { StaticImageData } from 'next/image';
 import type { LucideIcon } from 'lucide-react';
+import { Building, Newspaper, Percent, Phone } from 'lucide-react'; // Added for header links
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -35,7 +36,7 @@ export interface HeroSlide {
 export const heroSlides: HeroSlide[] = [
     {
       id: 1,
-      image: 'https://placehold.co/1200x400.png',
+      image: 'https://placehold.co/1200x450.png',
       alt: 'خرید گروهی هوشمندانه',
       title: 'قیمت‌ها بالا می‌رن، ما با هم پایین میاریم‌شون.',
       description: 'بیا گروهی بخریم',
@@ -47,7 +48,7 @@ export const heroSlides: HeroSlide[] = [
     },
     {
       id: 2,
-      image: 'https://placehold.co/1200x400.png',
+      image: 'https://placehold.co/1200x450.png',
       alt: 'جشنواره کالاهای ایرانی',
       title: 'جشنواره کالاهای ایرانی',
       description: 'تخفیف‌های ویژه برای حمایت از تولید ملی',
@@ -56,7 +57,7 @@ export const heroSlides: HeroSlide[] = [
     },
     {
       id: 3,
-      image: 'https://placehold.co/1200x400.png',
+      image: 'https://placehold.co/1200x450.png',
       alt: 'لوازم دیجیتال با بهترین قیمت',
       title: 'لوازم دیجیتال با بهترین قیمت',
       description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی',
@@ -318,6 +319,13 @@ export const categories: Category[] = [
   { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://placehold.co/80x80.png', aiHint: 'miscellaneous package box' }
 ];
 
+export const otherHeaderLinks = [
+    { name: 'فروش ویژه', icon: Percent , slug: 'special-offers'},
+    { name: 'وبلاگ', icon: Newspaper , slug: 'blog'},
+    { name: 'درباره ما', icon: Building , slug: 'about'},
+    { name: 'تماس با ما', icon: Phone, slug: 'contact'},
+];
+
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان
 export interface Store {
   id: number;
@@ -429,7 +437,7 @@ export interface SellerTestimonial {
   avatar: string;
   comment: string;
   rating: number;
-  productsSold: number;
+  productsSold?: number; // Optional for cases where this data might not be available or relevant
   aiHint: string;
 }
 export const sellerTestimonials: SellerTestimonial[] = [
@@ -512,3 +520,41 @@ export const allGroupProducts: GroupPurchaseItem[] = [
     }
     return acc;
 }, [] as GroupPurchaseItem[]);
+
+
+// Data for "Followed Product Requests" section
+export interface FollowedProductRequest {
+  id: string;
+  productName: string;
+  followerCount: number;
+  productImage: string;
+  aiHint?: string;
+  categorySlug: string;
+}
+
+export const followedProductRequests: FollowedProductRequest[] = [
+  { 
+    id: 'ps5-request', 
+    productName: 'کنسول بازی PlayStation 5', 
+    followerCount: 123, 
+    productImage: 'https://placehold.co/300x200.png', 
+    aiHint: 'gaming console playstation', 
+    categorySlug: 'digital' 
+  },
+  { 
+    id: 'airfryer-request', 
+    productName: 'سرخ کن بدون روغن Philips مدل HD9252', 
+    followerCount: 87, 
+    productImage: 'https://placehold.co/300x200.png', 
+    aiHint: 'air fryer kitchen appliance', 
+    categorySlug: 'home-appliances' 
+  },
+  { 
+    id: 'robot-vacuum-request', 
+    productName: 'جارو رباتیک شیائومی مدل Robot Vacuum S10', 
+    followerCount: 65, 
+    productImage: 'https://placehold.co/300x200.png', 
+    aiHint: 'robot vacuum cleaner', 
+    categorySlug: 'home-appliances' 
+  },
+];

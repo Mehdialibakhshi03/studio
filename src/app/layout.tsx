@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body className="antialiased">
+      <body className="antialiased overflow-x-hidden"> {/* Added overflow-x-hidden */}
         {children}
         <Toaster />
         <RandomActivityToast /> {/* Add the RandomActivityToast component here */}

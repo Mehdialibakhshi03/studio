@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle } from 'lucide-react';
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle, Eye } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,7 @@ import {
   sellerTestimonials,
   buyerFaqs,
   sellerFaqs,
+  followedProductRequests, // Import followedProductRequests
   formatNumber,
   isEndingSoon,
   getCategoryNameBySlug
@@ -604,6 +605,44 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* کالاهای پرطرفدار در انتظار گروه */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
+        <h2 className="text-3xl font-bold text-center mb-12 text-foreground">کالاهای پرطرفدار در انتظار تشکیل گروه</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {followedProductRequests.map(request => (
+            <Card key={request.id} className="bg-card rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 group h-full flex flex-col">
+              <CardHeader className="p-0 relative aspect-[16/10]">
+                <Image 
+                  src={request.productImage} 
+                  width={400} 
+                  height={250} 
+                  alt={request.productName} 
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  data-ai-hint={request.aiHint}
+                />
+                 <Badge variant="secondary" className="absolute top-3 left-3 bg-background/80 text-xs px-2 py-0.5">
+                    {getCategoryNameBySlug(request.categorySlug)}
+                 </Badge>
+              </CardHeader>
+              <CardContent className="p-4 flex-grow flex flex-col">
+                <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg h-14 overflow-hidden flex-grow">{request.productName}</h3>
+                <div className="flex items-center text-muted-foreground text-sm mb-4 mt-2">
+                  <Eye className="w-4 h-4 ml-1.5 rtl:mr-1.5 text-primary" />
+                  <span>{formatNumber(request.followerCount)} نفر دنبال گروه برای این کالا هستند.</span>
+                </div>
+              </CardContent>
+              <CardFooter className="p-4 pt-0 mt-auto">
+                <Button variant="default" className="w-full text-base py-2.5 flex items-center justify-center transition-transform hover:scale-105 duration-300 shadow-md">
+                  <PlusCircle className="w-5 h-5 ml-2 rtl:mr-2" />
+                  ساخت گروه جدید با این کالا
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
        <section className="bg-background py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
@@ -941,4 +980,3 @@ export default function HomePage() {
     </div>
   );
 }
-
