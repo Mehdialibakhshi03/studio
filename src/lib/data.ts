@@ -3,7 +3,7 @@
 
 import type { StaticImageData } from 'next/image';
 import type { LucideIcon } from 'lucide-react';
-import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop } from 'lucide-react'; // Added for header links
+import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop, Users, Search, Target, Eye, CreditCard, TrendingUp, Rocket, Link as LinkIcon, Users2, CheckCircle, ShoppingBasket } from 'lucide-react'; // Added for header links
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -36,31 +36,31 @@ export interface HeroSlide {
 export const heroSlides: HeroSlide[] = [
     {
       id: 1,
-      image: 'https://placehold.co/1200x450.png',
+      image: 'https://placehold.co/1200x500.png',
       alt: 'خرید گروهی هوشمندانه',
       title: 'قیمت‌ها بالا می‌رن، ما با هم پایین میاریم‌شون.',
       description: 'بیا گروهی بخریم',
       aiHint: 'community shopping saving money',
       ctas: [
-        { text: 'اولین خرید گروهی من', link: '/deals', variant: 'default' },
-        { text: 'ساخت گروه', link: '/create-request', variant: 'outline' }
+        { text: 'اولین خرید گروهی من', link: '/deals', variant: 'default', icon: ShoppingCart },
+        { text: 'ساخت گروه', link: '/create-request', variant: 'outline', icon: PlusCircle }
       ]
     },
     {
       id: 2,
-      image: 'https://placehold.co/1200x450.png',
+      image: 'https://placehold.co/1200x500.png',
       alt: 'جشنواره کالاهای ایرانی',
-      title: 'جشنواره کالاهای ایرانی',
-      description: 'تخفیف‌های ویژه برای حمایت از تولید ملی',
+      title: 'حمایت از کالای با کیفیت ایرانی',
+      description: 'تخفیف‌های ویژه برای حمایت از تولید ملی و محصولات داخلی.',
       link: '/category/iranian-products', // Example link
       aiHint: 'iranian products promotion sale'
     },
     {
       id: 3,
-      image: 'https://placehold.co/1200x450.png',
+      image: 'https://placehold.co/1200x500.png',
       alt: 'لوازم دیجیتال با بهترین قیمت',
-      title: 'لوازم دیجیتال با بهترین قیمت',
-      description: 'جدیدترین گوشی‌ها و لپ‌تاپ‌ها با خرید گروهی',
+      title: 'تکنولوژی برای همه، با قیمت کمتر',
+      description: 'جدیدترین گوشی‌ها، لپ‌تاپ‌ها و گجت‌ها را گروهی بخرید و در هزینه صرفه‌جویی کنید.',
       link: '/category/digital', // Example link
       aiHint: 'digital gadgets sale offer'
     },
@@ -103,8 +103,8 @@ export interface GroupPurchaseItem {
 export const groupPurchases: GroupPurchaseItem[] = [
   {
     id: 1,
-    title: 'گوشی سامسونگ Galaxy S24',
-    image: 'https://placehold.co/300x200.png',
+    title: 'گوشی سامسونگ Galaxy S24 Ultra 5G ظرفیت 256GB رم 12GB',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 45000000,
     groupPrice: 39500000,
     discount: 12,
@@ -129,8 +129,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 2,
-    title: 'روغن آفتابگردان لادن ۱ لیتری (بسته ۳ عددی)',
-    image: 'https://placehold.co/300x200.png',
+    title: 'روغن آفتابگردان خالص لادن طلایی ۱ لیتری (بسته ۳ عددی)',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 580000,
     groupPrice: 435000,
     discount: 25,
@@ -154,8 +154,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 3,
-    title: 'ماشین لباسشویی اسنوا ۸ کیلویی',
-    image: 'https://placehold.co/300x200.png',
+    title: 'ماشین لباسشویی اتوماتیک اسنوا ۸ کیلویی مدل SWM-84S60',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 28500000,
     groupPrice: 24225000,
     discount: 15,
@@ -177,8 +177,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 4,
-    title: 'بسته گوشت گوسفندی تازه ۲ کیلویی',
-    image: 'https://placehold.co/300x200.png',
+    title: 'بسته گوشت گوسفندی تازه ممتاز ۲ کیلویی (ران و سردست)',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 1200000,
     groupPrice: 984000,
     discount: 18,
@@ -202,8 +202,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
     {
     id: 9,
-    title: 'گوشی شیائومی Poco X6 Pro',
-    image: 'https://placehold.co/300x200.png',
+    title: 'گوشی شیائومی Poco X6 Pro 5G ظرفیت 512GB رم 12GB',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 15500000,
     groupPrice: 13800000,
     discount: 11,
@@ -220,8 +220,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 5,
-    title: 'زعفران درجه یک قائنات ۵ مثقالی',
-    image: 'https://placehold.co/300x200.png',
+    title: 'زعفران سرگل درجه یک قائنات ۵ مثقالی در بسته بندی خاتم',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 1850000,
     groupPrice: 1480000,
     discount: 20,
@@ -241,8 +241,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 6,
-    title: 'تلویزیون ال‌جی ۵۵ اینچ ۴K',
-    image: 'https://placehold.co/300x200.png',
+    title: 'تلویزیون هوشمند ال‌جی ۵۵ اینچ ۴K UHD مدل 55UQ80006LD',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 38500000,
     groupPrice: 32725000,
     discount: 15,
@@ -259,10 +259,10 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 7,
-    title: 'فرش دستباف کاشان ۹ متری',
-    image: 'https://placehold.co/300x200.png',
-    originalPrice: 18500000,
-    groupPrice: 14800000,
+    title: 'فرش دستباف ابریشم طرح ماهی کاشان ۹ متری رنگ کرم',
+    image: 'https://placehold.co/400x300.png',
+    originalPrice: 185000000, // Price corrected
+    groupPrice: 148000000, // Price corrected
     discount: 20,
     members: 5,
     requiredMembers: 10,
@@ -278,8 +278,8 @@ export const groupPurchases: GroupPurchaseItem[] = [
   },
   {
     id: 8,
-    title: 'گز اصفهان درجه یک (جعبه ۱ کیلویی)',
-    image: 'https://placehold.co/300x200.png',
+    title: 'گز پسته ای کرمانی اصفهان درجه یک (جعبه ۱ کیلویی)',
+    image: 'https://placehold.co/400x300.png',
     originalPrice: 950000,
     groupPrice: 760000,
     discount: 20,
@@ -328,16 +328,17 @@ export interface MegaMenuCategory {
 }
 
 export const groupShoppingCategories: MegaMenuCategory[] = [
-  { title: 'موبایل', href: '/category/mobile', description: 'جدیدترین گوشی‌های هوشمند و لوازم جانبی', icon: Laptop },
-  { title: 'تبلت و گجت', href: '/category/tablets-gadgets', description: 'تبلت‌ها، ساعت‌های هوشمند و گجت‌های پوشیدنی', icon: Laptop },
-  { title: 'کامپیوتر و لپ‌تاپ', href: '/category/computers', description: 'انواع کامپیوتر، لپ‌تاپ و قطعات جانبی', icon: Laptop },
-  { title: 'صوتی و تصویری', href: '/category/audio-video', description: 'تلویزیون، سیستم‌های صوتی و سینمای خانگی', icon: Laptop },
-  { title: 'پوشاک زنانه', href: '/category/womens-fashion', description: 'جدیدترین مدل‌های لباس، کیف و کفش زنانه', icon: Shirt },
-  { title: 'پوشاک مردانه', href: '/category/mens-fashion', description: 'انواع لباس، اکسسوری و کفش مردانه', icon: Shirt },
-  { title: 'خوراکی و آشامیدنی', href: '/category/food-beverage', description: 'مواد غذایی تازه، خشکبار، کنسرو و نوشیدنی‌ها', icon: Utensils },
-  { title: 'لوازم خانه و آشپزخانه', href: '/category/home-kitchen', description: 'لوازم برقی، ظروف، دکوراسیون و ابزار آشپزخانه', icon: Home },
-  { title: 'زیبایی و سلامت', href: '/category/beauty-health', description: 'لوازم آرایشی، بهداشتی و محصولات سلامت محور', icon: ShoppingBag }, // Assuming ShoppingBag can represent beauty products
-  { title: 'ورزش و سفر', href: '/category/sports-travel', description: 'تجهیزات ورزشی، کمپینگ و لوازم سفر', icon: Percent }, // Placeholder icon
+  { title: 'موبایل و تبلت', href: '/category/digital', description: 'گوشی‌های هوشمند، تبلت و گجت‌های پوشیدنی', icon: Laptop },
+  { title: 'کامپیوتر و لوازم جانبی', href: '/category/digital', description: 'لپ‌تاپ، کامپیوتر، قطعات و تجهیزات شبکه', icon: Laptop },
+  { title: 'صوتی و تصویری', href: '/category/digital', description: 'تلویزیون، سیستم صوتی، سینمای خانگی و دوربین', icon: Laptop },
+  { title: 'پوشاک زنانه و مردانه', href: '/category/fashion', description: 'جدیدترین مدل‌های لباس، کیف، کفش و اکسسوری', icon: Shirt },
+  { title: 'خوراکی و آشامیدنی', href: '/category/food', description: 'مواد غذایی تازه، خشکبار، کنسرو و نوشیدنی‌ها', icon: Utensils },
+  { title: 'لوازم خانه و آشپزخانه', href: '/category/home-appliances', description: 'لوازم برقی، ظروف، دکوراسیون و ابزار آشپزخانه', icon: Home },
+  { title: 'زیبایی و سلامت', href: '/category/beauty-health', description: 'لوازم آرایشی، بهداشتی و محصولات سلامت محور', icon: ShoppingBag },
+  { title: 'ورزش و سفر', href: '/category/other', description: 'تجهیزات ورزشی، کمپینگ و لوازم سفر', icon: Percent },
+  { title: 'ابزارآلات و تجهیزات', href: '/category/tools', description: 'ابزار برقی، دستی و تجهیزات صنعتی و ساختمانی', icon: HelpCircle }, // Using HelpCircle as a placeholder for tools
+  { title: 'دکوراسیون منزل', href: '/category/home-decor', description: 'مبلمان، روشنایی، فرش و لوازم تزئینی خانه', icon: Home },
+  { title: 'کتاب، لوازم التحریر و هنر', href: '/category/other', description: 'کتاب‌های چاپی، نوشت‌افزار و لوازم هنری', icon: Newspaper },
   { title: 'همه دسته‌بندی‌ها', href: '/categories', description: 'مشاهده تمامی دسته‌بندی‌های محصولات گروهی', icon: ListChecks },
 ];
 
@@ -492,16 +493,20 @@ export interface FaqItem {
   answer: string;
 }
 export const buyerFaqs: FaqItem[] = [
-  { question: "خرید گروهی چیست؟", answer: "خرید گروهی روشی برای خرید کالا با قیمت پایین‌تر است. با جمع شدن تعداد مشخصی خریدار، تخفیف عمده‌فروشی برای همه اعمال می‌شود." },
-  { question: "چگونه می‌توانم در خرید گروهی شرکت کنم؟", answer: "کالای مورد نظر خود را پیدا کرده و دکمه 'پیوستن به گروه' را بزنید. پس از رسیدن به حد نصاب، خرید نهایی می‌شود." },
-  { question: "اگر گروه به حد نصاب نرسد چه می‌شود؟", answer: "در صورت عدم تکمیل ظرفیت گروه تا زمان مشخص شده، هزینه پرداخت شده (در صورت پیش‌پرداخت) به شما بازگردانده می‌شود یا می‌توانید به گروه دیگری بپیوندید." },
-  { question: "زمان تحویل کالا چقدر است؟", answer: "زمان تحویل پس از نهایی شدن خرید گروهی و پرداخت وجه، معمولا بین ۳ تا ۷ روز کاری است و به نوع کالا و آدرس شما بستگی دارد." },
+  { question: "خرید گروهی چیست و چگونه کار می‌کند؟", answer: "خرید گروهی روشی است که در آن تعدادی از افراد با هم یک محصول را خریداری می‌کنند تا بتوانند از تخفیف خرید عمده بهره‌مند شوند. شما به یک گروه خرید می‌پیوندید و پس از رسیدن تعداد اعضا به حد نصاب تعیین شده توسط فروشنده، خرید با قیمت کمتر برای همه اعضای گروه نهایی می‌شود." },
+  { question: "چگونه می‌توانم در یک خرید گروهی شرکت کنم؟", answer: "ابتدا محصول مورد نظر خود را در لیست خریدهای گروهی فعال پیدا کنید. سپس با کلیک بر روی دکمه 'پیوستن به گروه' و طی کردن مراحل (که ممکن است شامل پیش‌پرداخت یا رزرو باشد)، به گروه ملحق می‌شوید. دوستان خود را نیز می‌توانید برای تسریع در تکمیل گروه دعوت کنید." },
+  { question: "اگر گروه خرید به حد نصاب نرسد چه اتفاقی می‌افتد؟", answer: "اگر تا پایان مهلت تعیین شده، تعداد اعضای گروه به حد نصاب نرسد، معمولاً خرید گروهی لغو می‌شود. در این صورت، اگر پیش‌پرداختی انجام داده باشید، مبلغ به حساب شما بازگردانده می‌شود. در برخی موارد، ممکن است فروشنده پیشنهاد تمدید زمان یا خرید با تعداد کمتر و تخفیف متفاوت را ارائه دهد." },
+  { question: "آیا می‌توانم پس از پیوستن به گروه، از خرید انصراف دهم؟", answer: "شرایط انصراف از خرید گروهی به قوانین هر گروه و پلتفرم بستگی دارد. معمولاً تا قبل از تکمیل ظرفیت و نهایی شدن خرید، امکان لغو عضویت با شرایط خاصی وجود دارد. پس از نهایی شدن خرید، انصراف معمولاً امکان‌پذیر نیست مگر تحت شرایط خاص بازگشت کالا." },
+  { question: "کالاها چگونه و چه زمانی ارسال می‌شوند؟", answer: "پس از تکمیل ظرفیت گروه و نهایی شدن خرید، فروشنده کالاها را برای اعضای گروه ارسال می‌کند. زمان و نحوه ارسال (پیک، پست و...) معمولاً در صفحه جزئیات خرید گروهی یا توسط فروشنده اطلاع‌رسانی می‌شود." },
+  { question: "آیا کیفیت کالاهای خرید گروهی با خرید تکی متفاوت است؟", answer: "خیر، کالاهای عرضه شده در خرید گروهی همان کالاهای اصلی با همان کیفیت هستند. هدف از خرید گروهی، کاهش قیمت از طریق خرید عمده است و نه کاهش کیفیت." },
 ];
 
 export const sellerFaqs: FaqItem[] = [
-  { question: "چگونه می‌توانم محصولاتم را برای خرید گروهی عرضه کنم؟", answer: "ابتدا باید به عنوان فروشنده در سایت ثبت نام کنید. سپس می‌توانید محصولات خود را با تعیین قیمت گروهی و حداقل تعداد مورد نیاز برای فروش، ثبت کنید." },
-  { question: "تسویه حساب با فروشندگان چگونه انجام می‌شود؟", answer: "پس از تکمیل موفقیت‌آمیز خرید گروهی و تحویل کالا به خریداران، وجه مربوطه پس از کسر کارمزد پلتفرم، به حساب شما واریز خواهد شد." },
-  { question: "کارمزد پلتفرم چقدر است؟", answer: "کارمزد بر اساس نوع کالا و توافق اولیه تعیین می‌شود. برای اطلاع دقیق از درصد کارمزد، لطفا به بخش قوانین و مقررات فروشندگان مراجعه کنید." },
+  { question: "چگونه می‌توانم محصولاتم را برای خرید گروهی در پلتفرم شما عرضه کنم؟", answer: "ابتدا باید به عنوان فروشنده در پلتفرم ما ثبت‌نام کرده و اطلاعات فروشگاه خود را تکمیل کنید. سپس می‌توانید محصولات خود را با تعیین قیمت اصلی، قیمت گروهی، حداقل تعداد فروش برای فعال شدن تخفیف گروهی و مهلت زمانی برای تکمیل گروه، تعریف و برای فروش عرضه کنید." },
+  { question: "کارمزد پلتفرم برای فروشندگان چقدر است؟", answer: "کارمزد پلتفرم معمولاً درصدی از قیمت فروش گروهی محصول است. این درصد ممکن است بر اساس نوع کالا و توافقات اولیه متفاوت باشد. برای اطلاع دقیق از میزان کارمزد، لطفاً به بخش قراردادها و تعرفه‌های فروشندگان در پنل کاربری خود مراجعه کنید یا با تیم پشتیبانی ما تماس بگیرید." },
+  { question: "تسویه حساب با فروشندگان چه زمانی و چگونه انجام می‌شود؟", answer: "پس از آنکه یک گروه خرید با موفقیت به حد نصاب رسید و خرید توسط اعضا نهایی شد (معمولاً پس از پرداخت وجه توسط خریداران)، مبلغ فروش پس از کسر کارمزد پلتفرم، طبق دوره زمانی مشخص شده در قرارداد (مثلاً هفتگی یا ماهانه) به حساب بانکی معرفی شده توسط شما واریز خواهد شد." },
+  { question: "چه نوع محصولاتی برای فروش گروهی مناسب هستند؟", answer: "تقریباً هر نوع محصولی که قابلیت فروش عمده و ارائه تخفیف برای خرید تعدادی را داشته باشد، می‌تواند برای فروش گروهی مناسب باشد. محصولات پرطرفدار، کالاهای مصرفی، محصولات فصلی و کالاهایی که با افزایش تعداد خرید، هزینه تمام شده آنها برای شما کاهش می‌یابد، گزینه‌های خوبی هستند." },
+  { question: "چگونه می‌توانم فروش گروهی محصولاتم را تبلیغ کنم؟", answer: "پلتفرم ما ابزارهایی برای نمایش محصولات شما به کاربران فراهم می‌کند. علاوه بر این، شما نیز می‌توانید از طریق شبکه‌های اجتماعی خود، وب‌سایت، یا سایر کانال‌های بازاریابی، لینک خرید گروهی محصولاتتان را به اشتراک بگذارید و مشتریان را به پیوستن به گروه تشویق کنید. ارائه توضیحات کامل و تصاویر باکیفیت از محصول نیز در جذب مشتری بسیار موثر است." },
 ];
 
 // تبدیل اعداد به فرمت فارسی با جداکننده هزارگان
@@ -551,25 +556,25 @@ export interface FollowedProductRequest {
 export const followedProductRequests: FollowedProductRequest[] = [
   { 
     id: 'ps5-request', 
-    productName: 'کنسول بازی PlayStation 5', 
+    productName: 'کنسول بازی PlayStation 5 Slim Digital Edition', 
     followerCount: 123, 
-    productImage: 'https://placehold.co/300x200.png', 
+    productImage: 'https://placehold.co/400x300.png', 
     aiHint: 'gaming console playstation', 
     categorySlug: 'digital' 
   },
   { 
     id: 'airfryer-request', 
-    productName: 'سرخ کن بدون روغن Philips مدل HD9252', 
+    productName: 'سرخ کن بدون روغن فیلیپس مدل HD9252 Airfryer Essential', 
     followerCount: 87, 
-    productImage: 'https://placehold.co/300x200.png', 
+    productImage: 'https://placehold.co/400x300.png', 
     aiHint: 'air fryer kitchen appliance', 
     categorySlug: 'home-appliances' 
   },
   { 
     id: 'robot-vacuum-request', 
-    productName: 'جارو رباتیک شیائومی مدل Robot Vacuum S10', 
+    productName: 'جارو رباتیک هوشمند شیائومی مدل Robot Vacuum S10 Plus', 
     followerCount: 65, 
-    productImage: 'https://placehold.co/300x200.png', 
+    productImage: 'https://placehold.co/400x300.png', 
     aiHint: 'robot vacuum cleaner', 
     categorySlug: 'home-appliances' 
   },
