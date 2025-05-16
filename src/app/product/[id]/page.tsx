@@ -62,7 +62,7 @@ const getRelatedProducts = (currentProductId: number, categorySlug?: string) => 
 type PageParams = { id: string };
 
 export default function ProductDetailPage() {
-  const params = React.use(useParams<PageParams>()); // Correctly use useParams and React.use
+  const params = useParams<PageParams>(); 
   const productId = parseInt(params.id, 10);
   const product = getProductById(productId);
   const store = getStoreByProductId(productId);
@@ -73,23 +73,31 @@ export default function ProductDetailPage() {
   const [selectedVariations, setSelectedVariations] = useState<{ [key: string]: string }>({});
   const [progressValue, setProgressValue] = useState(0);
   const [groupStatus, setGroupStatus] = useState<'active' | 'filling' | 'completed' | 'failed'>('active');
+  
+  // States for simulated live activity
   const [viewers, setViewers] = useState(0);
   const [showPurchasedRecently, setShowPurchasedRecently] = useState(false);
   const [purchasedCount, setPurchasedCount] = useState(0);
 
   useEffect(() => {
-    const randomViewers = Math.floor(Math.random() * 30) + 5;
+    // Simulate initial viewers
+    const randomViewers = Math.floor(Math.random() * 30) + 5; // 5 to 34 viewers
     setViewers(randomViewers);
-    const shouldShow = Math.random() > 0.6;
+
+    // Simulate if "purchased recently" badge should show
+    const shouldShow = Math.random() > 0.6; // 40% chance to show
     setShowPurchasedRecently(shouldShow);
     if (shouldShow) {
-      setPurchasedCount(Math.floor(Math.random() * 10) + 3);
+      setPurchasedCount(Math.floor(Math.random() * 10) + 3); // 3 to 12 purchases
     }
+
+    // Simulate viewers count changing over time
     const interval = setInterval(() => {
-      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2));
-    }, 7000);
+      setViewers(v => Math.max(3, v + Math.floor(Math.random() * 5) - 2)); // Change by -2 to +2, min 3
+    }, 7000); // Update every 7 seconds
+
     return () => clearInterval(interval);
-  }, []);
+  }, []); // Run only once on mount
 
   useEffect(() => {
     if (product) {
@@ -230,7 +238,7 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-3 flex flex-col space-y-6">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <Badge variant="outline">{dataGetCategoryNameBySlug(product.category)}</Badge>
               {product.isIranian && (
                 <Badge variant="secondary" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700">
@@ -239,7 +247,7 @@ export default function ProductDetailPage() {
                 </Badge>
               )}
               {product.isFeatured && (
-                <Badge variant="default" className="bg-yellow-500 hover:bg-yellow-600 text-white shadow">
+                <Badge variant="accent" className="shadow"> {/* Changed from default to accent */}
                   <Star className="w-4 h-4 ml-1 rtl:mr-1 fill-current" />
                   پیشنهاد ویژه
                 </Badge>
@@ -249,7 +257,7 @@ export default function ProductDetailPage() {
                 <span>۴.۵ (۱۲۰ رأی)</span>
               </div>
                {showPurchasedRecently && purchasedCount > 0 && (
-                 <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50 dark:bg-green-900/30 animate-pulse">
+                 <Badge variant="outline" className="text-destructive border-destructive/50 bg-destructive/10 dark:bg-destructive/20 animate-pulse">
                     🔥 {purchasedCount} نفر در ساعت گذشته خریدند
                  </Badge>
                )}
