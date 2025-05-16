@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingBasket, LogIn, UserPlus, Search, Bell, Menu, ChevronDown, X, User, Heart, ShoppingCart, Percent, Newspaper, Flame, HelpCircle, Store as StoreIconOriginal, ListChecks, PlusCircle, ShoppingBag, LifeBuoy } from 'lucide-react'; // Removed Phone, Building
+import { ShoppingBasket, LogIn, UserPlus, Search, Menu, ChevronDown, X, User, Percent, Newspaper, Flame, HelpCircle, Store as StoreIconOriginal, ListChecks, PlusCircle, ShoppingBag, LifeBuoy } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -61,7 +61,6 @@ ListItem.displayName = "ListItem"
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const [cartItemCount, setCartItemCount] = React.useState(3); // Example count
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,9 +74,6 @@ const Header = () => {
 
   return (
     <header className="bg-background shadow-sm sticky top-0 z-50 border-b border-border/80">
-      {/* Top Bar Removed */}
-
-      {/* Main Header */}
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 lg:gap-4">
@@ -147,21 +143,13 @@ const Header = () => {
                   </nav>
                    <div className="p-4 border-t mt-auto space-y-3">
                       <SheetClose asChild>
-                        <Link href="/register" className="w-full">
-                            <Button variant="outline" className="w-full justify-center">
-                               <UserPlus className="ml-2 rtl:mr-2 h-4 w-4" />
-                               ثبت نام کاربر
+                        <Link href="/login" className="w-full">
+                            <Button variant="cta" className="w-full justify-center">
+                               <LogIn className="ml-2 rtl:mr-2 h-4 w-4" />
+                               ورود / ثبت نام
                              </Button>
                         </Link>
                       </SheetClose>
-                       <SheetClose asChild>
-                         <Link href="/login" className="w-full">
-                             <Button variant="cta" className="w-full justify-center">
-                               <LogIn className="ml-2 rtl:mr-2 h-4 w-4" />
-                               ورود کاربر
-                             </Button>
-                         </Link>
-                       </SheetClose>
                    </div>
                 </SheetContent>
               </Sheet>
@@ -190,30 +178,11 @@ const Header = () => {
 
           <div className="flex items-center space-x-1 rtl:space-x-reverse">
             <Link href="/login" passHref>
-                 <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs h-9 text-foreground hover:bg-secondary">
-                    <User className="w-4 h-4 ml-1 rtl:mr-1"/>
-                    ورود
-                 </Button>
-             </Link>
-             <Link href="/register" passHref>
                  <Button variant="cta" size="sm" className="hidden sm:inline-flex text-xs h-9">
-                     <UserPlus className="w-4 h-4 ml-1 rtl:mr-1"/>
-                     ثبت نام
+                    <LogIn className="w-4 h-4 ml-1 rtl:mr-1"/>
+                    ورود / ثبت نام
                  </Button>
              </Link>
-            <Button variant="ghost" size="icon" className="relative transition-transform hover:scale-110 duration-300 text-muted-foreground hover:text-primary h-9 w-9">
-              <ShoppingCart className="h-5 w-5" />
-               {cartItemCount > 0 && (
-                 <Badge variant="destructive" className="absolute -top-1 -right-1 rtl:-left-1 rtl:-right-auto h-4 w-4 min-w-4 p-0 flex items-center justify-center text-[10px] rounded-full animate-pulse">
-                   {cartItemCount}
-                 </Badge>
-               )}
-               <span className="sr-only">سبد خرید</span>
-            </Button>
-             <Button variant="ghost" size="icon" className="relative transition-transform hover:scale-110 duration-300 text-muted-foreground hover:text-primary h-9 w-9">
-              <Heart className="h-5 w-5" />
-               <span className="sr-only">علاقه‌مندی‌ها</span>
-            </Button>
           </div>
         </div>
       </div>
@@ -243,8 +212,8 @@ const Header = () => {
                           <NavigationMenuLink className={cn(
                             navigationMenuTriggerStyle(),
                             "h-10 text-sm bg-transparent shadow-none border-none hover:bg-accent/10 text-foreground hover:text-primary px-3 py-2 font-normal flex items-center gap-1.5",
-                            link.isCTA && "text-accent-foreground bg-accent hover:bg-accent/90 hover:text-accent-foreground font-semibold",
-                            link.special && "text-destructive hover:text-destructive"
+                            link.isCTA && "text-accent-foreground bg-accent hover:bg-accent/90 hover:text-accent-foreground font-semibold", // Accent is Orange
+                            link.special && "text-destructive hover:text-destructive" // Destructive is Red
                             )}
                           >
                              {link.icon && <link.icon className={cn("h-4 w-4", link.isCTA ? "text-accent-foreground" : "text-muted-foreground group-hover:text-primary", link.special && "text-destructive")}/>}
