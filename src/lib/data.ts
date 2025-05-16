@@ -3,7 +3,7 @@
 
 import type { StaticImageData } from 'next/image';
 import type { LucideIcon } from 'lucide-react';
-import { Building, Newspaper, Percent, Phone } from 'lucide-react'; // Added for header links
+import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop } from 'lucide-react'; // Added for header links
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -299,11 +299,11 @@ export const groupPurchases: GroupPurchaseItem[] = [
   }
 ];
 
-// تعریف دسته‌بندی‌های محصولات
+// تعریف دسته‌بندی‌های محصولات برای نمایش در هدر و صفحه دسته‌بندی‌ها
 export interface Category {
   id: number;
   name: string;
-  icon: string; // Consider using LucideIcon type here if icons are components
+  icon: string; 
   slug: string;
   image: string;
   aiHint: string;
@@ -319,12 +319,28 @@ export const categories: Category[] = [
   { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://placehold.co/80x80.png', aiHint: 'miscellaneous package box' }
 ];
 
-export const otherHeaderLinks = [
-    { name: 'فروش ویژه', icon: Percent , slug: 'special-offers'},
-    { name: 'وبلاگ', icon: Newspaper , slug: 'blog'},
-    { name: 'درباره ما', icon: Building , slug: 'about'},
-    { name: 'تماس با ما', icon: Phone, slug: 'contact'},
+// داده‌های جدید برای مگا منوی "خرید گروهی"
+export interface MegaMenuCategory {
+  title: string;
+  href: string;
+  description: string;
+  icon?: React.ElementType; // LucideIcon
+}
+
+export const groupShoppingCategories: MegaMenuCategory[] = [
+  { title: 'موبایل', href: '/category/mobile', description: 'جدیدترین گوشی‌های هوشمند و لوازم جانبی', icon: Laptop },
+  { title: 'تبلت و گجت', href: '/category/tablets-gadgets', description: 'تبلت‌ها، ساعت‌های هوشمند و گجت‌های پوشیدنی', icon: Laptop },
+  { title: 'کامپیوتر و لپ‌تاپ', href: '/category/computers', description: 'انواع کامپیوتر، لپ‌تاپ و قطعات جانبی', icon: Laptop },
+  { title: 'صوتی و تصویری', href: '/category/audio-video', description: 'تلویزیون، سیستم‌های صوتی و سینمای خانگی', icon: Laptop },
+  { title: 'پوشاک زنانه', href: '/category/womens-fashion', description: 'جدیدترین مدل‌های لباس، کیف و کفش زنانه', icon: Shirt },
+  { title: 'پوشاک مردانه', href: '/category/mens-fashion', description: 'انواع لباس، اکسسوری و کفش مردانه', icon: Shirt },
+  { title: 'خوراکی و آشامیدنی', href: '/category/food-beverage', description: 'مواد غذایی تازه، خشکبار، کنسرو و نوشیدنی‌ها', icon: Utensils },
+  { title: 'لوازم خانه و آشپزخانه', href: '/category/home-kitchen', description: 'لوازم برقی، ظروف، دکوراسیون و ابزار آشپزخانه', icon: Home },
+  { title: 'زیبایی و سلامت', href: '/category/beauty-health', description: 'لوازم آرایشی، بهداشتی و محصولات سلامت محور', icon: ShoppingBag }, // Assuming ShoppingBag can represent beauty products
+  { title: 'ورزش و سفر', href: '/category/sports-travel', description: 'تجهیزات ورزشی، کمپینگ و لوازم سفر', icon: Percent }, // Placeholder icon
+  { title: 'همه دسته‌بندی‌ها', href: '/categories', description: 'مشاهده تمامی دسته‌بندی‌های محصولات گروهی', icon: ListChecks },
 ];
+
 
 // داده‌های نمونه برای فروشگاه‌ها و محصولاتشان
 export interface Store {
