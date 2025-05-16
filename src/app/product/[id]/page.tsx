@@ -1,10 +1,10 @@
 
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare, ShieldCheck as ShieldCheckIcon } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -58,7 +58,7 @@ const getRelatedProducts = (currentProductId: number, categorySlug?: string) => 
 type PageParams = { id: string };
 
 export default function ProductDetailPage() {
-  const params = use(useParams<PageParams>());
+  const params = useParams<PageParams>();
   const productId = parseInt(params.id, 10);
   const product = getProductById(productId);
   const store = getStoreByProductId(productId);
@@ -665,7 +665,7 @@ export default function ProductDetailPage() {
                    </div>
                    <div className="flex items-start gap-4">
                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1">
-                            <ShieldCheck className="w-5 h-5 text-primary"/>
+                            <ShieldCheckIcon className="w-5 h-5 text-primary"/>
                        </div>
                        <div>
                            <h4 className="font-semibold text-card-foreground mb-1">تضمین سلامت فیزیکی</h4>
@@ -747,3 +747,4 @@ export default function ProductDetailPage() {
     </div>
   );
 }
+
