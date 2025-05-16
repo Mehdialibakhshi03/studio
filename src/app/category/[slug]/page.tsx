@@ -19,6 +19,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ShoppingCart, Users, Clock, Star, Filter, ListRestart, Package as PackageIcon, MapPin, AlertTriangle } from 'lucide-react';
 import CountdownTimer from '@/components/countdown-timer';
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
   allGroupProducts,
   categories,
   formatNumber,
@@ -175,78 +184,88 @@ export default function CategoryPage() {
     <div dir="rtl" className="font-['Vazirmatn'] bg-background min-h-screen text-foreground">
       <Header />
       <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-8 text-center">
-          {categoryName || 'دسته بندی محصولات'}
-        </h1>
-
-        {/* Filters Section */}
-        <Card className="mb-8 p-4 md:p-6 bg-card shadow-md border border-border">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-end">
-            <div>
-              <Label htmlFor="search-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">جستجو در عنوان</Label>
-              <Input
-                id="search-filter"
-                type="text"
-                placeholder="مثلا: گوشی سامسونگ"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-10"
-              />
-            </div>
-             <div>
-              <Label htmlFor="location-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">مکان</Label>
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger id="location-filter" className="h-10">
-                  <SelectValue placeholder="همه مکان‌ها" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">همه مکان‌ها</SelectItem>
-                  {availableLocations.map(loc => (
-                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="seller-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">فروشنده</Label>
-              <Select value={selectedSeller} onValueChange={setSelectedSeller}>
-                <SelectTrigger id="seller-filter" className="h-10">
-                  <SelectValue placeholder="همه فروشندگان" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">همه فروشندگان</SelectItem>
-                  {availableSellers.map(seller => (
-                    <SelectItem key={seller.id} value={seller.id.toString()}>{seller.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label htmlFor="min-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداقل قیمت</Label>
-                <Input id="min-price" type="number" placeholder="مثلا: ۱۰۰,۰۰۰" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="h-10" />
-              </div>
-              <div>
-                <Label htmlFor="max-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر قیمت</Label>
-                <Input id="max-price" type="number" placeholder="مثلا: ۵,۰۰۰,۰۰۰" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="h-10" />
-              </div>
-            </div>
-             <div>
-                <Label htmlFor="max-days-remaining" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر روز مانده</Label>
-                <Input id="max-days-remaining" type="number" placeholder="مثلا: ۳" value={maxDaysRemaining} onChange={(e) => setMaxDaysRemaining(e.target.value)} className="h-10" />
-            </div>
-            <div className="flex items-center pt-5"> {/* Adjusted padding for alignment */}
-                <Checkbox
-                    id="urgent-filter"
-                    checked={onlyUrgent}
-                    onCheckedChange={(checked) => setOnlyUrgent(checked as boolean)}
-                />
-                <Label htmlFor="urgent-filter" className="mr-2 text-sm font-medium text-muted-foreground">
-                    فقط گروه‌های فوری (کمتر از ۲۴ ساعت)
-                </Label>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 lg:col-span-2 xl:col-span-1"> {/* Adjusted span for responsiveness */}
-                <div className="flex-grow">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary">
+            {categoryName || 'دسته بندی محصولات'}
+          </h1>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="flex items-center">
+                <Filter className="w-4 h-4 ml-2 rtl:mr-2" />
+                فیلترها
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
+              <SheetHeader className="p-6 pb-4 border-b">
+                <SheetTitle>فیلتر پیشرفته</SheetTitle>
+                <SheetClose className="absolute right-4 top-4 rtl:left-4 rtl:right-auto" />
+              </SheetHeader>
+              <ScrollArea className="flex-grow">
+                <div className="p-6 space-y-6">
+                  <div>
+                    <Label htmlFor="search-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">جستجو در عنوان</Label>
+                    <Input
+                      id="search-filter"
+                      type="text"
+                      placeholder="مثلا: گوشی سامسونگ"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="h-10"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="location-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">مکان</Label>
+                    <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                      <SelectTrigger id="location-filter" className="h-10">
+                        <SelectValue placeholder="همه مکان‌ها" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">همه مکان‌ها</SelectItem>
+                        {availableLocations.map(loc => (
+                          <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="seller-filter" className="mb-1.5 block text-sm font-medium text-muted-foreground">فروشنده</Label>
+                    <Select value={selectedSeller} onValueChange={setSelectedSeller}>
+                      <SelectTrigger id="seller-filter" className="h-10">
+                        <SelectValue placeholder="همه فروشندگان" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">همه فروشندگان</SelectItem>
+                        {availableSellers.map(seller => (
+                          <SelectItem key={seller.id} value={seller.id.toString()}>{seller.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="min-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداقل قیمت</Label>
+                      <Input id="min-price" type="number" placeholder="مثلا: ۱۰۰,۰۰۰" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="h-10" />
+                    </div>
+                    <div>
+                      <Label htmlFor="max-price" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر قیمت</Label>
+                      <Input id="max-price" type="number" placeholder="مثلا: ۵,۰۰۰,۰۰۰" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="h-10" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="max-days-remaining" className="mb-1.5 block text-sm font-medium text-muted-foreground">حداکثر روز مانده</Label>
+                    <Input id="max-days-remaining" type="number" placeholder="مثلا: ۳" value={maxDaysRemaining} onChange={(e) => setMaxDaysRemaining(e.target.value)} className="h-10" />
+                  </div>
+                  <div className="flex items-center pt-2">
+                    <Checkbox
+                        id="urgent-filter"
+                        checked={onlyUrgent}
+                        onCheckedChange={(checked) => setOnlyUrgent(checked as boolean)}
+                    />
+                    <Label htmlFor="urgent-filter" className="mr-2 text-sm font-medium text-muted-foreground">
+                        فقط گروه‌های فوری (کمتر از ۲۴ ساعت)
+                    </Label>
+                  </div>
+                  <div>
                     <Label htmlFor="sort-by" className="mb-1.5 block text-sm font-medium text-muted-foreground">مرتب سازی</Label>
                     <Select value={sortBy} onValueChange={setSortBy}>
                         <SelectTrigger id="sort-by" className="h-10">
@@ -259,15 +278,22 @@ export default function CategoryPage() {
                         <SelectItem value="ending-soon">زمان پایان: نزدیک‌ترین</SelectItem>
                         </SelectContent>
                     </Select>
+                  </div>
                 </div>
-                 <Button onClick={resetFilters} variant="outline" className="h-10 w-full sm:w-auto mt-auto shrink-0">
-                    <ListRestart className="w-4 h-4 ml-2 rtl:mr-2" />
-                    پاک کردن
-                </Button>
-            </div>
-          </div>
-        </Card>
-
+              </ScrollArea>
+              <div className="p-6 border-t flex flex-col sm:flex-row justify-end gap-2">
+                  <Button onClick={resetFilters} variant="outline" className="w-full sm:w-auto">
+                      <ListRestart className="w-4 h-4 ml-2 rtl:mr-2" />
+                      پاک کردن همه
+                  </Button>
+                  <SheetClose asChild>
+                      <Button className="w-full sm:w-auto">اعمال فیلتر</Button>
+                  </SheetClose>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+        
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
