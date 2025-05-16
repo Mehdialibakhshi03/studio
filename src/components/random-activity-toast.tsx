@@ -43,13 +43,18 @@ const RandomActivityToast: React.FC = () => {
 
     setCurrentToast(newToast);
     setPosition(randomPosition);
+    
+    // Trigger entry animation
     setIsVisible(true);
 
     // Hide toast after some time
     displayTimerRef.current = setTimeout(() => {
-      setIsVisible(false);
-      // Schedule next toast after this one is hidden
-      scheduleNextToast();
+      setIsVisible(false); // Trigger exit animation
+      // Schedule next toast after this one is hidden and animation completes
+      // Add a small delay for exit animation to complete before scheduling next toast
+      setTimeout(() => {
+         scheduleNextToast();
+      }, 500); // Assuming exit animation is around 300-500ms
     }, 5000); // Display for 5 seconds
   };
 
@@ -68,22 +73,32 @@ const RandomActivityToast: React.FC = () => {
     };
   }, []);
 
-  if (!currentToast || !isVisible) {
+  if (!currentToast) { // Don't render if no toast or if isVisible is false (to allow animation out)
     return null;
   }
 
   const IconComponent = currentToast.icon;
 
+  const animationClasses = isVisible 
+    ? `animate-in fade-in-75 ${position === 'bottom-left' ? 'slide-in-from-left-8 slide-in-from-bottom-8' : 'slide-in-from-right-8 slide-in-from-bottom-8'}`
+    : `animate-out fade-out-75 ${position === 'bottom-left' ? 'slide-out-to-left-8 slide-out-to-bottom-8' : 'slide-out-to-bottom-8 slide-out-to-right-8'}`;
+
+
   return (
     <div
       className={cn(
-        "fixed p-4 rounded-lg shadow-xl text-sm font-medium text-foreground bg-card border border-border transition-all duration-500 ease-in-out z-[200]",
-        "max-w-xs w-full sm:w-auto",
+        "fixed p-4 rounded-lg shadow-xl text-sm font-medium text-foreground bg-card border border-border z-[200]",
+        "max-w-xs w-full sm:w-auto duration-300 ease-out", // Adjusted duration
         position === 'bottom-left' ? 'bottom-4 left-4 rtl:right-4 rtl:left-auto' : 'bottom-4 right-4 rtl:left-4 rtl:right-auto',
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        animationClasses,
+        !isVisible && 'opacity-0' // Ensure it's fully hidden after animation
       )}
+      style={{ animationFillMode: isVisible ? 'forwards' : 'forwards' }} // Keep final state of animation
       role="alert"
       dir="rtl"
+      // Conditionally render based on currentToast to allow exit animation to complete
+      // Or manage this with a key on the div if multiple toasts can queue
+      key={currentToast.id} 
     >
       <div className="flex items-center gap-3">
         <IconComponent 
@@ -101,3 +116,4 @@ const RandomActivityToast: React.FC = () => {
 };
 
 export default RandomActivityToast;
+

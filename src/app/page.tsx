@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle, Eye } from 'lucide-react';
+import { Search, ShoppingCart, Users, Clock, ChevronLeft, ChevronRight, Bell, Heart, Truck, Star, Tag, Check, Gift, Percent, ShieldCheck, Package, Globe, Building, Store, Target, Handshake, MessageCircle, Quote, HelpCircle, UserCheck, ShoppingBag, Folder, PanelLeft, X, LogIn, UserPlus, Phone, LifeBuoy, Newspaper, ArrowLeft, Rocket, CreditCard, TrendingUp, CheckCircle, Link as LinkIcon, Users2, User, PlusCircle, Eye, PartyPopper, PiggyBank, UtensilsCrossed, Plane } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -482,7 +482,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
       {/* How It Works Section */}
       <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">نحوه عملکرد خرید گروهی</h2>
@@ -642,7 +641,6 @@ export default function HomePage() {
         </div>
       </section>
 
-
       {/* نمایش فروشگاه‌ها و محصولاتشان */}
        <section className="bg-background py-16">
         <div className="container mx-auto px-4 lg:px-8 xl:px-16">
@@ -758,6 +756,59 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* "با اینا می‌صرفه" Section */}
+      <section className="container mx-auto px-4 lg:px-8 xl:px-16 py-16">
+        <h2 className="text-3xl font-bold text-center mb-4 text-foreground">با خرید گروهی، هم خرید کن هم تفریح! 🥳</h2>
+        <p className="text-xl text-center text-muted-foreground mb-10">
+          اینقدر که با خرید گروهی پولتو سیو می‌کنی، می‌تونی کلی کار دیگه هم بکنی!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="bg-card shadow-xl border border-border overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardHeader className="p-0 relative aspect-[16/9]">
+              <Image src="https://placehold.co/600x338.png" alt="گوشی و سفر شمال" layout="fill" objectFit="cover" className="group-hover:scale-105 transition-transform duration-300" data-ai-hint="smartphone beach travel"/>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 right-4 text-white">
+                <PartyPopper className="w-12 h-12 text-yellow-300 mb-2" />
+                <CardTitle className="text-2xl drop-shadow-md">گوشی پرچمدار + سفر شمال!</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <CardDescription className="text-base text-muted-foreground mb-3 leading-relaxed">
+                با پولی که برای خرید تکی یه گوشی پرچمدار کنار گذاشتی، می‌تونی همون گوشی رو گروهی بخری، <strong className="text-primary">۵ میلیون تومان</strong> هم برات بمونه، باهاش یه سفر توپ بری شمال و کلی هم خوش بگذرونی!
+              </CardDescription>
+              <div className="flex items-center justify-start gap-2 text-sm text-green-600 dark:text-green-400 font-semibold">
+                <PiggyBank className="w-5 h-5"/>
+                <span>صرفه‌جویی تقریبی: ۵,۰۰۰,۰۰۰ تومان</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card shadow-xl border border-border overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardHeader className="p-0 relative aspect-[16/9]">
+              <Image src="https://placehold.co/600x338.png" alt="لوازم خانگی و شام در رستوران" layout="fill" objectFit="cover" className="group-hover:scale-105 transition-transform duration-300" data-ai-hint="home appliances fancy dinner"/>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 right-4 text-white">
+                <UtensilsCrossed className="w-12 h-12 text-rose-300 mb-2" />
+                <CardTitle className="text-2xl drop-shadow-md">جهیزیه کامل‌تر + شام لاکچری!</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <CardDescription className="text-base text-muted-foreground mb-3 leading-relaxed">
+                وقتی لوازم بزرگ آشپزخونه رو گروهی می‌خری، اینقدر تو هزینه‌هات صرفه‌جویی می‌شه که می‌تونی با خیال راحت یه سرویس قابلمه گرون‌تر برداری و آخر هفته هم کل خانواده رو یه شام <strong className="text-primary">حسابی مهمون کنی!</strong>
+              </CardDescription>
+              <div className="flex items-center justify-start gap-2 text-sm text-green-600 dark:text-green-400 font-semibold">
+                <PiggyBank className="w-5 h-5"/>
+                <span>صرفه‌جویی تقریبی: ۸,۰۰۰,۰۰۰ تومان</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+         <p className="text-center text-lg text-muted-foreground mt-10 italic">
+            پولاتو خرج هیجان‌انگیزترین کارا کن، نه فقط خرید! 😉
+          </p>
+      </section>
+
 
        {/* بخش رضایت مشتریان و فروشندگان */}
       <section className="bg-background py-16">
@@ -980,3 +1031,4 @@ export default function HomePage() {
     </div>
   );
 }
+
