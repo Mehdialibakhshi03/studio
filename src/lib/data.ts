@@ -3,7 +3,7 @@
 
 import type { StaticImageData } from 'next/image';
 import type { LucideIcon } from 'lucide-react';
-import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop, Users, Search, Target, Eye, CreditCard, TrendingUp, Rocket, Link as LinkIcon, Users2, CheckCircle, ShoppingBasket, ShoppingCart } from 'lucide-react'; // Added ShoppingCart and other icons
+import { Building, Newspaper, Percent, Phone, ListChecks, PlusCircle, Flame, HelpCircle, Store as StoreIcon, ShoppingBag, Home, Shirt, Utensils, Laptop, Users, Search, Target, Eye, CreditCard, TrendingUp, Rocket, Link as LinkIcon, Users2, CheckCircle, ShoppingBasket, ShoppingCart, UserCheck, DollarSign, Zap, Award, Sparkles } from 'lucide-react';
 
 // Helper function to create future dates for consistent testing
 export const getFutureDate = (days: number, hours: number = 0, minutes: number = 0): Date => {
@@ -88,7 +88,8 @@ export interface GroupPurchaseItem {
   discount: number;
   members: number;
   requiredMembers: number;
-  endDate: Date;
+  endDate?: Date; // Made endDate optional
+  remainingTime?: string; // Added remainingTime for direct display if needed
   category: string; // Keep as slug
   isFeatured?: boolean;
   isIranian?: boolean;
@@ -303,20 +304,20 @@ export const groupPurchases: GroupPurchaseItem[] = [
 export interface Category {
   id: number;
   name: string;
-  icon: string; 
+  icon?: string;  // Made icon optional as it was not used in header, but kept for category page circles
   slug: string;
   image: string;
   aiHint: string;
 }
 export const categories: Category[] = [
-  { id: 1, name: 'دیجیتال', icon: '📱', slug: 'digital', image: 'https://placehold.co/80x80.png', aiHint: 'mobile phone category' },
-  { id: 2, name: 'مواد غذایی', icon: '🍎', slug: 'food', image: 'https://placehold.co/80x80.png', aiHint: 'grocery food category' },
-  { id: 3, name: 'لوازم خانگی', icon: '🏠', slug: 'home-appliances', image: 'https://placehold.co/80x80.png', aiHint: 'home appliance category' },
-  { id: 4, name: 'پوشاک', icon: '👕', slug: 'fashion', image: 'https://placehold.co/80x80.png', aiHint: 'fashion clothing category' },
-  { id: 5, name: 'زیبایی و سلامت', icon: '💄', slug: 'beauty-health', image: 'https://placehold.co/80x80.png', aiHint: 'beauty health cosmetic' },
-  { id: 6, name: 'خانه و دکور', icon: '🛋️', slug: 'home-decor', image: 'https://placehold.co/80x80.png', aiHint: 'home decor furniture' },
-  { id: 7, name: 'ابزار و تجهیزات', icon: '🛠️', slug: 'tools', image: 'https://placehold.co/80x80.png', aiHint: 'tools hardware category' },
-  { id: 8, name: 'سایر', icon: '📦', slug: 'other', image: 'https://placehold.co/80x80.png', aiHint: 'miscellaneous package box' }
+  { id: 1, name: 'دیجیتال', slug: 'digital', image: 'https://placehold.co/80x80.png', aiHint: 'mobile phone category', icon: '📱' },
+  { id: 2, name: 'مواد غذایی', slug: 'food', image: 'https://placehold.co/80x80.png', aiHint: 'grocery food category', icon: '🍎' },
+  { id: 3, name: 'لوازم خانگی', slug: 'home-appliances', image: 'https://placehold.co/80x80.png', aiHint: 'home appliance category', icon: '🏠' },
+  { id: 4, name: 'پوشاک', slug: 'fashion', image: 'https://placehold.co/80x80.png', aiHint: 'fashion clothing category', icon: '👕' },
+  { id: 5, name: 'زیبایی و سلامت', slug: 'beauty-health', image: 'https://placehold.co/80x80.png', aiHint: 'beauty health cosmetic', icon: '💄' },
+  { id: 6, name: 'خانه و دکور', slug: 'home-decor', image: 'https://placehold.co/80x80.png', aiHint: 'home decor furniture', icon: '🛋️' },
+  { id: 7, name: 'ابزار و تجهیزات', slug: 'tools', image: 'https://placehold.co/80x80.png', aiHint: 'tools hardware category', icon: '🛠️' },
+  { id: 8, name: 'سایر', slug: 'other', image: 'https://placehold.co/80x80.png', aiHint: 'miscellaneous package box', icon: '📦' }
 ];
 
 // داده‌های جدید برای مگا منوی "خرید گروهی"
@@ -336,10 +337,47 @@ export const groupShoppingCategories: MegaMenuCategory[] = [
   { title: 'لوازم خانه و آشپزخانه', href: '/category/home-appliances', description: 'لوازم برقی، ظروف، دکوراسیون و ابزار آشپزخانه', icon: Home },
   { title: 'زیبایی و سلامت', href: '/category/beauty-health', description: 'لوازم آرایشی، بهداشتی و محصولات سلامت محور', icon: ShoppingBag },
   { title: 'ورزش و سفر', href: '/category/other', description: 'تجهیزات ورزشی، کمپینگ و لوازم سفر', icon: Percent },
-  { title: 'ابزارآلات و تجهیزات', href: '/category/tools', description: 'ابزار برقی، دستی و تجهیزات صنعتی و ساختمانی', icon: HelpCircle }, // Using HelpCircle as a placeholder for tools
+  { title: 'ابزارآلات و تجهیزات', href: '/category/tools', description: 'ابزار برقی، دستی و تجهیزات صنعتی و ساختمانی', icon: HelpCircle },
   { title: 'دکوراسیون منزل', href: '/category/home-decor', description: 'مبلمان، روشنایی، فرش و لوازم تزئینی خانه', icon: Home },
   { title: 'کتاب، لوازم التحریر و هنر', href: '/category/other', description: 'کتاب‌های چاپی، نوشت‌افزار و لوازم هنری', icon: Newspaper },
   { title: 'همه دسته‌بندی‌ها', href: '/categories', description: 'مشاهده تمامی دسته‌بندی‌های محصولات گروهی', icon: ListChecks },
+];
+
+// Main Navigation Links for Header
+export interface MainNavLink {
+  title: string;
+  href: string;
+  icon?: LucideIcon;
+  special?: boolean;
+  isCTA?: boolean;
+  ctaText?: string;
+}
+
+export const mainNavLinks: MainNavLink[] = [
+  {
+    title: 'گروه‌های فعال',
+    href: '/deals', // Assuming a page for active deals
+    icon: ListChecks,
+  },
+  {
+    title: 'ساخت گروه جدید',
+    href: '/create-request', // Assuming a page to create a group request
+    icon: PlusCircle,
+    isCTA: true,
+    ctaText: 'یه گروه بساز و تخفیف بگیر',
+  },
+  {
+    title: 'تخفیف ویژه امروز',
+    href: '/today-special', // Assuming a page for today's special
+    icon: Flame,
+    special: true,
+    ctaText: '🔥 فقط امروز!',
+  },
+  {
+    title: 'چجوری کار می‌کنه؟',
+    href: '/how-it-works', // Assuming an educational page
+    icon: HelpCircle,
+  },
 ];
 
 
@@ -580,3 +618,5 @@ export const followedProductRequests: FollowedProductRequest[] = [
   },
 ];
 
+
+    
