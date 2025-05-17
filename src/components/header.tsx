@@ -144,7 +144,7 @@ const Header = () => {
                    <div className="p-4 border-t mt-auto space-y-3">
                       <SheetClose asChild>
                         <Link href="/login" className="w-full">
-                            <Button variant="cta" className="w-full justify-center">
+                            <Button variant="default" className="w-full justify-center">
                                <LogIn className="ml-2 rtl:mr-2 h-4 w-4" />
                                ورود / ثبت نام
                              </Button>
@@ -178,7 +178,7 @@ const Header = () => {
 
           <div className="flex items-center space-x-1 rtl:space-x-reverse">
             <Link href="/login" passHref>
-                 <Button variant="cta" size="sm" className="hidden sm:inline-flex text-xs h-9">
+                 <Button variant="default" size="sm" className="hidden sm:inline-flex text-xs h-9">
                     <LogIn className="w-4 h-4 ml-1 rtl:mr-1"/>
                     ورود / ثبت نام
                  </Button>
@@ -212,8 +212,8 @@ const Header = () => {
                           <NavigationMenuLink className={cn(
                             navigationMenuTriggerStyle(),
                             "h-10 text-sm bg-transparent shadow-none border-none hover:bg-accent/10 text-foreground hover:text-primary px-3 py-2 font-normal flex items-center gap-1.5",
-                            link.isCTA && "text-accent-foreground bg-accent hover:bg-accent/90 hover:text-accent-foreground font-semibold", // Accent is Orange
-                            link.special && "text-destructive hover:text-destructive" // Destructive is Red
+                            link.isCTA && "text-accent-foreground bg-accent hover:bg-accent/90 hover:text-accent-foreground font-semibold", 
+                            link.special && "text-destructive hover:text-destructive" 
                             )}
                           >
                              {link.icon && <link.icon className={cn("h-4 w-4", link.isCTA ? "text-accent-foreground" : "text-muted-foreground group-hover:text-primary", link.special && "text-destructive")}/>}
@@ -227,7 +227,7 @@ const Header = () => {
             </NavigationMenu>
              <div className="flex items-center gap-2">
                 <Link href="/seller/register" passHref>
-                    <Button variant="outline" size="sm" className="text-xs h-9 border-primary/50 text-primary hover:bg-primary/10 hover:border-primary">
+                    <Button variant="outline" size="sm" className="text-xs h-9 border-accent text-accent hover:bg-accent hover:text-accent-foreground">
                     <StoreIcon className="ml-1.5 rtl:mr-1.5 h-4 w-4" />
                     فروشنده شو!
                     </Button>
