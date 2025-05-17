@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         accent: 
           "bg-accent text-accent-foreground hover:bg-accent/90",
-        cta: "text-[hsl(var(--cta-foreground))] bg-gradient-to-r from-[hsl(var(--cta-gradient-from))] to-[hsl(var(--cta-gradient-to))] hover:brightness-110 border-transparent shadow-md",
+        cta: "text-[#0F172A] bg-gradient-to-r from-[#F97316] to-[#F59E0B] hover:brightness-110 border-transparent shadow-md",
       },
       size: {
         default: "h-10 px-4 py-2",
