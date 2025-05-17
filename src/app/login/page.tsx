@@ -3,15 +3,16 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Phone, KeyRound, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
+import { Phone, KeyRound, LogIn, UserPlus, ArrowLeft, Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/auth-layout';
-import { useToast } from '@/hooks/use-toast'; // Ensure this is correctly imported as useToast
+import { useToast } from '@/hooks/use-toast';
 
 const loginSchema = z.object({
   phoneNumber: z.string().regex(/^09\d{9}$/, 'شماره موبایل معتبر (مانند 09123456789) وارد کنید'),
@@ -28,6 +29,10 @@ export default function LoginPage() {
   const [step, setStep] = useState<'phoneNumber' | 'otp'>('phoneNumber');
   const [submittedPhoneNumber, setSubmittedPhoneNumber] = useState('');
   const { toast } = useToast();
+  const router = useRouter(); // Initialize useRouter
+
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
 
   const phoneForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -43,28 +48,137 @@ export default function LoginPage() {
     },
   });
 
-  const handlePhoneNumberSubmit = (values: LoginFormValues) => {
-    console.log('Phone number submitted:', values.phoneNumber);
-    setSubmittedPhoneNumber(values.phoneNumber);
-    setStep('otp');
-    toast({
-      title: 'کد تایید ارسال شد',
-      description: `کد تایید به شماره ${values.phoneNumber} ارسال گردید.`,
-      variant: 'default',
-    });
-    // TODO: Implement actual OTP sending logic
+  const handlePhoneNumberSubmit = async (values: LoginFormValues) => {
+    setIsSendingOtp(true);
+    try {
+      //  TODO: Replace with your actual API endpoint for sending OTP
+      const response = await fetch('/api/v1/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber: values.phoneNumber }),
+      });
+
+      if (response.ok) {
+        // const data = await response.json(); // Optional: if API returns any data
+        setSubmittedPhoneNumber(values.phoneNumber);
+        setStep('otp');
+        toast({
+          title: 'کد تایید ارسال شد',
+          description: `کد تایید به شماره ${values.phoneNumber} ارسال گردید.`,
+          variant: 'default',
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: 'خطا در ارسال کد',
+          description: errorData.message || 'مشکلی در ارسال کد تایید پیش آمد. لطفا دوباره تلاش کنید.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'خطای شبکه',
+        description: 'امکان برقراری ارتباط با سرور وجود ندارد. لطفا اتصال اینترنت خود را بررسی کنید.',
+        variant: 'destructive',
+      });
+      console.error('Error sending OTP:', error);
+    } finally {
+      setIsSendingOtp(false);
+    }
   };
 
-  const handleOtpSubmit = (values: OtpFormValues) => {
-    console.log('OTP submitted:', values.otp, 'for phone:', submittedPhoneNumber);
-    toast({
-      title: 'ورود موفق',
-      description: 'شما با موفقیت وارد شدید.',
-      variant: 'default',
-    });
-    // TODO: Implement actual OTP verification and login logic
-    // router.push('/'); // Redirect to dashboard or home
+  const handleOtpSubmit = async (values: OtpFormValues) => {
+    setIsVerifyingOtp(true);
+    try {
+      // TODO: Replace with your actual API endpoint for OTP verification and login
+      const response = await fetch('/api/v1/auth/login-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber: submittedPhoneNumber, otp: values.otp }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // TODO: Store the token (e.g., in localStorage or state management)
+        // localStorage.setItem('authToken', data.token); 
+        toast({
+          title: 'ورود موفق',
+          description: 'شما با موفقیت وارد شدید.',
+          variant: 'default',
+        });
+        router.push('/'); // Redirect to dashboard or home
+      } else {
+        const errorData = await response.json();
+        let errorMessage = errorData.message || 'کد تایید نامعتبر است یا مشکلی پیش آمده.';
+        if (errorData.errors && errorData.errors.otp) {
+          errorMessage = errorData.errors.otp[0];
+        }
+        toast({
+          title: 'خطا در ورود',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'خطای شبکه',
+        description: 'امکان برقراری ارتباط با سرور وجود ندارد. لطفا اتصال اینترنت خود را بررسی کنید.',
+        variant: 'destructive',
+      });
+      console.error('Error verifying OTP:', error);
+    } finally {
+      setIsVerifyingOtp(false);
+    }
   };
+  
+  const handleResendOtp = async () => {
+    if (!submittedPhoneNumber) return;
+    // Effectively, we re-run the send OTP logic for the current number.
+    // You might have a dedicated resend endpoint or just call the send OTP endpoint again.
+    setIsSendingOtp(true); // Use a loading state if you want to disable the button during resend
+    try {
+      //  TODO: Replace with your actual API endpoint for resending OTP
+      const response = await fetch('/api/v1/auth/send-otp', { // Or a specific resend endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber: submittedPhoneNumber }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: 'کد تایید مجددا ارسال شد',
+          description: `کد جدیدی به شماره ${submittedPhoneNumber} ارسال گردید.`,
+          variant: 'default',
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: 'خطا در ارسال مجدد کد',
+          description: errorData.message || 'مشکلی در ارسال مجدد کد تایید پیش آمد.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'خطای شبکه',
+        description: 'امکان برقراری ارتباط با سرور برای ارسال مجدد کد وجود ندارد.',
+        variant: 'destructive',
+      });
+      console.error('Error resending OTP:', error);
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
 
   return (
     <AuthLayout 
@@ -92,15 +206,20 @@ export default function LoginPage() {
                       placeholder="09123456789"
                       {...field}
                       className="text-lg tracking-wider py-3 px-4 text-left"
+                      disabled={isSendingOtp}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300">
-              <LogIn className="ml-2 rtl:mr-2 h-5 w-5" />
-              دریافت کد تایید
+            <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300" disabled={isSendingOtp}>
+              {isSendingOtp ? (
+                <Loader2 className="ml-2 rtl:mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <LogIn className="ml-2 rtl:mr-2 h-5 w-5" />
+              )}
+              {isSendingOtp ? 'در حال ارسال کد...' : 'دریافت کد تایید'}
             </Button>
           </form>
         </Form>
@@ -123,15 +242,16 @@ export default function LoginPage() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="text" // Changed to text for better control over input, browsers might handle "number" differently
+                      type="text" 
                       dir="ltr"
                       maxLength={6}
                       placeholder="● ● ● ● ● ●"
                       {...field}
-                      className="text-2xl tracking-[0.5em] text-center font-mono py-3 px-4" // Increased tracking for digit separation illusion
-                      autoComplete="one-time-code" // Helps with OTP autofill
-                      inputMode="numeric" // Suggests numeric keyboard on mobile
-                      pattern="\d{6}" // Basic pattern validation
+                      className="text-2xl tracking-[0.5em] text-center font-mono py-3 px-4" 
+                      autoComplete="one-time-code" 
+                      inputMode="numeric" 
+                      pattern="\d{6}" 
+                      disabled={isVerifyingOtp}
                     />
                   </FormControl>
                   <FormMessage />
@@ -139,13 +259,17 @@ export default function LoginPage() {
               )}
             />
              <div className="flex flex-col sm:flex-row gap-3">
-                <Button type="button" variant="outline" onClick={() => setStep('phoneNumber')} className="w-full text-base py-3">
+                <Button type="button" variant="outline" onClick={() => setStep('phoneNumber')} className="w-full text-base py-3" disabled={isVerifyingOtp}>
                     <ArrowLeft className="ml-2 rtl:mr-2 h-5 w-5" />
                     تغییر شماره
                 </Button>
-                <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300">
-                  <LogIn className="ml-2 rtl:mr-2 h-5 w-5" />
-                  ورود
+                <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300" disabled={isVerifyingOtp}>
+                  {isVerifyingOtp ? (
+                    <Loader2 className="ml-2 rtl:mr-2 h-5 w-5 animate-spin" />
+                  ) : (
+                    <LogIn className="ml-2 rtl:mr-2 h-5 w-5" />
+                  )}
+                  {isVerifyingOtp ? 'در حال بررسی...' : 'ورود'}
                 </Button>
              </div>
             <div className="text-center text-sm">
@@ -153,19 +277,12 @@ export default function LoginPage() {
                 variant="link" 
                 size="sm" 
                 type="button" 
-                onClick={() => {
-                  // Simulate OTP resend
-                  toast({
-                    title: 'کد تایید مجددا ارسال شد',
-                    description: `کد جدیدی به شماره ${submittedPhoneNumber} ارسال گردید.`,
-                    variant: 'default',
-                  });
-                  // In a real app, you would call handlePhoneNumberSubmit or a dedicated resend function
-                  // handlePhoneNumberSubmit({phoneNumber: submittedPhoneNumber})
-                }} 
+                onClick={handleResendOtp} 
                 className="text-primary hover:text-accent"
+                disabled={isSendingOtp} // Disable if an OTP send operation (initial or resend) is in progress
               >
-                ارسال مجدد کد
+                {isSendingOtp && submittedPhoneNumber ? <Loader2 className="ml-2 rtl:mr-2 h-4 w-4 animate-spin" /> : null}
+                {isSendingOtp && submittedPhoneNumber ? 'در حال ارسال مجدد...' : 'ارسال مجدد کد'}
               </Button>
             </div>
           </form>

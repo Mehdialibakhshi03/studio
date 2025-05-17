@@ -1,8 +1,9 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react'; // Added useState
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -10,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { User, Phone, Lock, UserPlus, LogIn } from 'lucide-react';
+import { User, Phone, Lock, UserPlus, LogIn, Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/auth-layout';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,13 +25,16 @@ const registerSchema = z.object({
   }),
 }).refine(data => data.password === data.confirmPassword, {
   message: 'رمز عبور و تکرار آن یکسان نیستند',
-  path: ['confirmPassword'], // Path to field to display error
+  path: ['confirmPassword'], 
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const { toast } = useToast();
+  const router = useRouter(); // Initialize useRouter
+  const [isRegistering, setIsRegistering] = useState(false);
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -42,15 +46,59 @@ export default function RegisterPage() {
     },
   });
 
-  const onSubmit = (values: RegisterFormValues) => {
-    console.log('Registration data:', values);
-    toast({
-      title: 'ثبت نام موفق',
-      description: `حساب کاربری شما با موفقیت ایجاد شد، ${values.fullName}!`,
-      variant: 'default'
-    });
-    // TODO: Implement actual registration logic
-    // router.push('/login'); // Redirect to login or dashboard
+  const onSubmit = async (values: RegisterFormValues) => {
+    setIsRegistering(true);
+    try {
+      // TODO: Replace with your actual API endpoint for registration
+      const response = await fetch('/api/v1/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: values.fullName, // Laravel often uses 'name' for full name
+          phone_number: values.phoneNumber, // Or 'phone' depending on your API
+          password: values.password,
+          password_confirmation: values.confirmPassword, // Laravel standard for password confirmation
+          // agree_to_terms: values.agreeToTerms, // Optional: send if your API requires it
+        }),
+      });
+
+      if (response.ok) {
+        // const data = await response.json(); // Optional: if API returns user data or token
+        toast({
+          title: 'ثبت نام موفق',
+          description: `حساب کاربری شما با موفقیت ایجاد شد، ${values.fullName}! لطفاً وارد شوید.`,
+          variant: 'default'
+        });
+        router.push('/login'); // Redirect to login page
+      } else {
+        const errorData = await response.json();
+        let errorMessage = errorData.message || 'مشکلی در ثبت نام پیش آمد. لطفا دوباره تلاش کنید.';
+        // Handle Laravel validation errors
+        if (errorData.errors) {
+          const firstErrorField = Object.keys(errorData.errors)[0];
+          if (firstErrorField && errorData.errors[firstErrorField]) {
+            errorMessage = errorData.errors[firstErrorField][0];
+          }
+        }
+        toast({
+          title: 'خطا در ثبت نام',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'خطای شبکه',
+        description: 'امکان برقراری ارتباط با سرور وجود ندارد. لطفا اتصال اینترنت خود را بررسی کنید.',
+        variant: 'destructive',
+      });
+      console.error('Error registering user:', error);
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -72,7 +120,7 @@ export default function RegisterPage() {
                   نام و نام خانوادگی
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="مثلا: علی رضایی" {...field} className="py-3 px-4" />
+                  <Input placeholder="مثلا: علی رضایی" {...field} className="py-3 px-4" disabled={isRegistering} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +136,7 @@ export default function RegisterPage() {
                   شماره موبایل
                 </FormLabel>
                 <FormControl>
-                  <Input type="tel" dir="ltr" placeholder="09123456789" {...field} className="py-3 px-4 text-left tracking-wider"/>
+                  <Input type="tel" dir="ltr" placeholder="09123456789" {...field} className="py-3 px-4 text-left tracking-wider" disabled={isRegistering}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,7 +152,7 @@ export default function RegisterPage() {
                   رمز عبور
                 </FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="حداقل ۸ کاراکتر" {...field} className="py-3 px-4" />
+                  <Input type="password" placeholder="حداقل ۸ کاراکتر" {...field} className="py-3 px-4" disabled={isRegistering}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +168,7 @@ export default function RegisterPage() {
                   تکرار رمز عبور
                 </FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="تکرار رمز عبور" {...field} className="py-3 px-4" />
+                  <Input type="password" placeholder="تکرار رمز عبور" {...field} className="py-3 px-4" disabled={isRegistering}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -135,6 +183,7 @@ export default function RegisterPage() {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    disabled={isRegistering}
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
@@ -146,9 +195,13 @@ export default function RegisterPage() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300">
-            <UserPlus className="ml-2 rtl:mr-2 h-5 w-5" />
-            ایجاد حساب کاربری
+          <Button type="submit" className="w-full text-base py-3 transition-transform hover:scale-105 duration-300" disabled={isRegistering}>
+             {isRegistering ? (
+                <Loader2 className="ml-2 rtl:mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <UserPlus className="ml-2 rtl:mr-2 h-5 w-5" />
+              )}
+            {isRegistering ? 'در حال ثبت نام...' : 'ایجاد حساب کاربری'}
           </Button>
         </form>
       </Form>
