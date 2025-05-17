@@ -133,9 +133,8 @@ export default function HomePage() {
                   <Image
                     src={slide.image as string}
                     alt={slide.alt}
-                    layout="fill"
-                    objectFit="cover"
-                    className="brightness-70"
+                    fill
+                    className="object-cover brightness-70"
                     data-ai-hint={slide.aiHint}
                     priority={slide.id === 1}
                   />
@@ -378,9 +377,8 @@ export default function HomePage() {
               <Image
                 src={interactiveProductData.image}
                 alt={interactiveProductData.productName}
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-500 hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-500 hover:scale-105"
                 data-ai-hint={interactiveProductData.aiHint}
               />
                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-card md:via-transparent md:to-transparent opacity-60 md:opacity-100"></div>
@@ -394,10 +392,9 @@ export default function HomePage() {
               <Image
                   src="https://placehold.co/1600x600.png"
                   alt="فروشنده خوشحال در حال کار با لپتاپ"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  className="object-cover scale-110 blur-sm"
                   data-ai-hint="happy online seller business owner"
-                  className="scale-110 blur-sm"
               />
           </div>
           <div className="container mx-auto px-4 lg:px-8 xl:px-16 relative z-10">
@@ -734,9 +731,21 @@ export default function HomePage() {
                 className="bg-card p-6 rounded-xl shadow-lg text-center border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1.5 group animate-fade-in-right"
                 style={{animationDelay: `${benefit.delay}ms`}}
             >
-               <div className={`relative w-20 h-20 bg-gradient-to-br from-background to-secondary dark:from-card dark:to-secondary/70 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md ring-4 ring-transparent group-hover:ring-primary/20`}>
-                 <div className={`absolute inset-0 ${benefit.colorClass.replace('text-', 'bg-')}/20 rounded-full animate-ping group-hover:animate-none opacity-50`}></div>
-                 <benefit.icon className={`h-10 w-10 ${benefit.colorClass} relative z-10`} />
+               <div className={cn(
+                  "relative w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 transition-transform duration-300 group-hover:scale-110 shadow-md ring-4 ring-transparent group-hover:ring-primary/20",
+                  benefit.colorClass === "text-accent" ? "bg-accent/10" :
+                  benefit.colorClass === "text-[hsl(var(--progress-indicator))]" ? "bg-green-500/10" :
+                  benefit.colorClass === "text-primary" ? "bg-primary/10" :
+                  "bg-purple-500/10"
+                )}>
+                 <div className={cn(
+                    "absolute inset-0 rounded-full animate-ping group-hover:animate-none opacity-50",
+                    benefit.colorClass === "text-accent" ? "bg-accent/20" :
+                    benefit.colorClass === "text-[hsl(var(--progress-indicator))]" ? "bg-green-500/20" :
+                    benefit.colorClass === "text-primary" ? "bg-primary/20" :
+                    "bg-purple-500/20"
+                  )}></div>
+                 <benefit.icon className={cn("h-10 w-10 relative z-10", benefit.colorClass)} />
                </div>
                <h3 className="font-bold text-xl md:text-2xl mb-3 text-card-foreground">{benefit.title}</h3>
                <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{benefit.description}</p>
@@ -753,7 +762,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="bg-card shadow-xl border border-border overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="p-0 relative aspect-[16/9]">
-              <Image src="https://placehold.co/600x338.png" alt="گوشی و سفر شمال" layout="fill" objectFit="cover" className="group-hover:scale-105 transition-transform duration-300" data-ai-hint="smartphone beach travel"/>
+              <Image src="https://placehold.co/600x338.png" alt="گوشی و سفر شمال" fill className="object-cover group-hover:scale-105 transition-transform duration-300" data-ai-hint="smartphone beach travel"/>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
               <div className="absolute bottom-4 right-4 text-white p-2">
                 <PartyPopper className="w-12 h-12 text-yellow-300 mb-2" />
@@ -773,7 +782,7 @@ export default function HomePage() {
 
           <Card className="bg-card shadow-xl border border-border overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="p-0 relative aspect-[16/9]">
-              <Image src="https://placehold.co/600x338.png" alt="لوازم خانگی و شام در رستوران" layout="fill" objectFit="cover" className="group-hover:scale-105 transition-transform duration-300" data-ai-hint="home appliances fancy dinner"/>
+              <Image src="https://placehold.co/600x338.png" alt="لوازم خانگی و شام در رستوران" fill className="object-cover group-hover:scale-105 transition-transform duration-300" data-ai-hint="home appliances fancy dinner"/>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
               <div className="absolute bottom-4 right-4 text-white p-2">
                 <UtensilsCrossed className="w-12 h-12 text-rose-300 mb-2" />
@@ -983,7 +992,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto text-lg py-3.5 px-8 border-primary-foreground/50 text-primary-foreground hover:bg-white/10 hover:text-white transition-transform hover:scale-105 duration-300 shadow-md"
+                  className="w-full sm:w-auto text-lg py-3.5 px-8 border-accent !bg-transparent text-primary-foreground hover:bg-accent hover:text-accent-foreground transition-transform hover:scale-105 duration-300 shadow-md"
                 >
                   <svg className="w-5 h-5 ml-2 rtl:mr-2" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
