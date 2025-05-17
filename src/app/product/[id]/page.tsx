@@ -371,7 +371,7 @@ export default function ProductDetailPage() {
                           key={option}
                           htmlFor={`${variation.type}-${option}`}
                           className={cn(
-                            "cursor-pointer rounded-md border border-input px-4 py-2.5 text-sm transition-all duration-200 has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-background has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
+                            "cursor-pointer rounded-md border border-input px-4 py-2.5 text-sm transition-all duration-200 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent has-[:checked]:ring-offset-background has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
                             "bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-primary/50"
                           )}
                         >
