@@ -313,7 +313,7 @@ export default function ProductDetailPage() {
             {store && (
                  <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden my-2">
                    <CardHeader className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-card border-b border-border/70">
-                     <Avatar className="w-16 h-16 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
+                     <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-background shadow-md transition-transform duration-300 hover:scale-110">
                        <AvatarImage src={store.logo} alt={`لوگوی ${store.name}`} data-ai-hint={store.aiHint} />
                        <AvatarFallback className="text-xl font-semibold">{store.name.charAt(0)}</AvatarFallback>
                      </Avatar>
@@ -724,7 +724,7 @@ export default function ProductDetailPage() {
                           </div>
                         </CardContent>
                          <CardFooter className="p-3 pt-0">
-                           <Button size="sm" variant="outline" className="w-full text-xs transition-transform hover:scale-105 duration-300 py-2">مشاهده جزئیات</Button>
+                           <Button size="sm" variant="default" className="w-full text-xs transition-transform hover:scale-105 duration-300 py-2">مشاهده جزئیات</Button>
                         </CardFooter>
                       </Card>
                      </Link>
