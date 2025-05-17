@@ -16,31 +16,24 @@ export default function Loading() {
         <p className="text-lg text-muted-foreground mb-8">
           کمی صبر کنید، در حال آماده‌سازی بهترین‌ها برای شما هستیم...
         </p>
-        <div className="w-full bg-muted rounded-full h-2.5">
+        <div className="relative w-full bg-muted rounded-full h-2.5 overflow-hidden"> {/* Track with relative and overflow-hidden */}
           <div
-            className="bg-primary h-2.5 rounded-full animate-loading-progress"
-            style={{ width: '75%' }} // Placeholder width, actual progress is indeterminate
+            className="absolute bg-primary h-full rounded-full animate-loading-progress"
+            style={{ width: '40%' }} // The moving segment, e.g., 40% of the track's width
           ></div>
         </div>
       </div>
       <style jsx global>{`
         @keyframes loading-progress-animation {
           0% {
-            transform: translateX(-100%) scaleX(0.5);
-            opacity: 0.8;
-          }
-          50% {
-            transform: translateX(0%) scaleX(1);
-            opacity: 1;
+            left: -40%; /* Start completely to the left (off-screen based on its own width) */
           }
           100% {
-            transform: translateX(100%) scaleX(0.5);
-            opacity: 0.8;
+            left: 100%; /* End completely to the right (off-screen based on track's width) */
           }
         }
         .animate-loading-progress {
-          animation: loading-progress-animation 2s infinite ease-in-out;
-          transform-origin: left center;
+          animation: loading-progress-animation 1.8s linear infinite;
         }
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
@@ -53,3 +46,4 @@ export default function Loading() {
     </div>
   );
 }
+
