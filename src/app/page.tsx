@@ -400,7 +400,7 @@ export default function HomePage() {
           <div className="container mx-auto px-4 lg:px-8 xl:px-16 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                   <div className="text-white text-center md:text-right">
-                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 drop-shadow-lg">
+                      <h2 className="text-3xl md:text-4xl lg:text-4xl font-bold mb-6 drop-shadow-lg">
                           ایجاد فروشگاه گروهی تو، تنها در ۳ دقیقه! 🚀
                       </h2>
                       <p className="text-lg md:text-xl mb-8 text-blue-100 dark:text-blue-200 leading-relaxed drop-shadow-md">
