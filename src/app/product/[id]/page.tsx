@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare, ShieldCheck as ShieldCheckIcon } from 'lucide-react';
+import { Users, Clock, ShoppingCart, Share2, Package, CheckCircle, AlertCircle, XCircle, Truck as ShippingIcon, RefreshCw, Users2, Eye, Store, User, UserCheck, TrendingUp, Star as StarIcon, MessageSquare, ShieldCheck as ShieldCheckIcon, MapPin } from 'lucide-react';
 import { groupPurchases as mainGroupPurchases, stores, categories as allCategories, formatNumber, isEndingSoon, getCategoryNameBySlug as dataGetCategoryNameBySlug, allGroupProducts } from '@/lib/data';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -235,7 +235,7 @@ export default function ProductDetailPage() {
       <Header />
 
       <main className="container mx-auto px-4 lg:px-8 xl:px-16 py-12 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-12 gap-y-10">
           {/* Image Gallery Column */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg border border-border">
@@ -371,8 +371,12 @@ export default function ProductDetailPage() {
                           key={option}
                           htmlFor={`${variation.type}-${option}`}
                           className={cn(
-                            "cursor-pointer rounded-md border border-input px-4 py-2.5 text-sm transition-all duration-200 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent has-[:checked]:ring-offset-background has-[:checked]:ring-offset-2 has-[:checked]:shadow-md",
-                            "bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-primary/50"
+                            // Base structure and transition
+                            "cursor-pointer rounded-md border px-4 py-2.5 text-sm font-medium transition-all duration-200 shadow-sm",
+                            // Unselected state
+                            "bg-background border-border text-foreground hover:bg-secondary/70 hover:border-primary/70",
+                            // Selected state - :has selector for styling based on checked child
+                            "has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent has-[:checked]:ring-offset-background has-[:checked]:ring-offset-1 has-[:checked]:shadow-md"
                           )}
                         >
                           <RadioGroupItem
